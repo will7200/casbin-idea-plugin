@@ -1,0 +1,77 @@
+{
+  parserClass="io.github.will7200.plugins.casbin.language.parser.CasbinParser"
+  parserUtilClass = "io.github.will7200.plugins.casbin.language.parser.CasbinParserUtil"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Casbin"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.github.will7200.plugins.casbin.language.psi"
+  psiImplPackage="io.github.will7200.plugins.casbin.language.psi.impl"
+
+  elementTypeHolderClass="io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes"
+  elementTypeClass="io.github.will7200.plugins.casbin.language.psi.CasbinElementType"
+  tokenTypeClass="io.github.will7200.plugins.casbin.language.psi.CasbinTokenType"
+  extends(".*Expr")=Expr
+  tokens = [
+      DOT = "."
+      L_BRACKET = "["
+      R_BRACKET = "]"
+      ASSIGN = "="
+      COMMA = ","
+      OP_AND = "&&"
+      OP_OR = "||"
+      OP_EQUALS = "=="
+      ALLOW = "allow"
+      DENY = "deny"
+      LINE_COMMENT='regexp:[#;].*'
+      SECTION_IDENTIFER='regexp:[A-Za-z_]+'
+      IDENTIFIER='regexp:[A-Za-z_]+'
+      SPACE = "regexp:\s+"
+      L_PARATHESIS = "("
+      R_PARATHESIS = ")"
+  ]
+  psiImplUtilClass = "io.github.will7200.plugins.casbin.language.psi.impl.CasbinPsiImplUtils"
+}
+casbinModel ::= section*
+section ::= header property* {
+   methods=[getProperties hasProperty setProperty getProperty]
+}
+header ::= L_BRACKET section_name R_BRACKET
+
+section_name ::= SECTION_IDENTIFER {
+   methods=[getNameIdentifier getName setName]
+ }
+// Property
+property ::= key ASSIGN value {methods=[getKey getValue]}
+
+private key ::= flat_key
+private value ::= option_function | option_values | option_value_list | option_value_identifier
+// ---- ---- Key ---- ----
+
+flat_key ::= IDENTIFIER
+
+// ---- ---- Value ---- ----
+
+option_values ::= (option_value_list | option_value_expression | option_value_identifier)
+option_value_expression ::= Expr
+option_value_list ::= option_value_identifier (COMMA option_value_identifier)+
+option_function ::= IDENTIFIER L_PARATHESIS IDENTIFIER L_PARATHESIS equality R_PARATHESIS R_PARATHESIS
+equality ::= some_value OP_EQUALS some_value
+option_value_identifier ::= IDENTIFIER
+object_identifier ::= IDENTIFIER
+
+// ---- ---- Condition ---- ----
+
+Expr            ::= relationalExpr | primaryGroup
+relationalExpr  ::= Expr relOp Expr
+parenExpr       ::= parenConstruct
+literalExpr     ::= some_value OP_EQUALS some_value
+some_value      ::= (object_identifier DOT attribute | ALLOW | DENY | IDENTIFIER)
+attribute       ::= IDENTIFIER
+
+private primaryGroup    ::= literalExpr | parenExpr
+private relOp           ::= OP_AND | OP_OR
+private parenConstruct  ::= '(' [ !')' Expr (',' Expr) * ] ')'
+
+private not_header ::= !header
+private not_next_entry ::= !(header | option)
