@@ -21,6 +21,11 @@
                                        implementationClass="io.github.will7200.plugins.casbin.language.highlighting.CasbinSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="io.github.will7200.plugins.casbin.language.highlighting.CasbinColorSettingsPage"/>
         <annotator language="Casbin" implementationClass="io.github.will7200.plugins.casbin.language.highlighting.CasbinAnnotator"/>
+        <completion.contributor language="Casbin" implementationClass="io.github.will7200.plugins.casbin.language.completion.CasbinCompletionContributor"/>
+        <psi.referenceContributor implementation="io.github.will7200.plugins.casbin.language.reference.CasbinReferenceContributor"/>
+        <lang.refactoringSupport language="Casbin"
+                                 implementationClass="io.github.will7200.plugins.casbin.language.refactoring.CasbinRefactoringSupportProvider"/>
+
     </extensions>
 
     <actions>
