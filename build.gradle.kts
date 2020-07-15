@@ -1,6 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
+val psiViewerVersion: String by project
+val env: String? = System.getenv("CASBIN_ENV")
+
 plugins {
     java
     idea
@@ -25,7 +28,9 @@ intellij {
     version = "2020.1.2"
     pluginName = rootProject.name
     updateSinceUntilBuild = true
-    sandboxDirectory="${project.projectDir}/idea-sandbox"
+    sandboxDirectory = "${project.projectDir}/sandbox/idea-sandbox"
+    val devPlugins = arrayOf("PsiViewer:$psiViewerVersion")
+    setPlugins(*if (env == "DEV") devPlugins else emptyArray())
 }
 
 sourceSets {
@@ -82,7 +87,9 @@ tasks {
     }
 }
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-    changeNotes("""
+    changeNotes(
+        """
       Add change notes here.<br>
-      <em>most HTML tags may be used</em>""")
+      <em>most HTML tags may be used</em>"""
+    )
 }
