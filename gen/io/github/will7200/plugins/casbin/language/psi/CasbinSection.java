@@ -29,4 +29,10 @@ public interface CasbinSection extends PsiElement {
   //matching getProperty(CasbinSection, ...)
   //methods are not found in CasbinPsiUtils
 
+  @Nullable
+  String getName();
+
+  @NotNull
+  PsiElement setName(@NotNull String newName);
+
 }

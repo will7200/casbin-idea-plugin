@@ -38,4 +38,16 @@ public class CasbinSectionImpl extends ASTWrapperPsiElement implements CasbinSec
     return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinProperty.class);
   }
 
+  @Override
+  @Nullable
+  public String getName() {
+    return CasbinPsiUtils.getName(this);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement setName(@NotNull String newName) {
+    return CasbinPsiUtils.setName(this, newName);
+  }
+
 }

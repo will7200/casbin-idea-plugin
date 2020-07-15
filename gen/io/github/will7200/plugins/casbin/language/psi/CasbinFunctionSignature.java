@@ -8,15 +8,12 @@ import com.intellij.psi.PsiElement;
 public interface CasbinFunctionSignature extends PsiElement {
 
   @Nullable
-  CasbinFunctionName getFunctionName();
+  CasbinEquality getEquality();
 
   @Nullable
-  CasbinFunctionSignature getFunctionSignature();
+  CasbinFunction getFunction();
 
   @Nullable
-  CasbinFunctionSignatureCall getFunctionSignatureCall();
-
-  @Nullable
-  CasbinFunctionSignatureEquality getFunctionSignatureEquality();
+  CasbinParameters getParameters();
 
 }

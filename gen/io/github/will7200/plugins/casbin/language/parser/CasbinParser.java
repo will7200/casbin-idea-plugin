@@ -89,14 +89,17 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [OP_NOT](recursive_function | function_signature)
+  // [OP_NOT] function_name L_PARATHESIS function_signature R_PARATHESIS
   public static boolean function(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "function")) return false;
     if (!nextTokenIs(b, "<function>", IDENTIFIER, OP_NOT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, FUNCTION, "<function>");
     r = function_0(b, l + 1);
-    r = r && function_1(b, l + 1);
+    r = r && function_name(b, l + 1);
+    r = r && consumeToken(b, L_PARATHESIS);
+    r = r && function_signature(b, l + 1);
+    r = r && consumeToken(b, R_PARATHESIS);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -106,15 +109,6 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "function_0")) return false;
     consumeToken(b, OP_NOT);
     return true;
-  }
-
-  // recursive_function | function_signature
-  private static boolean function_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "function_1")) return false;
-    boolean r;
-    r = recursive_function(b, l + 1);
-    if (!r) r = function_signature(b, l + 1);
-    return r;
   }
 
   /* ********************************************************** */
@@ -130,59 +124,15 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // function_signature_call | function_signature_equality | function_name L_PARATHESIS function_signature R_PARATHESIS
+  // function | equality | parameters
   public static boolean function_signature(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "function_signature")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = function_signature_call(b, l + 1);
-    if (!r) r = function_signature_equality(b, l + 1);
-    if (!r) r = function_signature_2(b, l + 1);
-    exit_section_(b, m, FUNCTION_SIGNATURE, r);
-    return r;
-  }
-
-  // function_name L_PARATHESIS function_signature R_PARATHESIS
-  private static boolean function_signature_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "function_signature_2")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = function_name(b, l + 1);
-    r = r && consumeToken(b, L_PARATHESIS);
-    r = r && function_signature(b, l + 1);
-    r = r && consumeToken(b, R_PARATHESIS);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // function_name L_PARATHESIS parameters R_PARATHESIS
-  public static boolean function_signature_call(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "function_signature_call")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = function_name(b, l + 1);
-    r = r && consumeToken(b, L_PARATHESIS);
-    r = r && parameters(b, l + 1);
-    r = r && consumeToken(b, R_PARATHESIS);
-    exit_section_(b, m, FUNCTION_SIGNATURE_CALL, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // function_name L_PARATHESIS equality R_PARATHESIS
-  public static boolean function_signature_equality(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "function_signature_equality")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = function_name(b, l + 1);
-    r = r && consumeToken(b, L_PARATHESIS);
-    r = r && equality(b, l + 1);
-    r = r && consumeToken(b, R_PARATHESIS);
-    exit_section_(b, m, FUNCTION_SIGNATURE_EQUALITY, r);
+    Marker m = enter_section_(b, l, _NONE_, FUNCTION_SIGNATURE, "<function signature>");
+    r = function(b, l + 1);
+    if (!r) r = equality(b, l + 1);
+    if (!r) r = parameters(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -448,21 +398,6 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     r = r && consumeToken(b, ASSIGN);
     r = r && value(b, l + 1);
     exit_section_(b, m, PROPERTY, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // function_name L_PARATHESIS function_signature R_PARATHESIS
-  public static boolean recursive_function(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "recursive_function")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = function_name(b, l + 1);
-    r = r && consumeToken(b, L_PARATHESIS);
-    r = r && function_signature(b, l + 1);
-    r = r && consumeToken(b, R_PARATHESIS);
-    exit_section_(b, m, RECURSIVE_FUNCTION, r);
     return r;
   }
 

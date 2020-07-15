@@ -35,14 +35,6 @@ public class CasbinVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitFunctionSignatureCall(@NotNull CasbinFunctionSignatureCall o) {
-    visitPsiElement(o);
-  }
-
-  public void visitFunctionSignatureEquality(@NotNull CasbinFunctionSignatureEquality o) {
-    visitPsiElement(o);
-  }
-
   public void visitHeader(@NotNull CasbinHeader o) {
     visitPsiElement(o);
   }
@@ -80,10 +72,6 @@ public class CasbinVisitor extends PsiElementVisitor {
   }
 
   public void visitProperty(@NotNull CasbinProperty o) {
-    visitPsiElement(o);
-  }
-
-  public void visitRecursiveFunction(@NotNull CasbinRecursiveFunction o) {
     visitPsiElement(o);
   }
 

@@ -10,10 +10,4 @@ public interface CasbinSectionName extends PsiElement {
   @NotNull
   PsiElement getSectionIdentifer();
 
-  @Nullable
-  String getName();
-
-  @NotNull
-  PsiElement setName(@NotNull String newName);
-
 }

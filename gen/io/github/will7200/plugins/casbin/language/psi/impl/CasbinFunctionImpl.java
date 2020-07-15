@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.github.will7200.plugins.casbin.language.psi.*;
 
-public class CasbinFunctionImpl extends ASTWrapperPsiElement implements CasbinFunction {
+public class CasbinFunctionImpl extends CasbinFunctionMixin implements CasbinFunction {
 
   public CasbinFunctionImpl(@NotNull ASTNode node) {
     super(node);
@@ -27,15 +26,15 @@ public class CasbinFunctionImpl extends ASTWrapperPsiElement implements CasbinFu
   }
 
   @Override
-  @Nullable
-  public CasbinFunctionSignature getFunctionSignature() {
-    return findChildByClass(CasbinFunctionSignature.class);
+  @NotNull
+  public CasbinFunctionName getFunctionName() {
+    return findNotNullChildByClass(CasbinFunctionName.class);
   }
 
   @Override
-  @Nullable
-  public CasbinRecursiveFunction getRecursiveFunction() {
-    return findChildByClass(CasbinRecursiveFunction.class);
+  @NotNull
+  public CasbinFunctionSignature getFunctionSignature() {
+    return findNotNullChildByClass(CasbinFunctionSignature.class);
   }
 
 }

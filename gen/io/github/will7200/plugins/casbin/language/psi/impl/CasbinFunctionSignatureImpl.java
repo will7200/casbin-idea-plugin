@@ -28,26 +28,20 @@ public class CasbinFunctionSignatureImpl extends ASTWrapperPsiElement implements
 
   @Override
   @Nullable
-  public CasbinFunctionName getFunctionName() {
-    return findChildByClass(CasbinFunctionName.class);
+  public CasbinEquality getEquality() {
+    return findChildByClass(CasbinEquality.class);
   }
 
   @Override
   @Nullable
-  public CasbinFunctionSignature getFunctionSignature() {
-    return findChildByClass(CasbinFunctionSignature.class);
+  public CasbinFunction getFunction() {
+    return findChildByClass(CasbinFunction.class);
   }
 
   @Override
   @Nullable
-  public CasbinFunctionSignatureCall getFunctionSignatureCall() {
-    return findChildByClass(CasbinFunctionSignatureCall.class);
-  }
-
-  @Override
-  @Nullable
-  public CasbinFunctionSignatureEquality getFunctionSignatureEquality() {
-    return findChildByClass(CasbinFunctionSignatureEquality.class);
+  public CasbinParameters getParameters() {
+    return findChildByClass(CasbinParameters.class);
   }
 
 }

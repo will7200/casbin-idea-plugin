@@ -32,16 +32,4 @@ public class CasbinSectionNameImpl extends ASTWrapperPsiElement implements Casbi
     return findNotNullChildByType(SECTION_IDENTIFER);
   }
 
-  @Override
-  @Nullable
-  public String getName() {
-    return CasbinPsiUtils.getName(this);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return CasbinPsiUtils.setName(this, newName);
-  }
-
 }

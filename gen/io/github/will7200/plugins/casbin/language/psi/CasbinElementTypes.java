@@ -15,8 +15,6 @@ public interface CasbinElementTypes {
   IElementType FUNCTION = new CasbinElementType("FUNCTION");
   IElementType FUNCTION_NAME = new CasbinElementType("FUNCTION_NAME");
   IElementType FUNCTION_SIGNATURE = new CasbinElementType("FUNCTION_SIGNATURE");
-  IElementType FUNCTION_SIGNATURE_CALL = new CasbinElementType("FUNCTION_SIGNATURE_CALL");
-  IElementType FUNCTION_SIGNATURE_EQUALITY = new CasbinElementType("FUNCTION_SIGNATURE_EQUALITY");
   IElementType HEADER = new CasbinElementType("HEADER");
   IElementType LITERAL_EXPR = new CasbinElementType("LITERAL_EXPR");
   IElementType OBJECT_IDENTIFIER = new CasbinElementType("OBJECT_IDENTIFIER");
@@ -27,7 +25,6 @@ public interface CasbinElementTypes {
   IElementType PARAMETERS = new CasbinElementType("PARAMETERS");
   IElementType PAREN_EXPR = new CasbinElementType("PAREN_EXPR");
   IElementType PROPERTY = new CasbinElementType("PROPERTY");
-  IElementType RECURSIVE_FUNCTION = new CasbinElementType("RECURSIVE_FUNCTION");
   IElementType RELATIONAL_EXPR = new CasbinElementType("RELATIONAL_EXPR");
   IElementType SECTION = new CasbinElementType("SECTION");
   IElementType SECTION_NAME = new CasbinElementType("SECTION_NAME");
@@ -75,12 +72,6 @@ public interface CasbinElementTypes {
       else if (type == FUNCTION_SIGNATURE) {
         return new CasbinFunctionSignatureImpl(node);
       }
-      else if (type == FUNCTION_SIGNATURE_CALL) {
-        return new CasbinFunctionSignatureCallImpl(node);
-      }
-      else if (type == FUNCTION_SIGNATURE_EQUALITY) {
-        return new CasbinFunctionSignatureEqualityImpl(node);
-      }
       else if (type == HEADER) {
         return new CasbinHeaderImpl(node);
       }
@@ -110,9 +101,6 @@ public interface CasbinElementTypes {
       }
       else if (type == PROPERTY) {
         return new CasbinPropertyImpl(node);
-      }
-      else if (type == RECURSIVE_FUNCTION) {
-        return new CasbinRecursiveFunctionImpl(node);
       }
       else if (type == RELATIONAL_EXPR) {
         return new CasbinRelationalExprImpl(node);

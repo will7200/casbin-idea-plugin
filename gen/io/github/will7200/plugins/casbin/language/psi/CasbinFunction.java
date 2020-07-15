@@ -7,10 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface CasbinFunction extends PsiElement {
 
-  @Nullable
+  @NotNull
+  CasbinFunctionName getFunctionName();
+
+  @NotNull
   CasbinFunctionSignature getFunctionSignature();
 
   @Nullable
-  CasbinRecursiveFunction getRecursiveFunction();
+  String getName();
 
 }
