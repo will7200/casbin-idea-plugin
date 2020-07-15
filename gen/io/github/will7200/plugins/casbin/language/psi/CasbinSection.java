@@ -15,18 +15,18 @@ public interface CasbinSection extends PsiElement {
 
   //WARNING: getProperties(...) is skipped
   //matching getProperties(CasbinSection, ...)
-  //methods are not found in CasbinPsiImplUtils
+  //methods are not found in CasbinPsiUtils
 
   //WARNING: hasProperty(...) is skipped
   //matching hasProperty(CasbinSection, ...)
-  //methods are not found in CasbinPsiImplUtils
+  //methods are not found in CasbinPsiUtils
 
   //WARNING: setProperty(...) is skipped
   //matching setProperty(CasbinSection, ...)
-  //methods are not found in CasbinPsiImplUtils
+  //methods are not found in CasbinPsiUtils
 
   //WARNING: getProperty(...) is skipped
   //matching getProperty(CasbinSection, ...)
-  //methods are not found in CasbinPsiImplUtils
+  //methods are not found in CasbinPsiUtils
 
 }

@@ -40,6 +40,12 @@ public class CasbinSomeValueImpl extends ASTWrapperPsiElement implements CasbinS
 
   @Override
   @Nullable
+  public CasbinStringValue getStringValue() {
+    return findChildByClass(CasbinStringValue.class);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
   }

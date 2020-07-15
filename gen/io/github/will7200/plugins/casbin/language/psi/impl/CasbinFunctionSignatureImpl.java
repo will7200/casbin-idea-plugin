@@ -11,14 +11,14 @@ import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.github.will7200.plugins.casbin.language.psi.*;
 
-public class CasbinSectionNameImpl extends ASTWrapperPsiElement implements CasbinSectionName {
+public class CasbinFunctionSignatureImpl extends ASTWrapperPsiElement implements CasbinFunctionSignature {
 
-  public CasbinSectionNameImpl(@NotNull ASTNode node) {
+  public CasbinFunctionSignatureImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CasbinVisitor visitor) {
-    visitor.visitSectionName(this);
+    visitor.visitFunctionSignature(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -27,21 +27,27 @@ public class CasbinSectionNameImpl extends ASTWrapperPsiElement implements Casbi
   }
 
   @Override
-  @NotNull
-  public PsiElement getSectionIdentifer() {
-    return findNotNullChildByType(SECTION_IDENTIFER);
+  @Nullable
+  public CasbinFunctionName getFunctionName() {
+    return findChildByClass(CasbinFunctionName.class);
   }
 
   @Override
   @Nullable
-  public String getName() {
-    return CasbinPsiUtils.getName(this);
+  public CasbinFunctionSignature getFunctionSignature() {
+    return findChildByClass(CasbinFunctionSignature.class);
   }
 
   @Override
-  @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return CasbinPsiUtils.setName(this, newName);
+  @Nullable
+  public CasbinFunctionSignatureCall getFunctionSignatureCall() {
+    return findChildByClass(CasbinFunctionSignatureCall.class);
+  }
+
+  @Override
+  @Nullable
+  public CasbinFunctionSignatureEquality getFunctionSignatureEquality() {
+    return findChildByClass(CasbinFunctionSignatureEquality.class);
   }
 
 }

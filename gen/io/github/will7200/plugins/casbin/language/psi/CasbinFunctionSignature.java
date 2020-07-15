@@ -5,7 +5,10 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface CasbinOptionFunction extends PsiElement {
+public interface CasbinFunctionSignature extends PsiElement {
+
+  @Nullable
+  CasbinFunctionName getFunctionName();
 
   @Nullable
   CasbinFunctionSignature getFunctionSignature();
@@ -14,6 +17,6 @@ public interface CasbinOptionFunction extends PsiElement {
   CasbinFunctionSignatureCall getFunctionSignatureCall();
 
   @Nullable
-  CasbinRecursiveFunction getRecursiveFunction();
+  CasbinFunctionSignatureEquality getFunctionSignatureEquality();
 
 }

@@ -14,6 +14,9 @@ public interface CasbinSomeValue extends PsiElement {
   CasbinObjectIdentifier getObjectIdentifier();
 
   @Nullable
+  CasbinStringValue getStringValue();
+
+  @Nullable
   PsiElement getIdentifier();
 
 }

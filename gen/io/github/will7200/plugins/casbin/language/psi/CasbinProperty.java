@@ -10,20 +10,13 @@ public interface CasbinProperty extends PsiElement {
   @NotNull
   CasbinFlatKey getFlatKey();
 
-  @Nullable
-  CasbinOptionFunction getOptionFunction();
-
-  @Nullable
-  CasbinOptionValueIdentifier getOptionValueIdentifier();
-
-  @Nullable
-  CasbinOptionValueList getOptionValueList();
-
-  @Nullable
+  @NotNull
   CasbinOptionValues getOptionValues();
 
+  @Nullable
   String getKey();
 
+  @Nullable
   String getValue();
 
 }

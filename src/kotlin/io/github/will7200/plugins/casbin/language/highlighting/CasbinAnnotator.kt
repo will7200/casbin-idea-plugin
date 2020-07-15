@@ -10,29 +10,36 @@ open class CasbinAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when (element) {
             is CasbinObjectIdentifier -> annotate(element, holder)
-            is CasbinOptionValueList -> annotate(element, holder)
             is CasbinAttribute -> annotate(element, holder)
+            is CasbinFlatKey -> annotate(element, holder)
+            is CasbinFunctionName -> annotate(element, holder)
+            is CasbinStringValue -> annotate(element, holder)
         }
     }
 
-    private fun annotate(objectKey: CasbinObjectIdentifier, holder: AnnotationHolder) {
+    private fun annotate(objectKey: CasbinFunctionName, holder: AnnotationHolder) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(objectKey)
+            .textAttributes(CasbinHighlighterColors.FunctionName).create()
+    }
+
+    private fun annotate(objectKey: CasbinFlatKey, holder: AnnotationHolder) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(objectKey)
             .textAttributes(CasbinHighlighterColors.PropertyKey).create()
     }
 
-    private fun annotate(attribute: CasbinAttribute, holder: AnnotationHolder) {
-        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(attribute)
-            .textAttributes(CasbinHighlighterColors.PropertyValue).create()
+    private fun annotate(objectKey: CasbinObjectIdentifier, holder: AnnotationHolder) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(objectKey)
+            .textAttributes(CasbinHighlighterColors.ObjectInstance).create()
     }
 
-    /**
-     * Adds syntax highlighting to all {Braced Strings}.
-     */
-    private fun annotate(optionValueList: CasbinOptionValueList, holder: AnnotationHolder) {
-        holder.newAnnotation(HighlightSeverity.INFORMATION, "")
-            .range(optionValueList)
-            .textAttributes(CasbinHighlighterColors.IncludeModifier)
-            .create()
+    private fun annotate(attribute: CasbinAttribute, holder: AnnotationHolder) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(attribute)
+            .textAttributes(CasbinHighlighterColors.Attribute).create()
+    }
+
+    private fun annotate(attribute: CasbinStringValue, holder: AnnotationHolder) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(attribute)
+            .textAttributes(CasbinHighlighterColors.StringValue).create()
     }
 
 }

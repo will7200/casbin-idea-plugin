@@ -27,13 +27,14 @@ WHITE_SPACE=\s+
 
 LINE_COMMENT=[#;].*
 
-IDENTIFIER_LETTER=[A-Za-z_]
+IDENTIFIER_LETTER=[A-Za-z][A-Za-z_0-9]*
 
 IDENTIFIER={IDENTIFIER_LETTER}+
 
 SECTION_IDENTIFER=[A-Za-z_]+
 
 %state YYHEADER
+%state YYQUOTES
 
 %%
 
@@ -50,15 +51,24 @@ SECTION_IDENTIFER=[A-Za-z_]+
 "=="                        { return OP_EQUALS; }
 "allow"                     { return ALLOW; }
 "deny"                      { return DENY; }
+"!"                         { return OP_NOT;}
 
 <YYHEADER> {
     "]"                     { yybegin(YYINITIAL); return R_BRACKET; }
   {SECTION_IDENTIFER}      { return SECTION_IDENTIFER; }
 }
 
+<YYQUOTES> {
+   "\""             {yybegin(YYINITIAL); return CLOSE_QUOTES;}
+   {IDENTIFIER}     { return IDENTIFIER;}
+}
+
 <YYINITIAL> {
   "["                       { yybegin(YYHEADER);return L_BRACKET; }
   "]"                       { return R_BRACKET; }
+  "\""                      { yybegin(YYQUOTES);return OPEN_QUOTES;}
+  "allow"                     { return ALLOW; }
+  "deny"                      { return DENY; }
   {IDENTIFIER}              { return IDENTIFIER; }
 }
 

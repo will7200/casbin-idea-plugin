@@ -26,9 +26,21 @@ public class CasbinLiteralExprImpl extends CasbinExprImpl implements CasbinLiter
   }
 
   @Override
-  @NotNull
-  public List<CasbinSomeValue> getSomeValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinSomeValue.class);
+  @Nullable
+  public CasbinEquality getEquality() {
+    return findChildByClass(CasbinEquality.class);
+  }
+
+  @Override
+  @Nullable
+  public CasbinFunction getFunction() {
+    return findChildByClass(CasbinFunction.class);
+  }
+
+  @Override
+  @Nullable
+  public CasbinSomeValue getSomeValue() {
+    return findChildByClass(CasbinSomeValue.class);
   }
 
 }

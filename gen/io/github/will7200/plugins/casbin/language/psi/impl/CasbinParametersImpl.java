@@ -11,14 +11,14 @@ import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.github.will7200.plugins.casbin.language.psi.*;
 
-public class CasbinOptionFunctionImpl extends ASTWrapperPsiElement implements CasbinOptionFunction {
+public class CasbinParametersImpl extends ASTWrapperPsiElement implements CasbinParameters {
 
-  public CasbinOptionFunctionImpl(@NotNull ASTNode node) {
+  public CasbinParametersImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CasbinVisitor visitor) {
-    visitor.visitOptionFunction(this);
+    visitor.visitParameters(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -28,8 +28,8 @@ public class CasbinOptionFunctionImpl extends ASTWrapperPsiElement implements Ca
 
   @Override
   @NotNull
-  public CasbinEquality getEquality() {
-    return findNotNullChildByClass(CasbinEquality.class);
+  public List<CasbinSomeValue> getSomeValueList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinSomeValue.class);
   }
 
 }

@@ -16,21 +16,24 @@
       DOT = "."
       L_BRACKET = "["
       R_BRACKET = "]"
+      OPEN_QUOTES = "\""
+      CLOSE_QUOTES = "\""
       ASSIGN = "="
       COMMA = ","
       OP_AND = "&&"
       OP_OR = "||"
       OP_EQUALS = "=="
+      OP_NOT = "!"
       ALLOW = "allow"
       DENY = "deny"
       LINE_COMMENT='regexp:[#;].*'
       SECTION_IDENTIFER='regexp:[A-Za-z_]+'
-      IDENTIFIER='regexp:[A-Za-z_]+'
+      IDENTIFIER='regexp:[A-Za-z][A-Za-z_0-9]*'
       SPACE = "regexp:\s+"
       L_PARATHESIS = "("
       R_PARATHESIS = ")"
   ]
-  psiImplUtilClass = "io.github.will7200.plugins.casbin.language.psi.impl.CasbinPsiImplUtils"
+  psiImplUtilClass = "io.github.will7200.plugins.casbin.language.psi.CasbinPsiUtils"
 }
 casbinModel ::= section*
 section ::= header property* {
@@ -39,13 +42,13 @@ section ::= header property* {
 header ::= L_BRACKET section_name R_BRACKET
 
 section_name ::= SECTION_IDENTIFER {
-   methods=[getNameIdentifier getName setName]
+   methods=[getName setName]
  }
 // Property
 property ::= key ASSIGN value {methods=[getKey getValue]}
 
 private key ::= flat_key
-private value ::= option_function | option_values | option_value_list | option_value_identifier
+private value ::= option_values
 // ---- ---- Key ---- ----
 
 flat_key ::= IDENTIFIER
@@ -54,20 +57,30 @@ flat_key ::= IDENTIFIER
 
 option_values ::= (option_value_list | option_value_expression | option_value_identifier)
 option_value_expression ::= Expr
-option_value_list ::= option_value_identifier (COMMA option_value_identifier)+
-option_function ::= IDENTIFIER L_PARATHESIS IDENTIFIER L_PARATHESIS equality R_PARATHESIS R_PARATHESIS
+option_value_list ::= attribute (COMMA attribute)+
+
+function ::= [OP_NOT](recursive_function | function_signature)
+recursive_function ::= function_name L_PARATHESIS function_signature R_PARATHESIS
+function_signature ::= (function_signature_call | function_signature_equality | function_name L_PARATHESIS function_signature R_PARATHESIS)
+function_signature_equality ::= function_name L_PARATHESIS equality R_PARATHESIS
+function_signature_call ::= function_name L_PARATHESIS parameters R_PARATHESIS
+
+parameters ::= ((some_value (COMMA some_value)+) | some_value)
 equality ::= some_value OP_EQUALS some_value
+some_value ::= (object_identifier DOT attribute | ALLOW | DENY | string_value | IDENTIFIER)
+
+string_value ::= OPEN_QUOTES IDENTIFIER CLOSE_QUOTES
 option_value_identifier ::= IDENTIFIER
 object_identifier ::= IDENTIFIER
+function_name ::= IDENTIFIER
+attribute  ::= (IDENTIFIER | "_")
 
 // ---- ---- Condition ---- ----
 
 Expr            ::= relationalExpr | primaryGroup
 relationalExpr  ::= Expr relOp Expr
 parenExpr       ::= parenConstruct
-literalExpr     ::= some_value OP_EQUALS some_value
-some_value      ::= (object_identifier DOT attribute | ALLOW | DENY | IDENTIFIER)
-attribute       ::= IDENTIFIER
+literalExpr     ::= (equality | function | some_value)
 
 private primaryGroup    ::= literalExpr | parenExpr
 private relOp           ::= OP_AND | OP_OR

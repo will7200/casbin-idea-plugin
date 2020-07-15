@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface CasbinOptionValueList extends PsiElement {
+public interface CasbinFunctionSignatureEquality extends PsiElement {
 
   @NotNull
-  List<CasbinAttribute> getAttributeList();
+  CasbinEquality getEquality();
+
+  @NotNull
+  CasbinFunctionName getFunctionName();
 
 }

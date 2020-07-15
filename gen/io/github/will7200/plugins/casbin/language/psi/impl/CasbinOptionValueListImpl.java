@@ -28,8 +28,8 @@ public class CasbinOptionValueListImpl extends ASTWrapperPsiElement implements C
 
   @Override
   @NotNull
-  public List<CasbinOptionValueIdentifier> getOptionValueIdentifierList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinOptionValueIdentifier.class);
+  public List<CasbinAttribute> getAttributeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinAttribute.class);
   }
 
 }

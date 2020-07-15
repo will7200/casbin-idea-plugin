@@ -33,37 +33,21 @@ public class CasbinPropertyImpl extends ASTWrapperPsiElement implements CasbinPr
   }
 
   @Override
-  @Nullable
-  public CasbinOptionFunction getOptionFunction() {
-    return findChildByClass(CasbinOptionFunction.class);
-  }
-
-  @Override
-  @Nullable
-  public CasbinOptionValueIdentifier getOptionValueIdentifier() {
-    return findChildByClass(CasbinOptionValueIdentifier.class);
-  }
-
-  @Override
-  @Nullable
-  public CasbinOptionValueList getOptionValueList() {
-    return findChildByClass(CasbinOptionValueList.class);
-  }
-
-  @Override
-  @Nullable
+  @NotNull
   public CasbinOptionValues getOptionValues() {
-    return findChildByClass(CasbinOptionValues.class);
+    return findNotNullChildByClass(CasbinOptionValues.class);
   }
 
   @Override
+  @Nullable
   public String getKey() {
-    return CasbinPsiImplUtils.getKey(this);
+    return CasbinPsiUtils.getKey(this);
   }
 
   @Override
+  @Nullable
   public String getValue() {
-    return CasbinPsiImplUtils.getValue(this);
+    return CasbinPsiUtils.getValue(this);
   }
 
 }

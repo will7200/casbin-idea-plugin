@@ -10,16 +10,10 @@ public interface CasbinSectionName extends PsiElement {
   @NotNull
   PsiElement getSectionIdentifer();
 
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(CasbinSectionName, ...)
-  //methods are not found in CasbinPsiImplUtils
+  @Nullable
+  String getName();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(CasbinSectionName, ...)
-  //methods are not found in CasbinPsiImplUtils
-
-  //WARNING: setName(...) is skipped
-  //matching setName(CasbinSectionName, ...)
-  //methods are not found in CasbinPsiImplUtils
+  @NotNull
+  PsiElement setName(@NotNull String newName);
 
 }

@@ -7,7 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface CasbinLiteralExpr extends CasbinExpr {
 
-  @NotNull
-  List<CasbinSomeValue> getSomeValueList();
+  @Nullable
+  CasbinEquality getEquality();
+
+  @Nullable
+  CasbinFunction getFunction();
+
+  @Nullable
+  CasbinSomeValue getSomeValue();
 
 }

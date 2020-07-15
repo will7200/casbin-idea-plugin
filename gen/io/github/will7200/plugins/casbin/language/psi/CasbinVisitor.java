@@ -23,6 +23,26 @@ public class CasbinVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitFunction(@NotNull CasbinFunction o) {
+    visitPsiElement(o);
+  }
+
+  public void visitFunctionName(@NotNull CasbinFunctionName o) {
+    visitPsiElement(o);
+  }
+
+  public void visitFunctionSignature(@NotNull CasbinFunctionSignature o) {
+    visitPsiElement(o);
+  }
+
+  public void visitFunctionSignatureCall(@NotNull CasbinFunctionSignatureCall o) {
+    visitPsiElement(o);
+  }
+
+  public void visitFunctionSignatureEquality(@NotNull CasbinFunctionSignatureEquality o) {
+    visitPsiElement(o);
+  }
+
   public void visitHeader(@NotNull CasbinHeader o) {
     visitPsiElement(o);
   }
@@ -32,10 +52,6 @@ public class CasbinVisitor extends PsiElementVisitor {
   }
 
   public void visitObjectIdentifier(@NotNull CasbinObjectIdentifier o) {
-    visitPsiElement(o);
-  }
-
-  public void visitOptionFunction(@NotNull CasbinOptionFunction o) {
     visitPsiElement(o);
   }
 
@@ -55,11 +71,19 @@ public class CasbinVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitParameters(@NotNull CasbinParameters o) {
+    visitPsiElement(o);
+  }
+
   public void visitParenExpr(@NotNull CasbinParenExpr o) {
     visitExpr(o);
   }
 
   public void visitProperty(@NotNull CasbinProperty o) {
+    visitPsiElement(o);
+  }
+
+  public void visitRecursiveFunction(@NotNull CasbinRecursiveFunction o) {
     visitPsiElement(o);
   }
 
@@ -76,6 +100,10 @@ public class CasbinVisitor extends PsiElementVisitor {
   }
 
   public void visitSomeValue(@NotNull CasbinSomeValue o) {
+    visitPsiElement(o);
+  }
+
+  public void visitStringValue(@NotNull CasbinStringValue o) {
     visitPsiElement(o);
   }
 

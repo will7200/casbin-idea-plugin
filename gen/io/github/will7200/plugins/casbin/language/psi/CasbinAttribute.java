@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface CasbinAttribute extends PsiElement {
 
-  @NotNull
+  @Nullable
   PsiElement getIdentifier();
 
 }

@@ -11,14 +11,14 @@ import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.github.will7200.plugins.casbin.language.psi.*;
 
-public class CasbinSectionNameImpl extends ASTWrapperPsiElement implements CasbinSectionName {
+public class CasbinFunctionImpl extends ASTWrapperPsiElement implements CasbinFunction {
 
-  public CasbinSectionNameImpl(@NotNull ASTNode node) {
+  public CasbinFunctionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CasbinVisitor visitor) {
-    visitor.visitSectionName(this);
+    visitor.visitFunction(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -27,21 +27,15 @@ public class CasbinSectionNameImpl extends ASTWrapperPsiElement implements Casbi
   }
 
   @Override
-  @NotNull
-  public PsiElement getSectionIdentifer() {
-    return findNotNullChildByType(SECTION_IDENTIFER);
+  @Nullable
+  public CasbinFunctionSignature getFunctionSignature() {
+    return findChildByClass(CasbinFunctionSignature.class);
   }
 
   @Override
   @Nullable
-  public String getName() {
-    return CasbinPsiUtils.getName(this);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return CasbinPsiUtils.setName(this, newName);
+  public CasbinRecursiveFunction getRecursiveFunction() {
+    return findChildByClass(CasbinRecursiveFunction.class);
   }
 
 }

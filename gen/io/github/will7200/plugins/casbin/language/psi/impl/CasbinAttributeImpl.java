@@ -27,9 +27,9 @@ public class CasbinAttributeImpl extends ASTWrapperPsiElement implements CasbinA
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+    return findChildByType(IDENTIFIER);
   }
 
 }

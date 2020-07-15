@@ -13,20 +13,25 @@ class CasbinColorSettingsPage : ColorSettingsPage {
          */
         @JvmStatic
         val DESCRIPTORS = arrayOf(
-            AttributesDescriptor("Braces", CasbinHighlighterColors.Braces),
             AttributesDescriptor("Brackets", CasbinHighlighterColors.Brackets),
             AttributesDescriptor("Section Name", CasbinHighlighterColors.SectionName),
-            AttributesDescriptor("Identifiers", CasbinHighlighterColors.Identifier),
             AttributesDescriptor("Keywords//allow", CasbinHighlighterColors.Keyword),
             AttributesDescriptor("Keywords//deny", CasbinHighlighterColors.Keyword),
             AttributesDescriptor("Properties//keys", CasbinHighlighterColors.PropertyKey),
-            AttributesDescriptor("Properties//values", CasbinHighlighterColors.PropertyValue)
+            AttributesDescriptor("Properties//attributes", CasbinHighlighterColors.Attribute),
+            AttributesDescriptor("Properties//objects", CasbinHighlighterColors.ObjectInstance),
+            AttributesDescriptor("Properties//functions", CasbinHighlighterColors.FunctionName),
+            AttributesDescriptor("Properties//string_values", CasbinHighlighterColors.StringValue)
         )
 
         @JvmStatic
         val ADDITIONAL_DESCRIPTORS = mapOf(
             "propertyKey" to CasbinHighlighterColors.PropertyKey,
-            "propertyValue" to CasbinHighlighterColors.PropertyValue
+            "propertyValue" to CasbinHighlighterColors.PropertyValue,
+            "valueAttribute" to CasbinHighlighterColors.Attribute,
+            "objectInstance" to CasbinHighlighterColors.ObjectInstance,
+            "functions" to CasbinHighlighterColors.FunctionName,
+            "stringValue" to CasbinHighlighterColors.StringValue
         )
     }
 
@@ -35,16 +40,20 @@ class CasbinColorSettingsPage : ColorSettingsPage {
     override fun getHighlighter() = CasbinHighlighter()
 
     override fun getDemoText() = """[request_definition]
-r = sub, obj, act
+<propertyKey>r</propertyKey> = <valueAttribute>sub</valueAttribute>, <valueAttribute>obj</valueAttribute>, <valueAttribute>act</valueAttribute>
 
 [policy_definition]
-p = sub, obj, act
+<propertyKey>p</propertyKey> = <valueAttribute>sub</valueAttribute>, <valueAttribute>obj</valueAttribute>, <valueAttribute>act</valueAttribute>
+
+[role_definition]
+<propertyKey>g</propertyKey> = <valueAttribute>_</valueAttribute>, <valueAttribute>_</valueAttribute>
+<propertyKey>g2</propertyKey> = <valueAttribute>_</valueAttribute>, <valueAttribute>_</valueAttribute>
 
 [policy_effect]
-e = some(where (<propertyKey>p.eft == allow))
+<propertyKey>e</propertyKey> = <functions>some</functions>(<functions>where</functions> (<objectInstance>p</objectInstance>.<valueAttribute>eft</valueAttribute> == allow))
 
 [matchers]
-m = <propertyKey>r</propertyKey>.sub == <propertyKey>p</propertyKey>.sub && <propertyKey>r</propertyKey>.obj == <propertyKey>p</propertyKey>.obj && <propertyKey>r</propertyKey>.act == <propertyKey>p</propertyKey>.act
+<propertyKey>m</propertyKey> = <objectInstance>r</objectInstance>.<valueAttribute>sub</valueAttribute> == <objectInstance>p</objectInstance>.<valueAttribute>sub</valueAttribute> && <objectInstance>r</objectInstance>.<valueAttribute>obj</valueAttribute> == <objectInstance>p</objectInstance>.<valueAttribute>obj</valueAttribute> && <objectInstance>r</objectInstance>.<valueAttribute>act</valueAttribute> == <objectInstance>p</objectInstance>.<valueAttribute>act</valueAttribute> || <objectInstance>r</objectInstance>.<valueAttribute>sub</valueAttribute> == <stringValue>"root"</stringValue>
         """.trimMargin()
 
     override fun getAdditionalHighlightingTagToDescriptorMap() = ADDITIONAL_DESCRIPTORS
