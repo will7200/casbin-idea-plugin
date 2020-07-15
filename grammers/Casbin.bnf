@@ -37,13 +37,11 @@
 }
 casbinModel ::= section*
 section ::= header property* {
-   methods=[getProperties hasProperty setProperty getProperty]
+   methods=[getProperties hasProperty setProperty getProperty getName setName]
 }
 header ::= L_BRACKET section_name R_BRACKET
 
-section_name ::= SECTION_IDENTIFER {
-   methods=[getName setName]
- }
+section_name ::= SECTION_IDENTIFER
 // Property
 property ::= key ASSIGN value {methods=[getKey getValue]}
 
@@ -59,11 +57,11 @@ option_values ::= (option_value_list | option_value_expression | option_value_id
 option_value_expression ::= Expr
 option_value_list ::= attribute (COMMA attribute)+
 
-function ::= [OP_NOT](recursive_function | function_signature)
-recursive_function ::= function_name L_PARATHESIS function_signature R_PARATHESIS
-function_signature ::= (function_signature_call | function_signature_equality | function_name L_PARATHESIS function_signature R_PARATHESIS)
-function_signature_equality ::= function_name L_PARATHESIS equality R_PARATHESIS
-function_signature_call ::= function_name L_PARATHESIS parameters R_PARATHESIS
+function ::= [OP_NOT] function_name L_PARATHESIS function_signature R_PARATHESIS {
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinFunctionMixin"
+  methods=[getName]
+}
+function_signature ::= (function | equality | parameters)
 
 parameters ::= ((some_value (COMMA some_value)+) | some_value)
 equality ::= some_value OP_EQUALS some_value
