@@ -10,12 +10,14 @@ open class CasbinAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when (element) {
             is CasbinObjectIdentifier -> annotate(element, holder)
+            is CasbinAttributeDefinition -> annotate(element, holder)
             is CasbinAttribute -> annotate(element, holder)
             is CasbinFlatKey -> annotate(element, holder)
             is CasbinFunctionName -> annotate(element, holder)
             is CasbinStringValue -> annotate(element, holder)
         }
     }
+
 
     private fun annotate(objectKey: CasbinFunctionName, holder: AnnotationHolder) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(objectKey)
@@ -33,6 +35,11 @@ open class CasbinAnnotator : Annotator {
     }
 
     private fun annotate(attribute: CasbinAttribute, holder: AnnotationHolder) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(attribute)
+            .textAttributes(CasbinHighlighterColors.Attribute).create()
+    }
+
+    private fun annotate(attribute: CasbinAttributeDefinition, holder: AnnotationHolder) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(attribute)
             .textAttributes(CasbinHighlighterColors.Attribute).create()
     }

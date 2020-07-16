@@ -5,15 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface CasbinSomeValue extends PsiElement {
+public interface CasbinObject extends PsiElement {
+
+  @NotNull
+  CasbinAttribute getAttribute();
+
+  @NotNull
+  CasbinObjectIdentifier getObjectIdentifier();
 
   @Nullable
-  CasbinObject getObject();
-
-  @Nullable
-  CasbinStringValue getStringValue();
-
-  @Nullable
-  PsiElement getIdentifier();
+  String getName();
 
 }

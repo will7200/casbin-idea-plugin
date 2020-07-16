@@ -6,23 +6,22 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.intellij.util.IncorrectOperationException
-import io.github.will7200.plugins.casbin.language.reference.CasbinPropertyReference
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementFactory
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes
-import io.github.will7200.plugins.casbin.language.psi.CasbinFunction
+import io.github.will7200.plugins.casbin.language.psi.CasbinObject
+import io.github.will7200.plugins.casbin.language.reference.CasbinObjectReference
 
-
-abstract class CasbinFunctionMixin(node: ASTNode) : ASTWrapperPsiElement(node), CasbinFunction {
-    private val log: Logger = Logger.getInstance(CasbinFunctionMixin::class.java)
+abstract class CasbinObjectMixin(node: ASTNode) : ASTWrapperPsiElement(node), CasbinObject {
+    private val log: Logger = Logger.getInstance(CasbinObjectMixin::class.java)
     override fun getName(): String? {
-        val functionNode = node.findChildByType(CasbinElementTypes.FUNCTION_NAME) ?: return null
+        val functionNode = node.findChildByType(CasbinElementTypes.OBJECT_IDENTIFIER) ?: return null
         return functionNode.text
     }
 
     @Throws(IncorrectOperationException::class)
     fun setName(name: String): PsiElement {
-        val identifier = node.findChildByType(CasbinElementTypes.FUNCTION_NAME) ?: return this
-        val functionName = CasbinElementFactory.createFunctionName(this.project, name)
+        val identifier = node.findChildByType(CasbinElementTypes.OBJECT_IDENTIFIER) ?: return this
+        val functionName = CasbinElementFactory.createObjectName(this.project, name)
         node.replaceChild(identifier, functionName.node)
         return this
     }
@@ -35,9 +34,11 @@ abstract class CasbinFunctionMixin(node: ASTNode) : ASTWrapperPsiElement(node), 
     }
 
     override fun getReferences(): Array<PsiReference> = myReference
-    private val myReference by lazy { arrayOf<PsiReference>(
-        CasbinPropertyReference(
-            this
+    private val myReference by lazy {
+        arrayOf<PsiReference>(
+            CasbinObjectReference(
+                this
+            )
         )
-    ) }
+    }
 }

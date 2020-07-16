@@ -16,11 +16,36 @@ object CasbinElementFactory {
     fun createSectionName(project: Project, section: String) =
         createFile(project, section).firstChild as ASTNode
 
+    fun createPropertyName(project: Project, propertyName: String): CasbinFlatKey =
+        createFile(
+            project, """
+        [fake_section]
+        ${propertyName} = sub, obj, act
+    """.trimIndent()
+        ).findDescendantOfType { true }!!
+
+    fun createObjectName(project: Project, objectName: String): CasbinObject =
+        createFile(
+            project, """
+        [fake_section]
+        e = ${objectName}.property && o.property
+    """.trimIndent()
+        ).findDescendantOfType { true }!!
+
     fun createFunctionName(project: Project, functionName: String): CasbinFunctionName {
         return createFile(
             project, """
         [fake_section]
         e = ${functionName}(fakeargs)
+    """.trimIndent()
+        ).findDescendantOfType { true }!!
+    }
+
+    fun createAttributeName(project: Project, attributeName: String): CasbinAttribute {
+        return createFile(
+            project, """
+        [fake_section]
+        e = ${attributeName}, f1, f2
     """.trimIndent()
         ).findDescendantOfType { true }!!
     }

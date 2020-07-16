@@ -25,7 +25,8 @@
         <psi.referenceContributor implementation="io.github.will7200.plugins.casbin.language.reference.CasbinReferenceContributor"/>
         <lang.refactoringSupport language="Casbin"
                                  implementationClass="io.github.will7200.plugins.casbin.language.refactoring.CasbinRefactoringSupportProvider"/>
-
+        <lang.findUsagesProvider language="Casbin"
+                                 implementationClass="io.github.will7200.plugins.casbin.language.reference.CasbinUsagesProvider"/>
     </extensions>
 
     <actions>

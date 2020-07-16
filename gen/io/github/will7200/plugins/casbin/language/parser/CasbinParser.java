@@ -52,6 +52,18 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // IDENTIFIER | "_"
+  public static boolean attribute_definition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "attribute_definition")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, ATTRIBUTE_DEFINITION, "<attribute definition>");
+    r = consumeToken(b, IDENTIFIER);
+    if (!r) r = consumeToken(b, "_");
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // section*
   static boolean casbinModel(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "casbinModel")) return false;
@@ -188,6 +200,20 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // object_identifier DOT attribute
+  public static boolean object(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "object")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = object_identifier(b, l + 1);
+    r = r && consumeToken(b, DOT);
+    r = r && attribute(b, l + 1);
+    exit_section_(b, m, OBJECT, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // IDENTIFIER
   public static boolean object_identifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object_identifier")) return false;
@@ -223,18 +249,18 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // attribute (COMMA attribute)+
+  // attribute_definition (COMMA attribute_definition)+
   public static boolean option_value_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "option_value_list")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, OPTION_VALUE_LIST, "<option value list>");
-    r = attribute(b, l + 1);
+    r = attribute_definition(b, l + 1);
     r = r && option_value_list_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // (COMMA attribute)+
+  // (COMMA attribute_definition)+
   private static boolean option_value_list_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "option_value_list_1")) return false;
     boolean r;
@@ -249,13 +275,13 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // COMMA attribute
+  // COMMA attribute_definition
   private static boolean option_value_list_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "option_value_list_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
-    r = r && attribute(b, l + 1);
+    r = r && attribute_definition(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -449,29 +475,17 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // object_identifier DOT attribute | ALLOW | DENY | string_value | IDENTIFIER
+  // object | ALLOW | DENY | string_value | IDENTIFIER
   public static boolean some_value(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "some_value")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SOME_VALUE, "<some value>");
-    r = some_value_0(b, l + 1);
+    r = object(b, l + 1);
     if (!r) r = consumeToken(b, ALLOW);
     if (!r) r = consumeToken(b, DENY);
     if (!r) r = string_value(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // object_identifier DOT attribute
-  private static boolean some_value_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "some_value_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = object_identifier(b, l + 1);
-    r = r && consumeToken(b, DOT);
-    r = r && attribute(b, l + 1);
-    exit_section_(b, m, null, r);
     return r;
   }
 

@@ -43,7 +43,11 @@ header ::= L_BRACKET section_name R_BRACKET
 
 section_name ::= SECTION_IDENTIFER
 // Property
-property ::= key ASSIGN value {methods=[getKey getValue]}
+property ::= key ASSIGN value {
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinPropertyMixin"
+  methods=[getName getKey getValue]
+}
+
 
 private key ::= flat_key
 private value ::= option_values
@@ -55,7 +59,7 @@ flat_key ::= IDENTIFIER
 
 option_values ::= (option_value_list | option_value_expression | option_value_identifier)
 option_value_expression ::= Expr
-option_value_list ::= attribute (COMMA attribute)+
+option_value_list ::= attribute_definition (COMMA attribute_definition)+
 
 function ::= [OP_NOT] function_name L_PARATHESIS function_signature R_PARATHESIS {
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinFunctionMixin"
@@ -65,13 +69,24 @@ function_signature ::= (function | equality | parameters)
 
 parameters ::= ((some_value (COMMA some_value)+) | some_value)
 equality ::= some_value OP_EQUALS some_value
-some_value ::= (object_identifier DOT attribute | ALLOW | DENY | string_value | IDENTIFIER)
+some_value ::= (object | ALLOW | DENY | string_value | IDENTIFIER)
 
+object ::= object_identifier DOT attribute {
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinObjectMixin"
+  methods=[getName]
+}
 string_value ::= OPEN_QUOTES IDENTIFIER CLOSE_QUOTES
 option_value_identifier ::= IDENTIFIER
 object_identifier ::= IDENTIFIER
 function_name ::= IDENTIFIER
-attribute  ::= (IDENTIFIER | "_")
+attribute  ::= (IDENTIFIER | "_"){
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeMixin"
+  methods=[getName]
+}
+attribute_definition ::= IDENTIFIER | "_"{
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeDefinitionMixin"
+  methods=[getName]
+}
 
 // ---- ---- Condition ---- ----
 

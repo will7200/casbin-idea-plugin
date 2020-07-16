@@ -64,7 +64,6 @@ class CasbinFunctionReference(element: CasbinFunctionMixin) : PsiReferenceBase<C
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        myElement.setName(newElementName)
         return myElement
     }
 }

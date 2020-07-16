@@ -9,6 +9,7 @@ import io.github.will7200.plugins.casbin.language.psi.impl.*;
 public interface CasbinElementTypes {
 
   IElementType ATTRIBUTE = new CasbinElementType("ATTRIBUTE");
+  IElementType ATTRIBUTE_DEFINITION = new CasbinElementType("ATTRIBUTE_DEFINITION");
   IElementType EQUALITY = new CasbinElementType("EQUALITY");
   IElementType EXPR = new CasbinElementType("EXPR");
   IElementType FLAT_KEY = new CasbinElementType("FLAT_KEY");
@@ -17,6 +18,7 @@ public interface CasbinElementTypes {
   IElementType FUNCTION_SIGNATURE = new CasbinElementType("FUNCTION_SIGNATURE");
   IElementType HEADER = new CasbinElementType("HEADER");
   IElementType LITERAL_EXPR = new CasbinElementType("LITERAL_EXPR");
+  IElementType OBJECT = new CasbinElementType("OBJECT");
   IElementType OBJECT_IDENTIFIER = new CasbinElementType("OBJECT_IDENTIFIER");
   IElementType OPTION_VALUES = new CasbinElementType("OPTION_VALUES");
   IElementType OPTION_VALUE_EXPRESSION = new CasbinElementType("OPTION_VALUE_EXPRESSION");
@@ -57,6 +59,9 @@ public interface CasbinElementTypes {
       if (type == ATTRIBUTE) {
         return new CasbinAttributeImpl(node);
       }
+      else if (type == ATTRIBUTE_DEFINITION) {
+        return new CasbinAttributeDefinitionImpl(node);
+      }
       else if (type == EQUALITY) {
         return new CasbinEqualityImpl(node);
       }
@@ -77,6 +82,9 @@ public interface CasbinElementTypes {
       }
       else if (type == LITERAL_EXPR) {
         return new CasbinLiteralExprImpl(node);
+      }
+      else if (type == OBJECT) {
+        return new CasbinObjectImpl(node);
       }
       else if (type == OBJECT_IDENTIFIER) {
         return new CasbinObjectIdentifierImpl(node);

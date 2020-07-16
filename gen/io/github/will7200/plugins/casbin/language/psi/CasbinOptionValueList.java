@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface CasbinOptionValueList extends PsiElement {
 
   @NotNull
-  List<CasbinAttribute> getAttributeList();
+  List<CasbinAttributeDefinition> getAttributeDefinitionList();
 
 }

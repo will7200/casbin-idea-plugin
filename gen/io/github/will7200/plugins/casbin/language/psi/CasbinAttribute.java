@@ -10,4 +10,7 @@ public interface CasbinAttribute extends PsiElement {
   @Nullable
   PsiElement getIdentifier();
 
+  @Nullable
+  String getName();
+
 }

@@ -15,6 +15,10 @@ public class CasbinVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAttributeDefinition(@NotNull CasbinAttributeDefinition o) {
+    visitPsiElement(o);
+  }
+
   public void visitEquality(@NotNull CasbinEquality o) {
     visitPsiElement(o);
   }
@@ -41,6 +45,10 @@ public class CasbinVisitor extends PsiElementVisitor {
 
   public void visitLiteralExpr(@NotNull CasbinLiteralExpr o) {
     visitExpr(o);
+  }
+
+  public void visitObject(@NotNull CasbinObject o) {
+    visitPsiElement(o);
   }
 
   public void visitObjectIdentifier(@NotNull CasbinObjectIdentifier o) {

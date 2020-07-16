@@ -10,8 +10,8 @@ import io.github.will7200.plugins.casbin.language.psi.impl.CasbinFunctionMixin
 
 class CasbinReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
-        val function = psiElement(CasbinFunction::class.java)
-        registrar.registerReferenceProvider(function, CasbinFunctions)
+        // val function = psiElement(CasbinFunction::class.java)
+        // registrar.registerReferenceProvider(function, CasbinFunctions)
     }
 }
 

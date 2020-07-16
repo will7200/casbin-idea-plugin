@@ -28,14 +28,8 @@ public class CasbinSomeValueImpl extends ASTWrapperPsiElement implements CasbinS
 
   @Override
   @Nullable
-  public CasbinAttribute getAttribute() {
-    return findChildByClass(CasbinAttribute.class);
-  }
-
-  @Override
-  @Nullable
-  public CasbinObjectIdentifier getObjectIdentifier() {
-    return findChildByClass(CasbinObjectIdentifier.class);
+  public CasbinObject getObject() {
+    return findChildByClass(CasbinObject.class);
   }
 
   @Override

@@ -14,6 +14,9 @@ public interface CasbinProperty extends PsiElement {
   CasbinOptionValues getOptionValues();
 
   @Nullable
+  String getName();
+
+  @Nullable
   String getKey();
 
   @Nullable

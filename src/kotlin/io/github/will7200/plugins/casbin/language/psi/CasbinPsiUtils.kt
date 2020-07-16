@@ -23,7 +23,7 @@ object CasbinPsiUtils {
 
     @JvmStatic
     fun getKey(element: CasbinProperty): String? {
-        val keyNode = element.node.findChildByType(CasbinElementTypes.IDENTIFIER)
+        val keyNode = element.node.findChildByType(CasbinElementTypes.FLAT_KEY)
         return keyNode?.text
     }
 
