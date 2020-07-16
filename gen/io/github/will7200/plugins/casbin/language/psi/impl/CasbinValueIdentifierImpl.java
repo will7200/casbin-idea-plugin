@@ -11,14 +11,14 @@ import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.github.will7200.plugins.casbin.language.psi.*;
 
-public class CasbinOptionValueIdentifierImpl extends ASTWrapperPsiElement implements CasbinOptionValueIdentifier {
+public class CasbinValueIdentifierImpl extends ASTWrapperPsiElement implements CasbinValueIdentifier {
 
-  public CasbinOptionValueIdentifierImpl(@NotNull ASTNode node) {
+  public CasbinValueIdentifierImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CasbinVisitor visitor) {
-    visitor.visitOptionValueIdentifier(this);
+    visitor.visitValueIdentifier(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {

@@ -169,37 +169,6 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !header
-  static boolean not_header(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "not_header")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !header(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // !(header | option)
-  static boolean not_next_entry(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "not_next_entry")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NOT_);
-    r = !not_next_entry_0(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // header | option
-  private static boolean not_next_entry_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "not_next_entry_0")) return false;
-    boolean r;
-    r = header(b, l + 1);
-    if (!r) r = consumeToken(b, OPTION);
-    return r;
-  }
-
-  /* ********************************************************** */
   // object_identifier DOT attribute
   public static boolean object(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object")) return false;
@@ -226,75 +195,14 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Expr
-  public static boolean option_value_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "option_value_expression")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, OPTION_VALUE_EXPRESSION, "<option value expression>");
-    r = Expr(b, l + 1, -1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // IDENTIFIER
-  public static boolean option_value_identifier(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "option_value_identifier")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, OPTION_VALUE_IDENTIFIER, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // attribute_definition (COMMA attribute_definition)+
-  public static boolean option_value_list(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "option_value_list")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, OPTION_VALUE_LIST, "<option value list>");
-    r = attribute_definition(b, l + 1);
-    r = r && option_value_list_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // (COMMA attribute_definition)+
-  private static boolean option_value_list_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "option_value_list_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = option_value_list_1_0(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!option_value_list_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "option_value_list_1", c)) break;
-    }
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // COMMA attribute_definition
-  private static boolean option_value_list_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "option_value_list_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, COMMA);
-    r = r && attribute_definition(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // option_value_list | option_value_expression | option_value_identifier
+  // value_tuple | value_expression | value_identifier
   public static boolean option_values(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "option_values")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, OPTION_VALUES, "<option values>");
-    r = option_value_list(b, l + 1);
-    if (!r) r = option_value_expression(b, l + 1);
-    if (!r) r = option_value_identifier(b, l + 1);
+    r = value_tuple(b, l + 1);
+    if (!r) r = value_expression(b, l + 1);
+    if (!r) r = value_identifier(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -475,7 +383,7 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // object | ALLOW | DENY | string_value | IDENTIFIER
+  // object | ALLOW | DENY | string_value
   public static boolean some_value(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "some_value")) return false;
     boolean r;
@@ -484,7 +392,6 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, ALLOW);
     if (!r) r = consumeToken(b, DENY);
     if (!r) r = string_value(b, l + 1);
-    if (!r) r = consumeToken(b, IDENTIFIER);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -505,6 +412,67 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   // option_values
   static boolean value(PsiBuilder b, int l) {
     return option_values(b, l + 1);
+  }
+
+  /* ********************************************************** */
+  // Expr
+  public static boolean value_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_expression")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, VALUE_EXPRESSION, "<value expression>");
+    r = Expr(b, l + 1, -1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // IDENTIFIER
+  public static boolean value_identifier(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_identifier")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, VALUE_IDENTIFIER, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // attribute_definition (COMMA attribute_definition)+
+  public static boolean value_tuple(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_tuple")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, VALUE_TUPLE, "<value tuple>");
+    r = attribute_definition(b, l + 1);
+    r = r && value_tuple_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (COMMA attribute_definition)+
+  private static boolean value_tuple_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_tuple_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = value_tuple_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!value_tuple_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "value_tuple_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // COMMA attribute_definition
+  private static boolean value_tuple_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "value_tuple_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && attribute_definition(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */

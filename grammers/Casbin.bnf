@@ -57,10 +57,12 @@ flat_key ::= IDENTIFIER
 
 // ---- ---- Value ---- ----
 
-option_values ::= (option_value_list | option_value_expression | option_value_identifier)
-option_value_expression ::= Expr
-option_value_list ::= attribute_definition (COMMA attribute_definition)+
+option_values ::= (value_tuple | value_expression | value_identifier)
+value_expression ::= Expr
+value_tuple ::= attribute_definition (COMMA attribute_definition)+
+value_identifier ::= IDENTIFIER
 
+// ---- ---- Expressions ---- ----
 function ::= [OP_NOT] function_name L_PARATHESIS function_signature R_PARATHESIS {
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinFunctionMixin"
   methods=[getName]
@@ -69,26 +71,14 @@ function_signature ::= (function | equality | parameters)
 
 parameters ::= ((some_value (COMMA some_value)+) | some_value)
 equality ::= some_value OP_EQUALS some_value
-some_value ::= (object | ALLOW | DENY | string_value | IDENTIFIER)
+some_value ::= (object | ALLOW | DENY | string_value)
 
 object ::= object_identifier DOT attribute {
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinObjectMixin"
   methods=[getName]
 }
-string_value ::= OPEN_QUOTES IDENTIFIER CLOSE_QUOTES
-option_value_identifier ::= IDENTIFIER
-object_identifier ::= IDENTIFIER
-function_name ::= IDENTIFIER
-attribute  ::= (IDENTIFIER | "_"){
-  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeMixin"
-  methods=[getName]
-}
-attribute_definition ::= IDENTIFIER | "_"{
-  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeDefinitionMixin"
-  methods=[getName]
-}
 
-// ---- ---- Condition ---- ----
+// ---- ---- (Expressions) Condition ---- ----
 
 Expr            ::= relationalExpr | primaryGroup
 relationalExpr  ::= Expr relOp Expr
@@ -99,5 +89,15 @@ private primaryGroup    ::= literalExpr | parenExpr
 private relOp           ::= OP_AND | OP_OR
 private parenConstruct  ::= '(' [ !')' Expr (',' Expr) * ] ')'
 
-private not_header ::= !header
-private not_next_entry ::= !(header | option)
+// ---- ---- Low Level Identifiers ---- ----
+string_value ::= OPEN_QUOTES IDENTIFIER CLOSE_QUOTES
+object_identifier ::= IDENTIFIER
+function_name ::= IDENTIFIER
+attribute  ::= (IDENTIFIER | "_"){
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeMixin"
+  methods=[getName]
+}
+attribute_definition ::= IDENTIFIER | "_"{
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeDefinitionMixin"
+  methods=[getName]
+}

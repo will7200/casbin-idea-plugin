@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 public interface CasbinOptionValues extends PsiElement {
 
   @Nullable
-  CasbinOptionValueExpression getOptionValueExpression();
+  CasbinValueExpression getValueExpression();
 
   @Nullable
-  CasbinOptionValueIdentifier getOptionValueIdentifier();
+  CasbinValueIdentifier getValueIdentifier();
 
   @Nullable
-  CasbinOptionValueList getOptionValueList();
+  CasbinValueTuple getValueTuple();
 
 }

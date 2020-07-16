@@ -55,18 +55,6 @@ public class CasbinVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitOptionValueExpression(@NotNull CasbinOptionValueExpression o) {
-    visitPsiElement(o);
-  }
-
-  public void visitOptionValueIdentifier(@NotNull CasbinOptionValueIdentifier o) {
-    visitPsiElement(o);
-  }
-
-  public void visitOptionValueList(@NotNull CasbinOptionValueList o) {
-    visitPsiElement(o);
-  }
-
   public void visitOptionValues(@NotNull CasbinOptionValues o) {
     visitPsiElement(o);
   }
@@ -100,6 +88,18 @@ public class CasbinVisitor extends PsiElementVisitor {
   }
 
   public void visitStringValue(@NotNull CasbinStringValue o) {
+    visitPsiElement(o);
+  }
+
+  public void visitValueExpression(@NotNull CasbinValueExpression o) {
+    visitPsiElement(o);
+  }
+
+  public void visitValueIdentifier(@NotNull CasbinValueIdentifier o) {
+    visitPsiElement(o);
+  }
+
+  public void visitValueTuple(@NotNull CasbinValueTuple o) {
     visitPsiElement(o);
   }
 

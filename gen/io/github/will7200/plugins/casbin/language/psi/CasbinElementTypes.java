@@ -21,9 +21,6 @@ public interface CasbinElementTypes {
   IElementType OBJECT = new CasbinElementType("OBJECT");
   IElementType OBJECT_IDENTIFIER = new CasbinElementType("OBJECT_IDENTIFIER");
   IElementType OPTION_VALUES = new CasbinElementType("OPTION_VALUES");
-  IElementType OPTION_VALUE_EXPRESSION = new CasbinElementType("OPTION_VALUE_EXPRESSION");
-  IElementType OPTION_VALUE_IDENTIFIER = new CasbinElementType("OPTION_VALUE_IDENTIFIER");
-  IElementType OPTION_VALUE_LIST = new CasbinElementType("OPTION_VALUE_LIST");
   IElementType PARAMETERS = new CasbinElementType("PARAMETERS");
   IElementType PAREN_EXPR = new CasbinElementType("PAREN_EXPR");
   IElementType PROPERTY = new CasbinElementType("PROPERTY");
@@ -32,6 +29,9 @@ public interface CasbinElementTypes {
   IElementType SECTION_NAME = new CasbinElementType("SECTION_NAME");
   IElementType SOME_VALUE = new CasbinElementType("SOME_VALUE");
   IElementType STRING_VALUE = new CasbinElementType("STRING_VALUE");
+  IElementType VALUE_EXPRESSION = new CasbinElementType("VALUE_EXPRESSION");
+  IElementType VALUE_IDENTIFIER = new CasbinElementType("VALUE_IDENTIFIER");
+  IElementType VALUE_TUPLE = new CasbinElementType("VALUE_TUPLE");
 
   IElementType ALLOW = new CasbinTokenType("allow");
   IElementType ASSIGN = new CasbinTokenType("=");
@@ -44,7 +44,6 @@ public interface CasbinElementTypes {
   IElementType L_BRACKET = new CasbinTokenType("[");
   IElementType L_PARATHESIS = new CasbinTokenType("(");
   IElementType OPEN_QUOTES = new CasbinTokenType("OPEN_QUOTES");
-  IElementType OPTION = new CasbinTokenType("option");
   IElementType OP_AND = new CasbinTokenType("&&");
   IElementType OP_EQUALS = new CasbinTokenType("==");
   IElementType OP_NOT = new CasbinTokenType("!");
@@ -92,15 +91,6 @@ public interface CasbinElementTypes {
       else if (type == OPTION_VALUES) {
         return new CasbinOptionValuesImpl(node);
       }
-      else if (type == OPTION_VALUE_EXPRESSION) {
-        return new CasbinOptionValueExpressionImpl(node);
-      }
-      else if (type == OPTION_VALUE_IDENTIFIER) {
-        return new CasbinOptionValueIdentifierImpl(node);
-      }
-      else if (type == OPTION_VALUE_LIST) {
-        return new CasbinOptionValueListImpl(node);
-      }
       else if (type == PARAMETERS) {
         return new CasbinParametersImpl(node);
       }
@@ -124,6 +114,15 @@ public interface CasbinElementTypes {
       }
       else if (type == STRING_VALUE) {
         return new CasbinStringValueImpl(node);
+      }
+      else if (type == VALUE_EXPRESSION) {
+        return new CasbinValueExpressionImpl(node);
+      }
+      else if (type == VALUE_IDENTIFIER) {
+        return new CasbinValueIdentifierImpl(node);
+      }
+      else if (type == VALUE_TUPLE) {
+        return new CasbinValueTupleImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

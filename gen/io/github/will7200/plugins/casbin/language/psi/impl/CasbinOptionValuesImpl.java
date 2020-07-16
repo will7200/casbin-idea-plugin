@@ -28,20 +28,20 @@ public class CasbinOptionValuesImpl extends ASTWrapperPsiElement implements Casb
 
   @Override
   @Nullable
-  public CasbinOptionValueExpression getOptionValueExpression() {
-    return findChildByClass(CasbinOptionValueExpression.class);
+  public CasbinValueExpression getValueExpression() {
+    return findChildByClass(CasbinValueExpression.class);
   }
 
   @Override
   @Nullable
-  public CasbinOptionValueIdentifier getOptionValueIdentifier() {
-    return findChildByClass(CasbinOptionValueIdentifier.class);
+  public CasbinValueIdentifier getValueIdentifier() {
+    return findChildByClass(CasbinValueIdentifier.class);
   }
 
   @Override
   @Nullable
-  public CasbinOptionValueList getOptionValueList() {
-    return findChildByClass(CasbinOptionValueList.class);
+  public CasbinValueTuple getValueTuple() {
+    return findChildByClass(CasbinValueTuple.class);
   }
 
 }

@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface CasbinOptionValueList extends PsiElement {
+public interface CasbinValueIdentifier extends PsiElement {
 
   @NotNull
-  List<CasbinAttributeDefinition> getAttributeDefinitionList();
+  PsiElement getIdentifier();
 
 }

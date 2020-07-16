@@ -4,14 +4,15 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.*
-import com.intellij.psi.util.parentOfType
-import com.intellij.psi.util.parentOfTypes
-import io.github.will7200.plugins.casbin.language.psi.*
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiReference
+import io.github.will7200.plugins.casbin.language.psi.CasbinAttribute
+import io.github.will7200.plugins.casbin.language.psi.CasbinAttributeDefinition
+import io.github.will7200.plugins.casbin.language.psi.CasbinProperty
+import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
 import io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeMixin
 import io.github.will7200.plugins.casbin.language.psi.impl.CasbinObjectMixin
-import org.jetbrains.annotations.Nullable
-import java.util.*
 
 open class CasbinAttributeReference(private val usage: CasbinAttributeMixin) :
     PsiReference {
@@ -38,19 +39,6 @@ open class CasbinAttributeReference(private val usage: CasbinAttributeMixin) :
                 return true
             }
             return false
-        }
-        if (element is CasbinProperty) {
-            val properties: @Nullable CasbinOptionValueList? = element.optionValues.optionValueList ?: return false
-            if (properties != null) {
-                for (attribute in properties.attributeDefinitionList) {
-                    if (attribute.text == nameNode.text) {
-                        return true
-                    }
-                }
-                return false
-            } else {
-                return false
-            }
         }
         return false
     }
