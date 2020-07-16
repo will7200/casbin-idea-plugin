@@ -27,12 +27,10 @@ open class CasbinAttributeReference(private val usage: CasbinAttributeMixin) :
     override fun bindToElement(element: PsiElement): PsiElement? = null
     private val nameNode: ASTNode
         get() {
-            log.warn(usage.node.text)
             return usage.node
         }
 
     override fun isReferenceTo(element: PsiElement): Boolean {
-        log.warn(element.toString() + " " + element.text + " " + element.parent.toString())
         if (element is CasbinAttributeDefinition) {
             val obj = (usage.parent as CasbinObjectMixin)
             if (obj.name == (element.parent.parent.parent as CasbinProperty).name) {
