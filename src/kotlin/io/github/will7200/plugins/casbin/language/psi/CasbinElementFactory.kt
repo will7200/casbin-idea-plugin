@@ -40,7 +40,7 @@ object CasbinElementFactory {
         ).findDescendantOfType { true }!!
     }
 
-    fun createAttributeName(project: Project, attributeName: String): CasbinAttribute {
+    fun createAttributeName(project: Project, attributeName: String): CasbinAttributeDefinition {
         return createFile(
             project, """
         [fake_section]

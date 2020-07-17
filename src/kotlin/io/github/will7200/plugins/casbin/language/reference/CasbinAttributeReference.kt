@@ -33,7 +33,7 @@ open class CasbinAttributeReference(private val usage: CasbinAttributeMixin) :
     override fun isReferenceTo(element: PsiElement): Boolean {
         if (element is CasbinAttributeDefinition) {
             val obj = (usage.parent as CasbinObjectMixin)
-            if (obj.name == (element.parent.parent.parent as CasbinProperty).name) {
+            if (obj.name == (element.parent.parent.parent as CasbinProperty).name && usage.name == element.name) {
                 return true
             }
             return false
