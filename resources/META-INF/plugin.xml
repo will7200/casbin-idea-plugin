@@ -39,6 +39,8 @@
                 implementation="io.github.will7200.plugins.casbin.language.navigation.CasbinGoToSection"/>
         <lang.psiStructureViewFactory language="Casbin"
                                       implementationClass="io.github.will7200.plugins.casbin.language.structure.CasbinStructureViewFactory"/>
+        <lang.commenter language="Casbin"
+                        implementationClass="io.github.will7200.plugins.casbin.language.editor.CasbinCommenter"/>
     </extensions>
 
     <actions>
