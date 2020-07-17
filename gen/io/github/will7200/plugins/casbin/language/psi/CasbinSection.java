@@ -39,6 +39,6 @@ public interface CasbinSection extends PsiElement {
   PsiNamedElement setName(@NotNull String name) throws IncorrectOperationException;
 
   @Nullable
-  ItemPresentation getPresentation(@NotNull CasbinSection element);
+  ItemPresentation getPresentation();
 
 }

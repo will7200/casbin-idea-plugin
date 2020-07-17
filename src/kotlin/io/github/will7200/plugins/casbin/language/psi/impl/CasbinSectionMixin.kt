@@ -15,7 +15,8 @@ import io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes
 import io.github.will7200.plugins.casbin.language.psi.CasbinSection
 import javax.swing.Icon
 
-abstract class CasbinSectionMixin(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement, CasbinSection {
+abstract class CasbinSectionMixin(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement, CasbinSection,
+    NavigationItem {
     private val log: Logger = Logger.getInstance(CasbinSectionMixin::class.java)
     override fun getName(): String? {
         val functionNode =
@@ -34,14 +35,17 @@ abstract class CasbinSectionMixin(node: ASTNode) : ASTWrapperPsiElement(node), P
         return this
     }
 
-    override fun getPresentation(element: CasbinSection): ItemPresentation? {
+    override fun getPresentation(): ItemPresentation? {
         return object : ItemPresentation {
             override fun getPresentableText(): String? {
-                return "[section] ${element.name}"
+                return "[section] ${this@CasbinSectionMixin.name}"
             }
 
             override fun getLocationString(): String? {
-                return element.containingFile.name.replace(element.containingFile.containingDirectory.name, "")
+                return this@CasbinSectionMixin.containingFile.name.replace(
+                    this@CasbinSectionMixin.containingFile.containingDirectory.name,
+                    ""
+                )
             }
 
             override fun getIcon(unused: Boolean): Icon? {
@@ -53,7 +57,7 @@ abstract class CasbinSectionMixin(node: ASTNode) : ASTWrapperPsiElement(node), P
     fun createLabelNavigationItem(element: PsiElement): NavigationItem? {
         return GoToSymbolProvider.BaseNavigationItem(
             element,
-            getPresentation(element as CasbinSection)?.presentableText!!,
+            presentation?.presentableText!!,
             CasbinFileIcon
         )
     }

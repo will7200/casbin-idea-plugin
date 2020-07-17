@@ -30,14 +30,17 @@ abstract class CasbinPropertyMixin(node: ASTNode) : ASTWrapperPsiElement(node), 
         return this
     }
 
-    override fun getPresentation(element: CasbinProperty): ItemPresentation? {
+    override fun getPresentation(): ItemPresentation? {
         return object : ItemPresentation {
             override fun getPresentableText(): String? {
-                return "[property] ${element.key}"
+                return "[property] ${this@CasbinPropertyMixin.key}"
             }
 
             override fun getLocationString(): String? {
-                return element.containingFile.name.replace(element.containingFile.containingDirectory.name, "")
+                return this@CasbinPropertyMixin.containingFile.name.replace(
+                    this@CasbinPropertyMixin.containingFile.containingDirectory.name,
+                    ""
+                )
             }
 
             override fun getIcon(unused: Boolean): Icon? {
@@ -49,7 +52,7 @@ abstract class CasbinPropertyMixin(node: ASTNode) : ASTWrapperPsiElement(node), 
     fun createLabelNavigationItem(element: PsiElement): NavigationItem? {
         return GoToSymbolProvider.BaseNavigationItem(
             element,
-            getPresentation(element as CasbinProperty)?.presentableText!!,
+            presentation?.presentableText!!,
             CasbinFileIcon
         )
     }

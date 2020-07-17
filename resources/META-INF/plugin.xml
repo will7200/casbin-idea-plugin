@@ -37,6 +37,8 @@
                 implementation="io.github.will7200.plugins.casbin.language.navigation.CasbinGoToProperty"/>
         <gotoSymbolContributor
                 implementation="io.github.will7200.plugins.casbin.language.navigation.CasbinGoToSection"/>
+        <lang.psiStructureViewFactory language="Casbin"
+                                      implementationClass="io.github.will7200.plugins.casbin.language.structure.CasbinStructureViewFactory"/>
     </extensions>
 
     <actions>

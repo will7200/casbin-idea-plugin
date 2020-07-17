@@ -24,6 +24,6 @@ public interface CasbinProperty extends PsiElement {
   String getValue();
 
   @Nullable
-  ItemPresentation getPresentation(@NotNull CasbinProperty element);
+  ItemPresentation getPresentation();
 
 }
