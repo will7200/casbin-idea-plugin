@@ -1,6 +1,5 @@
 package io.github.will7200.plugins.casbin.language.psi
 
-import com.intellij.lang.ASTNode
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
@@ -13,8 +12,8 @@ object CasbinElementFactory {
     fun createFile(project: Project, text: String) =
         PsiFileFactory.getInstance(project).createFileFromText("policy.conf", CasbinFileType, text) as CasbinPsiFile
 
-    fun createSectionName(project: Project, section: String) =
-        createFile(project, section).firstChild as ASTNode
+    fun createSectionName(project: Project, section: String): CasbinSection =
+        createFile(project, "[${section}]").findDescendantOfType { true }!!
 
     fun createPropertyName(project: Project, propertyName: String): CasbinFlatKey =
         createFile(

@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
 import io.github.will7200.plugins.casbin.language.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
 public class CasbinPropertyImpl extends CasbinPropertyMixin implements CasbinProperty {
 

@@ -37,7 +37,8 @@
 }
 casbinModel ::= section*
 section ::= header property* {
-   methods=[getProperties hasProperty setProperty getProperty getName setName]
+   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinSectionMixin"
+   methods=[getProperties hasProperty setProperty getProperty getName setName getPresentation]
 }
 header ::= L_BRACKET section_name R_BRACKET
 
@@ -45,7 +46,7 @@ section_name ::= SECTION_IDENTIFER
 // Property
 property ::= key ASSIGN value {
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinPropertyMixin"
-  methods=[getName getKey getValue]
+  methods=[getName getKey getValue getPresentation]
 }
 
 

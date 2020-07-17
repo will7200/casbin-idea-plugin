@@ -4,6 +4,9 @@ package io.github.will7200.plugins.casbin.language.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.util.IncorrectOperationException;
 
 public interface CasbinSection extends PsiElement {
 
@@ -33,6 +36,9 @@ public interface CasbinSection extends PsiElement {
   String getName();
 
   @NotNull
-  PsiElement setName(@NotNull String newName);
+  PsiNamedElement setName(@NotNull String name) throws IncorrectOperationException;
+
+  @Nullable
+  ItemPresentation getPresentation(@NotNull CasbinSection element);
 
 }

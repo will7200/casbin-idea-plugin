@@ -8,10 +8,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.github.will7200.plugins.casbin.language.psi.*;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.util.IncorrectOperationException;
 
-public class CasbinSectionImpl extends ASTWrapperPsiElement implements CasbinSection {
+public class CasbinSectionImpl extends CasbinSectionMixin implements CasbinSection {
 
   public CasbinSectionImpl(@NotNull ASTNode node) {
     super(node);
@@ -36,18 +38,6 @@ public class CasbinSectionImpl extends ASTWrapperPsiElement implements CasbinSec
   @NotNull
   public List<CasbinProperty> getPropertyList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinProperty.class);
-  }
-
-  @Override
-  @Nullable
-  public String getName() {
-    return CasbinPsiUtils.getName(this);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement setName(@NotNull String newName) {
-    return CasbinPsiUtils.setName(this, newName);
   }
 
 }

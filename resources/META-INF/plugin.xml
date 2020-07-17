@@ -33,6 +33,10 @@
                                  implementationClass="io.github.will7200.plugins.casbin.language.reference.CasbinUsagesProvider"/>
         <lang.foldingBuilder language="Casbin"
                              implementationClass="io.github.will7200.plugins.casbin.language.folding.CasbinSectionFolding"/>
+        <gotoSymbolContributor
+                implementation="io.github.will7200.plugins.casbin.language.navigation.CasbinGoToProperty"/>
+        <gotoSymbolContributor
+                implementation="io.github.will7200.plugins.casbin.language.navigation.CasbinGoToSection"/>
     </extensions>
 
     <actions>

@@ -12,28 +12,32 @@ import com.intellij.util.xml.model.gotosymbol.GoToSymbolProvider
 import io.github.will7200.plugins.casbin.language.CasbinFileIcon
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementFactory
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes
-import io.github.will7200.plugins.casbin.language.psi.CasbinProperty
+import io.github.will7200.plugins.casbin.language.psi.CasbinSection
 import javax.swing.Icon
 
-abstract class CasbinPropertyMixin(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement, CasbinProperty {
-    private val log: Logger = Logger.getInstance(CasbinPropertyMixin::class.java)
+abstract class CasbinSectionMixin(node: ASTNode) : ASTWrapperPsiElement(node), PsiNamedElement, CasbinSection {
+    private val log: Logger = Logger.getInstance(CasbinSectionMixin::class.java)
     override fun getName(): String? {
-        val functionNode = node.findChildByType(CasbinElementTypes.FLAT_KEY) ?: return null
+        val functionNode =
+            node.findChildByType(CasbinElementTypes.HEADER)?.findChildByType(CasbinElementTypes.SECTION_NAME)
+                ?: return null
         return functionNode.text
     }
 
     @Throws(IncorrectOperationException::class)
     override fun setName(name: String): PsiNamedElement {
-        val identifier = node.findChildByType(CasbinElementTypes.FLAT_KEY) ?: return this
-        val functionName = CasbinElementFactory.createPropertyName(this.project, name)
+        val identifier =
+            node.findChildByType(CasbinElementTypes.HEADER)?.findChildByType(CasbinElementTypes.SECTION_NAME)
+                ?: return this
+        val functionName = CasbinElementFactory.createSectionName(this.project, name)
         node.replaceChild(identifier, functionName.node)
         return this
     }
 
-    override fun getPresentation(element: CasbinProperty): ItemPresentation? {
+    override fun getPresentation(element: CasbinSection): ItemPresentation? {
         return object : ItemPresentation {
             override fun getPresentableText(): String? {
-                return "[property] ${element.key}"
+                return "[section] ${element.name}"
             }
 
             override fun getLocationString(): String? {
@@ -49,7 +53,7 @@ abstract class CasbinPropertyMixin(node: ASTNode) : ASTWrapperPsiElement(node), 
     fun createLabelNavigationItem(element: PsiElement): NavigationItem? {
         return GoToSymbolProvider.BaseNavigationItem(
             element,
-            getPresentation(element as CasbinProperty)?.presentableText!!,
+            getPresentation(element as CasbinSection)?.presentableText!!,
             CasbinFileIcon
         )
     }
