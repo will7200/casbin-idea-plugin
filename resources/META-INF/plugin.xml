@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>io.github.will7200.plugins.casbin.casbin-idea-plugin</id>
     <name>Casbin</name>
     <vendor url="https://github.com/will7200">Will7200</vendor>
@@ -11,7 +11,7 @@
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-
+    <xi:include href="/META-INF/CasbinCSV.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="Casbin" implementationClass="io.github.will7200.plugins.casbin.language.CasbinFileType"
                   language="Casbin" extensions="casbin;conf"/>

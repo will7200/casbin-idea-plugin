@@ -1,0 +1,33 @@
+{
+  parserClass="io.github.will7200.plugins.casbincsv.language.parser.CasbinCSVParser"
+  parserUtilClass = "io.github.will7200.plugins.casbincsv.language.parser.CasbinCSVParserUtil"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="CasbinCSV"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.github.will7200.plugins.casbincsv.language.psi"
+  psiImplPackage="io.github.will7200.plugins.casbincsv.language.psi.impl"
+
+  elementTypeHolderClass="io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVElementTypes"
+  elementTypeClass="io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVElementType"
+  tokenTypeClass="io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVTokenType"
+  tokens=[
+    TEXT='regexp:[^ ,:;|\t\r\n"\\]+'
+    ESCAPED_TEXT='regexp:[,:;|\t\r\n]|""|\\"'
+    ESCAPE_CHARACTER='regexp:\\'
+    COMMA='regexp:[,:;|\t]'
+    QUOTE='regexp:"'
+    CRLF='regexp:\n'
+   ]
+  psiImplUtilClass = "io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVPsiUtils"
+}
+
+casbinCsvFile ::= record (CRLF record)* [CRLF]
+
+record ::= field (COMMA field)*
+
+field ::= (escaped | nonEscaped)
+
+private escaped ::= QUOTE (TEXT | ESCAPE_CHARACTER | ESCAPED_TEXT)* QUOTE
+
+private nonEscaped ::= (TEXT | ESCAPE_CHARACTER)*

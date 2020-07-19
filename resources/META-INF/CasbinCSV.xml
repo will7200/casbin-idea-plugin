@@ -1,0 +1,8 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="CasbinCSV" implementationClass="io.github.will7200.plugins.casbincsv.language.CasbinCSVFileType"
+                  language="CasbinCSV" extensions="casbincsv"/>
+        <lang.parserDefinition language="CasbinCSV"
+                               implementationClass="io.github.will7200.plugins.casbincsv.language.parser.CasbinCSVParserDefinition"/>
+    </extensions>
+</idea-plugin>
