@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 val psiViewerVersion: String by project
@@ -12,14 +11,16 @@ plugins {
 }
 
 group = "io.github.will7200.plugins.casbin"
-version = "1.0-SNAPSHOT"
+version = "0.1.0-Alpha"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("org.casbin", "jcasbin", "1.6.0")
     testCompile("junit", "junit", "4.12")
 }
 
