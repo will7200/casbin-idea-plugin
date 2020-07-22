@@ -38,6 +38,7 @@ open class CasbinCSVEditor(language: Language?, project: Project?, s: String) :
             editor.settings.isCamelWords = true
             editor.settings.isAutoCodeFoldingEnabled = true
             editor.settings.setGutterIconsShown(true)
+            editor.setFontSize(16)
             val colorsScheme = editor.colorsScheme
             colorsScheme.setColor(EditorColors.CARET_ROW_COLOR, null)
             editor.colorsScheme = colorsScheme
