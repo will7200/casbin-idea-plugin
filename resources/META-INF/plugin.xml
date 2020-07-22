@@ -48,6 +48,8 @@
                         implementationClass="io.github.will7200.plugins.casbin.language.editor.CasbinCommenter"/>
         <projectService serviceImplementation="io.github.will7200.plugins.casbin.executor.CasbinExecutorManager"
                         serviceInterface="io.github.will7200.plugins.casbin.CasbinExecutorService"/>
+        <projectService serviceImplementation="io.github.will7200.plugins.casbin.executor.CasbinDocumentManager"
+                        serviceInterface="io.github.will7200.plugins.casbin.CasbinDocumentService"/>
         <toolWindow id="Casbin Executor" icon="/icons/icon-14px.png" anchor="bottom"
                     factoryClass="io.github.will7200.plugins.casbin.view.ui.CasbinToolWindowFactory"/>
     </extensions>

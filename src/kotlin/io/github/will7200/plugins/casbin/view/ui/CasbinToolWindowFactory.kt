@@ -9,16 +9,13 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentFactory
-import io.github.will7200.plugins.casbin.CasbinExecutorRequest
-import io.github.will7200.plugins.casbin.CasbinExecutorService
+import io.github.will7200.plugins.casbin.CasbinDocumentRequest
+import io.github.will7200.plugins.casbin.CasbinDocumentService
+import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor
 
 
 class CasbinToolWindowFactory : ToolWindowFactory {
     private val log: Logger = Logger.getInstance(CasbinToolWindowFactory::class.java)
-    private var myProject: Project? = null
-    private val casbinService: CasbinExecutorService by lazy {
-        myProject!!.service<CasbinExecutorService>()
-    }
 
     // Create the tool window content.
     override fun createToolWindowContent(
@@ -30,25 +27,29 @@ class CasbinToolWindowFactory : ToolWindowFactory {
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val content: Content = contentFactory.createContent(myToolWindow.content, "Main", false)
         toolWindow.contentManager.addContent(content)
-        myProject = project
+        val casbinDocumentManager = project.service<CasbinDocumentService>()
         myToolWindow.requestEditorPane.run {
+            casbinDocumentManager.connectDocument(document)
             document.addDocumentListener(object : DocumentListener {
                 override fun documentChanged(event: DocumentEvent) {
                     super.documentChanged(event)
                     if (event.newFragment.toString().contains("\n")) {
-                        casbinService.executeEnforcement(
-                            CasbinExecutorRequest.CasbinEnforcementRequest(
-                                myToolWindow.modelDefinitionFile,
-                                myToolWindow.policyFile,
-                                arrayOf("alice", "data1", "read")
-                            ).apply {
-                                this.document = myToolWindow.requestEditorPane.document
-                                this.model = myToolWindow.requestEditorPane.editor?.markupModel
-                            }
+                        casbinDocumentManager.processChange(
+                            CasbinDocumentRequest.ContentAdded(
+                                myToolWindow.requestEditorPane as CasbinCSVEditor,
+                                document,
+                                myToolWindow
+                            )
                         )
                     } else if (event.newLength < event.oldLength) {
                         log.warn("context changed")
-                        // log.warn(PsiDocumentManager.getInstance(project).getPsiFile(this@run.document).toString())
+                        casbinDocumentManager.processChange(
+                            CasbinDocumentRequest.ContentRemoved(
+                                myToolWindow.requestEditorPane as CasbinCSVEditor,
+                                document,
+                                myToolWindow
+                            )
+                        )
                     }
                 }
             })
