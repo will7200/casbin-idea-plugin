@@ -56,27 +56,6 @@ sourceSets {
         }
     }
 }
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs 'src/java', 'gen'
-//        }
-//        kotlin {
-//            srcDirs 'src/kotlin'
-//        }
-//        resources {
-//            srcDir 'res'
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'test'
-//        }
-//        resources {
-//            srcDir 'test-data'
-//        }
-//    }
-//}
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -89,10 +68,10 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 }
-tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-    changeNotes(
-        """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
-    )
-}
+//tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
+//    changeNotes(
+//        """
+//      Add change notes here.<br>
+//      <em>most HTML tags may be used</em>"""
+//    )
+//}
