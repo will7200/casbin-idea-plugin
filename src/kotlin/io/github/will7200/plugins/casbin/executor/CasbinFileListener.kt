@@ -23,7 +23,7 @@ class CasbinFileListener : BulkFileListener {
     }
 
     private fun sendChangeEvent(filePath: String) {
-        project.messageBus.syncPublisher(CasbinTopics.REQUEST_TOPIC)
+        project.messageBus.syncPublisher(CasbinTopics.EXECUTOR_REQUEST_TOPIC)
             .processRequest(CasbinExecutorRequest.CasbinFileChangeNotify(filePath))
     }
 

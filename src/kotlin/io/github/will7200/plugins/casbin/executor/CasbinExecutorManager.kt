@@ -25,7 +25,7 @@ class CasbinExecutorManager(private val myProject: Project?) : CasbinExecutorSer
     }
 
     override fun processRequest(request: CasbinExecutorRequest) {
-        myProject?.messageBus?.syncPublisher(CasbinTopics.REQUEST_TOPIC)?.processRequest(request)
+        myProject?.messageBus?.syncPublisher(CasbinTopics.EXECUTOR_REQUEST_TOPIC)?.processRequest(request)
     }
 
     companion object {

@@ -4,13 +4,13 @@ import com.intellij.util.messages.Topic
 
 interface CasbinTopics {
     companion object {
-        val REQUEST_TOPIC = Topic.create(
+        val EXECUTOR_REQUEST_TOPIC = Topic.create(
             "REQUEST_TOPIC",
             CasbinExecutorProducer::class.java,
             Topic.BroadcastDirection.TO_PARENT
         )
 
-        val RESPONSE_TOPIC = Topic.create(
+        val EXECUTOR_RESPONSE_TOPIC = Topic.create(
             "RESPONSE_TOPIC",
             CasbinExecutorConsumer::class.java,
             Topic.BroadcastDirection.TO_PARENT

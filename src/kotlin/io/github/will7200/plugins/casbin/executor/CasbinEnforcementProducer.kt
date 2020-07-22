@@ -20,7 +20,7 @@ class CasbinEnforcementProducer(
     private var lineNum: Int = 0
 
     init {
-        bus.connect().subscribe(CasbinTopics.REQUEST_TOPIC, this)
+        bus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
     }
 
     private fun executeRequest(casbinRequest: CasbinExecutorRequest) {
@@ -48,7 +48,7 @@ class CasbinEnforcementProducer(
     }
 
     private fun executeEnforcement(casbinRequest: CasbinExecutorRequest.CasbinEnforcementRequest) {
-        val publisher = bus.syncPublisher(CasbinTopics.RESPONSE_TOPIC)
+        val publisher = bus.syncPublisher(CasbinTopics.EXECUTOR_RESPONSE_TOPIC)
 
         publisher.beforeProcessing(casbinRequest);
         try {
