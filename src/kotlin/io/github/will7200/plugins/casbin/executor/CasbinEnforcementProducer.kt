@@ -1,12 +1,10 @@
 package io.github.will7200.plugins.casbin.executor
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBus
 import io.github.will7200.plugins.casbin.CasbinExecutorProducer
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
-import io.github.will7200.plugins.casbin.view.ui.CasbinRequestGutterIconRenderer
 import org.casbin.jcasbin.main.Enforcer
 
 
@@ -17,7 +15,6 @@ class CasbinEnforcementProducer(
 ) : CasbinExecutorProducer {
     private var log: Logger = Logger.getInstance(CasbinEnforcementProducer::class.java)
     private var enforcer: Enforcer = Enforcer(modelPath, policyFile)
-    private var lineNum: Int = 0
 
     init {
         bus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
@@ -57,25 +54,12 @@ class CasbinEnforcementProducer(
             } else {
                 casbinRequest.result = CasbinExecutorRequest.Decision.DENY
             }
-            log.warn(casbinRequest.result.toString())
             casbinRequest.processed = true
             publisher.afterProcessing(casbinRequest)
         } catch (ex: Exception) {
             casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
             log.warn(ex.toString())
             ex.printStackTrace()
-        }
-        ApplicationManager.getApplication().invokeLater {
-            ApplicationManager.getApplication().runWriteAction() {
-                val highlighter =
-                    casbinRequest.model!!.addLineHighlighter(
-                        lineNum++,
-                        0,
-                        null
-                    )
-                highlighter.gutterIconRenderer =
-                    CasbinRequestGutterIconRenderer(casbinRequest)
-            }
         }
     }
 
