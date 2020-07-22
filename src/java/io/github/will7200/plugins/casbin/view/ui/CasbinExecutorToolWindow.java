@@ -12,21 +12,27 @@ import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor;
 import javax.swing.*;
 
 public class CasbinExecutorToolWindow {
+    private final Project myProject;
     private JPanel TopLevel;
     private JPanel MainView;
     private JPanel Settings;
     private PersistedTextFieldWithBrowseButton policyFile;
     private PersistedTextFieldWithBrowseButton modelDefinitionFile;
     public EditorTextField requestEditorPane;
+    private JButton runTestButton;
+    private JCheckBox runAsyncCheckBox;
     private final Logger log = Logger.getInstance("CasbinExecutorToolWindow");
 
     public CasbinExecutorToolWindow(Project project, ToolWindow toolWindow) {
+        myProject = project;
+        $$$setupUI$$$();
         policyFile.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(true, false, false, false, false, false)));
         modelDefinitionFile.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(true, false, false, false, false, false)));
-//        policyFile.setText("C:\\Users\\wf08\\source\\casbin-idea-plugin\\test\\basic_policy.csv");
-//        modelDefinitionFile.setText("C:\\Users\\wf08\\source\\casbin-idea-plugin\\test\\basic_modal.conf");
         policyFile.load(project, "policy_file");
         modelDefinitionFile.load(project, "model_def_file");
+    }
+
+    private void $$$setupUI$$$() {
     }
 
     public JPanel getContent() {
@@ -41,7 +47,15 @@ public class CasbinExecutorToolWindow {
         return modelDefinitionFile.getText();
     }
 
+    public JButton getRunTestButton() {
+        return runTestButton;
+    }
+
+    public JCheckBox getRunAsyncCheckBox() {
+        return runAsyncCheckBox;
+    }
+
     private void createUIComponents() {
-        requestEditorPane = new CasbinCSVEditor(Language.findLanguageByID("CasbinCSV"), null, "");
+        requestEditorPane = new CasbinCSVEditor(Language.findLanguageByID("CasbinCSV"), myProject, "");
     }
 }
