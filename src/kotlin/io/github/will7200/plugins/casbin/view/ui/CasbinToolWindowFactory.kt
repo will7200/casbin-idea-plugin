@@ -16,17 +16,23 @@ import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor
 
 class CasbinToolWindowFactory : ToolWindowFactory {
     private val log: Logger = Logger.getInstance(CasbinToolWindowFactory::class.java)
+    private lateinit var project: Project
+    private lateinit var myToolWindow: CasbinExecutorToolWindow
 
     // Create the tool window content.
     override fun createToolWindowContent(
         project: Project,
         toolWindow: ToolWindow
     ) {
-        val myToolWindow =
-            CasbinExecutorToolWindow(project, toolWindow)
+        this.project = project
+        myToolWindow = CasbinExecutorToolWindow(project, toolWindow)
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val content: Content = contentFactory.createContent(myToolWindow.content, "Main", false)
         toolWindow.contentManager.addContent(content)
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         val casbinDocumentManager = project.service<CasbinDocumentService>()
         myToolWindow.requestEditorPane.run {
             casbinDocumentManager.connectDocument(document)
@@ -54,5 +60,6 @@ class CasbinToolWindowFactory : ToolWindowFactory {
                 }
             })
         }
+        // TODO: Add Listeners for Run Test Buttons and Async Check Box
     }
 }
