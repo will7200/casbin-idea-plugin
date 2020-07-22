@@ -11,6 +11,7 @@ import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentFactory
 import io.github.will7200.plugins.casbin.CasbinDocumentRequest
 import io.github.will7200.plugins.casbin.CasbinDocumentService
+import io.github.will7200.plugins.casbin.CasbinTopics
 import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor
 
 
@@ -60,6 +61,20 @@ class CasbinToolWindowFactory : ToolWindowFactory {
                 }
             })
         }
-        // TODO: Add Listeners for Run Test Buttons and Async Check Box
+        myToolWindow.runTestButton.addActionListener { event ->
+            project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_REQUEST_TOPIC)
+                .processChange(
+                    CasbinDocumentRequest.ExecuteEntireDocument(
+                        myToolWindow.requestEditorPane as CasbinCSVEditor,
+                        myToolWindow.requestEditorPane.document,
+                        myToolWindow
+                    )
+                )
+        }
+
+        // TODO: Async Check Box
+        myToolWindow.runAsyncCheckBox.addActionListener { event ->
+            log.warn(event.paramString())
+        }
     }
 }
