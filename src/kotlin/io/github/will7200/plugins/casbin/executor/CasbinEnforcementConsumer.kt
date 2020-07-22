@@ -29,37 +29,55 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
     @ExperimentalCoroutinesApi
     override fun beforeProcessing(request: CasbinDocumentRequest) {
         when (request) {
-            is CasbinDocumentRequest.RemoveHighlighter -> {
-                val range = request.range()
-                highlights.keys.filter {
-                    it >= range.first && it < range.second
-                }.map {
-                    log.warn("${it.toString()} removing")
-                    val highlighter = highlights[it]!!
-                    highlights.remove(it)
-                    GlobalScope.launch {
-                        removeChannel.send(highlighter)
-                        removeHighlightsJob?.cancel()
-                        removeHighlightsJob = GlobalScope.launch {
-                            delay(250)
-                            withContext(Dispatchers.Unconfined) {
-                                val removeHighlights = mutableListOf<RangeHighlighter>()
-                                while (!removeChannel.isEmpty) {
-                                    removeHighlights.add(removeChannel.receive())
-                                }
-                                log.warn("removeSize: $removeHighlights")
-                                removeHighlights(removeHighlights, request.model!!)
-                            }
-                        }
-                    }
-                }
-
+            is CasbinDocumentRequest.ExecuteEntireDocument -> {
+                removeHighlightsJob?.cancel("removing all highlights")
+                highlights.clear()
+                removeHighlights(request.toolWindow.requestEditorPane.editor!!.markupModel, null)
             }
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun afterProcessing(request: CasbinDocumentRequest) {
-        TODO("Not yet implemented")
+        when (request) {
+            is CasbinDocumentRequest.ContentRemoved -> {
+                for (delta in request.patch?.deltas!!) {
+                    val rh = CasbinDocumentRequest.RemoveHighlighter(
+                        delta.source.position,
+                        delta.source.position + 1,
+                        request.document
+                    ).apply {
+                        model = request.editor.editor?.markupModel
+                    }
+                    process(rh)
+                }
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun process(request: CasbinDocumentRequest.RemoveHighlighter) {
+        val range = request.range()
+        highlights.keys.filter {
+            it >= range.first && it < range.second
+        }.map {
+            val highlighter = highlights[it]!!
+            highlights.remove(it)
+            GlobalScope.launch {
+                removeChannel.send(highlighter)
+                removeHighlightsJob?.cancel()
+                removeHighlightsJob = GlobalScope.launch {
+                    delay(250)
+                    withContext(Dispatchers.Unconfined) {
+                        val removeHighlights = mutableListOf<RangeHighlighter>()
+                        while (!removeChannel.isEmpty) {
+                            removeHighlights.add(removeChannel.receive())
+                        }
+                        removeHighlights(request.model!!, removeHighlights)
+                    }
+                }
+            }
+        }
     }
 
     override fun beforeProcessing(request: CasbinExecutorRequest) {
@@ -70,6 +88,7 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun afterProcessing(request: CasbinExecutorRequest) {
         when (request) {
             is CasbinExecutorRequest.CasbinEnforcementRequest -> process(request)
@@ -80,14 +99,18 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
     }
 
     private fun removeHighlights(
-        removeHighlights: List<RangeHighlighter>,
-        model: MarkupModel
+        model: MarkupModel,
+        removeHighlights: List<RangeHighlighter>?
     ) {
         ApplicationManager.getApplication().invokeAndWait(Runnable {
             ApplicationManager.getApplication().runWriteAction {
-                for (remove in removeHighlights) {
-                    log.warn("removing ${remove}")
-                    model.removeHighlighter(remove)
+                if (removeHighlights.isNullOrEmpty()) {
+                    model.removeAllHighlighters()
+                } else {
+                    for (remove in removeHighlights) {
+                        log.warn("removing ${remove}")
+                        model.removeHighlighter(remove)
+                    }
                 }
             }
         })

@@ -31,7 +31,14 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
 
     @ExperimentalTime
     override fun processChange(change: CasbinDocumentRequest) {
+        project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
+            .beforeProcessing(change)
         when (change) {
+            is CasbinDocumentRequest.ExecuteEntireDocument -> {
+                contentAddedJob?.cancel("Processing entire document instead")
+                oldContent = change.document.text
+                process(change)
+            }
             is CasbinDocumentRequest.ContentAdded -> {
                 contentAddedJob?.cancel()
                 contentAddedJob = GlobalScope.launch {
@@ -45,17 +52,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
             is CasbinDocumentRequest.ContentRemoved -> {
                 oldContent?.let {
                     val patch = DiffUtils.diff(oldContent!!.lines(), change.document.text.lines())
-                    for (delta in patch.deltas) {
-                        project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
-                            .beforeProcessing(
-                                CasbinDocumentRequest.RemoveHighlighter(
-                                    delta.source.position,
-                                    delta.source.position + 1,
-                                    change.document
-                                ).apply {
-                                    model = change.editor.editor?.markupModel
-                                })
-                    }
+                    change.patch = patch
                 }
                 oldContent = change.document.text
             }
@@ -63,17 +60,41 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                 TODO("Handle class ${change.toString()}")
             }
         }
+        project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
+            .afterProcessing(change)
     }
 
-    private fun onNewContent(change: CasbinDocumentRequest.ContentAdded) {
+    private fun process(change: CasbinDocumentRequest.ExecuteEntireDocument) {
         val document = change.document
-        var casbinCSVFile: CasbinCSVPsiFile?
         runReadAction {
             val psiFile =
                 PsiDocumentManager.getInstance(ProjectManager.getInstance().defaultProject).getPsiFile(document)
                     ?: return@runReadAction
-            casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
-            for (record in casbinCSVFile!!.records) {
+            val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
+            for (record in casbinCSVFile.records) {
+                val ln = document.getLineNumber(record.textOffset)
+                casbinService.executeEnforcement(
+                    CasbinExecutorRequest.CasbinEnforcementRequest(
+                        change.toolWindow.modelDefinitionFile,
+                        change.toolWindow.policyFile,
+                        record.fieldList.map { it.text }.toTypedArray()
+                    ).apply {
+                        this.model = change.editor.editor?.markupModel
+                        this.lineNumber = ln
+                    }
+                )
+            }
+        }
+    }
+
+    private fun onNewContent(change: CasbinDocumentRequest.ContentAdded) {
+        val document = change.document
+        runReadAction {
+            val psiFile =
+                PsiDocumentManager.getInstance(ProjectManager.getInstance().defaultProject).getPsiFile(document)
+                    ?: return@runReadAction
+            val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
+            for (record in casbinCSVFile.records) {
                 val ln = document.getLineNumber(record.textOffset)
                 log.warn("processing $ln")
                 if (record.text.isEmpty()) {

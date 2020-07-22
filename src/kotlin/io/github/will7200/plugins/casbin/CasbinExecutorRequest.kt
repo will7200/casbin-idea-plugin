@@ -31,16 +31,16 @@ open class CasbinExecutorRequest {
     ) : CasbinExecutorRequest()
 
     open class CasbinModelFileChangeRequest(
-        val modelFile: String,
+        modelFile: String,
         override val checkSum: String
-    ) : CasbinFileChangeRequest(checkSum) {
+    ) : CasbinFileChangeRequest(modelFile) {
 
     }
 
     open class CasbinPolicyFileChangeRequest(
-        val policyFile: String,
+        policyFile: String,
         override val checkSum: String
-    ) : CasbinFileChangeRequest(checkSum) {
+    ) : CasbinFileChangeRequest(policyFile) {
 
     }
 }
