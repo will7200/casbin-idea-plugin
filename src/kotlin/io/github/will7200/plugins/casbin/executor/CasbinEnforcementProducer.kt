@@ -49,12 +49,21 @@ class CasbinEnforcementProducer(
 
         publisher.beforeProcessing(casbinRequest);
         try {
-            if (enforcer.enforce(*casbinRequest.rvals)) {
-                casbinRequest.result = CasbinExecutorRequest.Decision.ALLOW
-            } else {
-                casbinRequest.result = CasbinExecutorRequest.Decision.DENY
+            when {
+                casbinRequest.rvals.isEmpty() || (casbinRequest.rvals.size == 1 && casbinRequest.rvals[0].isEmpty()) -> {
+                    casbinRequest.processed = false
+                    casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
+                    casbinRequest.message = "Empty rvals"
+                }
+                else -> {
+                    if (enforcer.enforce(*casbinRequest.rvals)) {
+                        casbinRequest.result = CasbinExecutorRequest.Decision.ALLOW
+                    } else {
+                        casbinRequest.result = CasbinExecutorRequest.Decision.DENY
+                    }
+                    casbinRequest.processed = true
+                }
             }
-            casbinRequest.processed = true
             publisher.afterProcessing(casbinRequest)
         } catch (ex: Exception) {
             casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
@@ -64,7 +73,6 @@ class CasbinEnforcementProducer(
     }
 
     override fun processRequest(request: CasbinExecutorRequest) {
-        log.warn(request.toString())
         executeRequest(request)
     }
 }

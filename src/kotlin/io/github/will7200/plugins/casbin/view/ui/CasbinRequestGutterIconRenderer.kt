@@ -9,10 +9,14 @@ import javax.swing.Icon
 class CasbinRequestGutterIconRenderer(private val ce: CasbinExecutorRequest.CasbinEnforcementRequest) :
     GutterIconRenderer() {
     override fun getIcon(): Icon {
-        if (ce.result == CasbinExecutorRequest.Decision.ALLOW) {
-            return AllIcons.Actions.Commit
+        return when (ce.result) {
+            CasbinExecutorRequest.Decision.ALLOW -> AllIcons.Actions.Commit
+            CasbinExecutorRequest.Decision.ERROR -> AllIcons.General.Error
+            CasbinExecutorRequest.Decision.DENY -> AllIcons.Vcs.Remove
+            else -> {
+                return AllIcons.Debugger.Question_badge
+            }
         }
-        return AllIcons.Vcs.Remove
     }
 
     override fun equals(other: Any?): Boolean {
@@ -23,7 +27,10 @@ class CasbinRequestGutterIconRenderer(private val ce: CasbinExecutorRequest.Casb
     }
 
     override fun getTooltipText(): String? {
-        return ce.result.toString()
+        return when {
+            ce.message != null -> ce.message
+            else -> ce.result.toString()
+        }
     }
 
     override fun hashCode(): Int {

@@ -133,7 +133,6 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
                     )
                     highlighter.gutterIconRenderer =
                         CasbinRequestGutterIconRenderer(request)
-                    log.warn("${highlights.size}")
                 }
             }
         })

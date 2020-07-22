@@ -17,6 +17,7 @@ open class CasbinExecutorRequest {
     ) : CasbinExecutorRequest() {
         var lineNumber: Int? = null
         var result: Decision? = null
+        var message: String? = null
         var processed: Boolean = false
         var model: MarkupModel? = null
         var textRange: TextRangeInterval? = null
