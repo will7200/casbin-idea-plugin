@@ -6,7 +6,7 @@ import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon
 
 
-val CasbinCSVFileIcon = IconLoader.getIcon("/icons/icon-14px.png")
+val CasbinCSVFileIcon = IconLoader.getIcon("/icons/casbin-icon-13x13.png")
 val CasbinCSVFileTargetIcon: Icon = AllIcons.RunConfigurations.TestState.Run
 
 object CasbinCSVFileType : LanguageFileType(CasbinCSVLanguage) {
