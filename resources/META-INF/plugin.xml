@@ -11,12 +11,10 @@
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-    <applicationListeners>
+    <projectListeners>
         <listener class="io.github.will7200.plugins.casbin.executor.CasbinFileListener"
                   topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
-        <listener class="io.github.will7200.plugins.casbin.executor.CasbinEditorHighlighter"
-                  topic="io.github.will7200.plugins.casbin.CasbinDocumentProducer"/>
-    </applicationListeners>
+    </projectListeners>
 
     <xi:include href="/META-INF/CasbinCSV.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
