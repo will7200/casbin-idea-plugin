@@ -152,20 +152,53 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   // L_BRACKET section_name R_BRACKET
   public static boolean header(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "header")) return false;
-    if (!nextTokenIs(b, L_BRACKET)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, HEADER, "<header>");
     r = consumeToken(b, L_BRACKET);
-    r = r && section_name(b, l + 1);
-    r = r && consumeToken(b, R_BRACKET);
-    exit_section_(b, m, HEADER, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, section_name(b, l + 1));
+    r = p && consumeToken(b, R_BRACKET) && r;
+    exit_section_(b, l, m, r, p, not_next_entry_parser_);
+    return r || p;
   }
 
   /* ********************************************************** */
   // flat_key
   static boolean key(PsiBuilder b, int l) {
     return flat_key(b, l + 1);
+  }
+
+  /* ********************************************************** */
+  // !header
+  static boolean not_header(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "not_header")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !header(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // !(header | value)
+  static boolean not_next_entry(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "not_next_entry")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !not_next_entry_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // header | value
+  private static boolean not_next_entry_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "not_next_entry_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = header(b, l + 1);
+    if (!r) r = value(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */
@@ -325,14 +358,14 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   // key ASSIGN value
   public static boolean property(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "property")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, PROPERTY, "<property>");
     r = key(b, l + 1);
     r = r && consumeToken(b, ASSIGN);
+    p = r; // pin = 2
     r = r && value(b, l + 1);
-    exit_section_(b, m, PROPERTY, r);
-    return r;
+    exit_section_(b, l, m, r, p, not_next_entry_parser_);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -533,4 +566,9 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  static final Parser not_next_entry_parser_ = new Parser() {
+    public boolean parse(PsiBuilder b, int l) {
+      return not_next_entry(b, l + 1);
+    }
+  };
 }

@@ -28,7 +28,7 @@
       DENY = "deny"
       LINE_COMMENT='regexp:[#;].*'
       SECTION_IDENTIFER='regexp:[A-Za-z_]+'
-      IDENTIFIER='regexp:[A-Za-z][A-Za-z_0-9]*'
+      IDENTIFIER='regexp:[A-Za-z]?[A-Za-z_0-9]+'
       SPACE = "regexp:\s+"
       L_PARATHESIS = "("
       R_PARATHESIS = ")"
@@ -40,11 +40,16 @@ section ::= header property* {
    mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinSectionMixin"
    methods=[getProperties hasProperty setProperty getProperty getName setName getPresentation]
 }
-header ::= L_BRACKET section_name R_BRACKET
+header ::= L_BRACKET section_name R_BRACKET {
+  pin=1
+  recoverWhile=not_next_entry
+}
 
 section_name ::= SECTION_IDENTIFER
 // Property
 property ::= key ASSIGN value {
+  pin=2
+  recoverWhile=not_next_entry
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinPropertyMixin"
   methods=[getName getKey getValue getPresentation]
 }
@@ -102,3 +107,7 @@ attribute_definition ::= IDENTIFIER | "_"{
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeDefinitionMixin"
   methods=[getName]
 }
+
+// ---- ---- Recovery ---- ----
+private not_header ::= !header
+private not_next_entry ::= !(header | value)

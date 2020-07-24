@@ -13,7 +13,14 @@ import io.github.will7200.plugins.casbin.language.psi.CasbinSection
 
 class CasbinSectionFolding : FoldingBuilderEx() {
     override fun isCollapsedByDefault(node: ASTNode) = false
-    override fun getPlaceholderText(node: ASTNode) = node.text.replace("]", "]\\n").substring(0, 30) + "..."
+    override fun getPlaceholderText(node: ASTNode): String {
+        return if (node.text.length < 30) {
+            node.text
+        } else {
+            node.text.replace("]", "]\\n").substring(0, 30) + "..."
+        }
+    }
+
     override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
         val descriptors = ArrayList<FoldingDescriptor>()
         // Initialize the group of folding regions that will expand/collapse together.

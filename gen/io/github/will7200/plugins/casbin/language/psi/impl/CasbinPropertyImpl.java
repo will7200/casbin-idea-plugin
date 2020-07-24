@@ -33,9 +33,9 @@ public class CasbinPropertyImpl extends CasbinPropertyMixin implements CasbinPro
   }
 
   @Override
-  @NotNull
+  @Nullable
   public CasbinOptionValues getOptionValues() {
-    return findNotNullChildByClass(CasbinOptionValues.class);
+    return findChildByClass(CasbinOptionValues.class);
   }
 
   @Override

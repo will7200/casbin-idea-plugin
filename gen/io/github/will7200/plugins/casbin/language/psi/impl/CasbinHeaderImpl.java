@@ -27,9 +27,9 @@ public class CasbinHeaderImpl extends ASTWrapperPsiElement implements CasbinHead
   }
 
   @Override
-  @NotNull
+  @Nullable
   public CasbinSectionName getSectionName() {
-    return findNotNullChildByClass(CasbinSectionName.class);
+    return findChildByClass(CasbinSectionName.class);
   }
 
 }

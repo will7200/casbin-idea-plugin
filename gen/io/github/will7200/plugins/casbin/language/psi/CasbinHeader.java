@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface CasbinHeader extends PsiElement {
 
-  @NotNull
+  @Nullable
   CasbinSectionName getSectionName();
 
 }

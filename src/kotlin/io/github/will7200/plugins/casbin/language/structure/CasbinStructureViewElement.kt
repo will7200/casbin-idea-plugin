@@ -24,8 +24,8 @@ class CasbinStructureViewElement(private val element: PsiElement) : StructureVie
             is CasbinPsiFile -> element.sections.map(::CasbinStructureViewElement).toTypedArray()
             is CasbinSection -> element.propertyList.map(::CasbinStructureViewElement).toTypedArray()
             is CasbinProperty -> {
-                if (element.optionValues.valueTuple != null) {
-                    return element.optionValues.valueTuple!!.attributeDefinitionList.map(::CasbinStructureViewElement)
+                if (element.optionValues?.valueTuple != null) {
+                    return element.optionValues!!.valueTuple!!.attributeDefinitionList.map(::CasbinStructureViewElement)
                         .toTypedArray()
                 }
                 return emptyArray()
