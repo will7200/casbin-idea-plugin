@@ -92,6 +92,12 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
     override fun afterProcessing(request: CasbinExecutorRequest) {
         when (request) {
             is CasbinExecutorRequest.CasbinEnforcementRequest -> process(request)
+            is CasbinExecutorRequest.CasbinFileChangeNotify -> {
+                if (request.enforcerSwapped) {
+                    removeHighlightsJob?.cancel("removing all highlights")
+                    highlights.clear()
+                }
+            }
             else -> {
                 TODO("Not yet implemented $request")
             }

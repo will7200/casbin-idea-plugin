@@ -29,7 +29,9 @@ open class CasbinExecutorRequest {
 
     open class CasbinFileChangeNotify(
         open val filePath: String
-    ) : CasbinExecutorRequest()
+    ) : CasbinExecutorRequest() {
+        var enforcerSwapped: Boolean = false
+    }
 
     open class CasbinModelFileChangeRequest(
         modelFile: String,

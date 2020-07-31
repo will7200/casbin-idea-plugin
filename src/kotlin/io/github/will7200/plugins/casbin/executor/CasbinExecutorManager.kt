@@ -1,17 +1,26 @@
 package io.github.will7200.plugins.casbin.executor
 
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
+import com.jetbrains.rd.util.ConcurrentHashMap
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinExecutorService
 import io.github.will7200.plugins.casbin.CasbinTopics
 import java.time.LocalDateTime
 
-class CasbinExecutorManager(private val myProject: Project?) : CasbinExecutorService() {
-    private val enforcers: MutableUsageMap<Pair<String, String>, CasbinEnforcementProducer> = MutableUsageMap()
+typealias EnforcerKey = Pair<String, String>
+
+class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorService() {
+    private val log: Logger = Logger.getInstance(CasbinExecutorManager::class.java)
+    private val enforcers: MutableUsageMap<EnforcerKey, CasbinEnforcementProducer> = MutableUsageMap()
     private val maxEnforcers: Int = 10
 
+    init {
+        myProject.messageBus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
+    }
+
     override fun executeEnforcement(request: CasbinExecutorRequest.CasbinEnforcementRequest) {
-        val lk = Pair(request.modelFile, request.policyFile)
+        val lk = Pair(request.modelFile.replace("\\", "/"), request.policyFile.replace("\\", "/"))
         if (enforcers[lk] == null) {
             if (enforcers.size > maxEnforcers) {
                 val removeKeys = enforcers.leastUsedKeys(enforcers.size - maxEnforcers)
@@ -19,17 +28,37 @@ class CasbinExecutorManager(private val myProject: Project?) : CasbinExecutorSer
                     enforcers.remove(key)
                 }
             }
-            enforcers[lk] = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject!!.messageBus)
+            enforcers[lk] = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject.messageBus)
         }
-        processRequest(request)
+        myProject.messageBus.syncPublisher(CasbinTopics.EXECUTOR_REQUEST_TOPIC).processRequest(request)
     }
 
     override fun processRequest(request: CasbinExecutorRequest) {
-        myProject?.messageBus?.syncPublisher(CasbinTopics.EXECUTOR_REQUEST_TOPIC)?.processRequest(request)
+        val publisher = myProject.messageBus.syncPublisher(CasbinTopics.EXECUTOR_RESPONSE_TOPIC)
+        publisher.beforeProcessing(request)
+        when (request) {
+            is CasbinExecutorRequest.CasbinFileChangeNotify -> {
+                for (key in enforcers.keys()) {
+                    if (key.first == request.filePath || key.second == request.filePath) {
+                        reInitializeEnforce(key)
+                        request.enforcerSwapped = true
+                        break
+                    }
+                }
+            }
+        }
+        publisher.afterProcessing(request)
+    }
+
+    private fun reInitializeEnforce(key: EnforcerKey) {
+        log.warn("Updating enforcer:\n model definition: ${key.first}\n policy file: ${key.second}")
+        val newEnforcer = CasbinEnforcementProducer(key.first, key.second, myProject.messageBus)
+        enforcers.remove(key)
+        enforcers[key] = newEnforcer
     }
 
     companion object {
-        class MutableUsageMap<K, V> : LinkedHashMap<K, V>() {
+        class MutableUsageMap<K, V> : ConcurrentHashMap<K, V>() {
             private val keyUsageMap: MutableMap<K, LocalDateTime> = mutableMapOf()
 
             override fun get(key: K): V? {

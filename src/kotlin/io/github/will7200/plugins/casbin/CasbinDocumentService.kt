@@ -4,5 +4,5 @@ import com.intellij.openapi.editor.Document
 
 
 abstract class CasbinDocumentService : CasbinDocumentProducer {
-    abstract fun connectDocument(document: Document)
+    abstract fun connectDocument(document: Document?)
 }

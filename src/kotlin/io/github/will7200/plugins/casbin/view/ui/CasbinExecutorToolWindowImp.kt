@@ -8,20 +8,20 @@ import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
-import io.github.will7200.plugins.casbin.CasbinDocumentRequest
-import io.github.will7200.plugins.casbin.CasbinDocumentService
-import io.github.will7200.plugins.casbin.CasbinTopics
+import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor
 import java.awt.event.ItemEvent
 
 class CasbinExecutorToolWindowImp(private val project: Project, private val toolWindow: ToolWindow) :
-    CasbinExecutorToolWindow(project, toolWindow) {
+    CasbinExecutorToolWindow(project, toolWindow), CasbinExecutorConsumer {
     private val log: Logger = Logger.getInstance(CasbinExecutorToolWindowImp::class.java)
     private var casbinDocumentManager: CasbinDocumentService = project.service()
     private var dispose: Disposable? = null
 
     init {
         setupListeners()
+        val connection = project.messageBus.connect()
+        connection.subscribe(CasbinTopics.EXECUTOR_RESPONSE_TOPIC, this)
     }
 
     private fun setupListeners() {
@@ -85,6 +85,23 @@ class CasbinExecutorToolWindowImp(private val project: Project, private val tool
         requestEditorPane.run {
             dispose?.let {
                 Disposer.dispose(it)
+            }
+        }
+    }
+
+    override fun beforeProcessing(request: CasbinExecutorRequest) {
+        TODO("Not yet implemented")
+    }
+
+    override fun afterProcessing(request: CasbinExecutorRequest) {
+        when (request) {
+            is CasbinExecutorRequest.CasbinFileChangeNotify -> {
+                if (request.enforcerSwapped &&
+                    (request.filePath == modelDefinitionFile.replace("\\", "/")
+                            || request.filePath == policyFile.replace("\\", "/"))
+                ) {
+                    requestEditorPane.editor?.markupModel?.removeAllHighlighters()
+                }
             }
         }
     }
