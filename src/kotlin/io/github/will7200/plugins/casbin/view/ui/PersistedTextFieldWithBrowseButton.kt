@@ -5,7 +5,6 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
 
 class PersistedTextFieldWithBrowseButton : TextFieldWithBrowseButton() {
     private val log: Logger = Logger.getInstance(this::class.java)
@@ -45,19 +44,4 @@ class PersistedTextFieldWithBrowseButton : TextFieldWithBrowseButton() {
         super.setText(text)
     }
 
-    @FunctionalInterface
-    interface SimpleDocumentListener : DocumentListener {
-        fun update(e: DocumentEvent?)
-        override fun insertUpdate(e: DocumentEvent?) {
-            update(e)
-        }
-
-        override fun removeUpdate(e: DocumentEvent?) {
-            update(e)
-        }
-
-        override fun changedUpdate(e: DocumentEvent?) {
-            update(e)
-        }
-    }
 }

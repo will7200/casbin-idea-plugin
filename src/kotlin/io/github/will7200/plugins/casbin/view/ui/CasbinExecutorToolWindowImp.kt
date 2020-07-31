@@ -11,6 +11,7 @@ import com.intellij.openapi.wm.ToolWindow
 import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor
 import java.awt.event.ItemEvent
+import javax.swing.event.DocumentEvent.EventType
 
 class CasbinExecutorToolWindowImp(private val project: Project, private val toolWindow: ToolWindow) :
     CasbinExecutorToolWindow(project, toolWindow), CasbinExecutorConsumer {
@@ -24,6 +25,17 @@ class CasbinExecutorToolWindowImp(private val project: Project, private val tool
         connection.subscribe(CasbinTopics.EXECUTOR_RESPONSE_TOPIC, this)
     }
 
+    private fun enforceEntireDocument() {
+        project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_REQUEST_TOPIC)
+            .processChange(
+                CasbinDocumentRequest.ExecuteEntireDocument(
+                    requestEditorPane as CasbinCSVEditor,
+                    requestEditorPane.document,
+                    this
+                )
+            )
+    }
+
     private fun setupListeners() {
         requestEditorPane.run {
             casbinDocumentManager.connectDocument(document)
@@ -33,14 +45,7 @@ class CasbinExecutorToolWindowImp(private val project: Project, private val tool
             connectDocumentAsync()
         }
         runTestButton.addActionListener {
-            project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_REQUEST_TOPIC)
-                .processChange(
-                    CasbinDocumentRequest.ExecuteEntireDocument(
-                        requestEditorPane as CasbinCSVEditor,
-                        requestEditorPane.document,
-                        this
-                    )
-                )
+            enforceEntireDocument()
         }
 
         runAsyncCheckBox.addItemListener { event ->
@@ -50,6 +55,40 @@ class CasbinExecutorToolWindowImp(private val project: Project, private val tool
                 disconnectDocument()
             }
         }
+
+        modelDefinitionFile.textField.document.addDocumentListener(object : SimpleDocumentListener {
+            private var oldValue: String = modelDefinitionFileText
+            override fun update(e: javax.swing.event.DocumentEvent?) {
+                if (e != null) {
+                    when (e.type) {
+                        EventType.INSERT -> {
+                            if (e.document.getText(0, e.document.length) != oldValue) {
+                                requestEditorPane.editor?.markupModel?.removeAllHighlighters()
+                                enforceEntireDocument()
+                            }
+                            oldValue = e.document.getText(0, e.document.length)
+                        }
+                    }
+                }
+            }
+        })
+
+        policyFile.textField.document.addDocumentListener(object : SimpleDocumentListener {
+            private var oldValue: String = policyFileText
+            override fun update(e: javax.swing.event.DocumentEvent?) {
+                if (e != null) {
+                    when (e.type) {
+                        EventType.INSERT -> {
+                            if (e.document.getText(0, e.document.length) != oldValue) {
+                                requestEditorPane.editor?.markupModel?.removeAllHighlighters()
+                                enforceEntireDocument()
+                            }
+                            oldValue = e.document.getText(0, e.document.length)
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun connectDocumentAsync() {
@@ -90,15 +129,15 @@ class CasbinExecutorToolWindowImp(private val project: Project, private val tool
     }
 
     override fun beforeProcessing(request: CasbinExecutorRequest) {
-        TODO("Not yet implemented")
+        // TODO("Not yet implemented")
     }
 
     override fun afterProcessing(request: CasbinExecutorRequest) {
         when (request) {
             is CasbinExecutorRequest.CasbinFileChangeNotify -> {
                 if (request.enforcerSwapped &&
-                    (request.filePath == modelDefinitionFile.replace("\\", "/")
-                            || request.filePath == policyFile.replace("\\", "/"))
+                    (request.filePath == modelDefinitionFileText.replace("\\", "/")
+                            || request.filePath == policyFileText.replace("\\", "/"))
                 ) {
                     requestEditorPane.editor?.markupModel?.removeAllHighlighters()
                 }

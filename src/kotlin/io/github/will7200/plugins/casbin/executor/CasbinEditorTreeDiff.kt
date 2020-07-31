@@ -73,8 +73,8 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                 val ln = document.getLineNumber(record.textOffset)
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
-                        change.toolWindow.modelDefinitionFile,
-                        change.toolWindow.policyFile,
+                        change.toolWindow.modelDefinitionFileText,
+                        change.toolWindow.policyFileText,
                         record.fieldList.map { it.text }.toTypedArray()
                     ).apply {
                         this.model = change.editor.editor?.markupModel
@@ -97,8 +97,8 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                 lines.add(ln, record.text)
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
-                        change.toolWindow.modelDefinitionFile,
-                        change.toolWindow.policyFile,
+                        change.toolWindow.modelDefinitionFileText,
+                        change.toolWindow.policyFileText,
                         record.fieldList.map { it.text }.toTypedArray()
                     ).apply {
                         this.model = change.editor.editor?.markupModel

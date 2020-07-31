@@ -39,11 +39,19 @@ public class CasbinExecutorToolWindow {
         return TopLevel;
     }
 
-    public String getPolicyFile() {
+    public PersistedTextFieldWithBrowseButton getPolicyFile() {
+        return policyFile;
+    }
+
+    public PersistedTextFieldWithBrowseButton getModelDefinitionFile() {
+        return modelDefinitionFile;
+    }
+
+    public String getPolicyFileText() {
         return policyFile.getText();
     }
 
-    public String getModelDefinitionFile() {
+    public String getModelDefinitionFileText() {
         return modelDefinitionFile.getText();
     }
 
