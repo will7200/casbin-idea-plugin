@@ -33,6 +33,12 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
     override fun processChange(change: CasbinDocumentRequest) {
         project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
             .beforeProcessing(change)
+        casbinService.createEnforcer(
+            CasbinExecutorRequest.CasbinCreateEnforcer(
+                change.toolWindow.modelDefinitionFileText,
+                change.toolWindow.policyFileText
+            )
+        )
         when (change) {
             is CasbinDocumentRequest.ExecuteEntireDocument -> {
                 contentAddedJob?.cancel("Processing entire document instead")

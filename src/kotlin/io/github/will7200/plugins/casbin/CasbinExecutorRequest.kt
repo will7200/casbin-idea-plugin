@@ -23,6 +23,11 @@ open class CasbinExecutorRequest {
         var textRange: TextRangeInterval? = null
     }
 
+    open class CasbinCreateEnforcer(
+        val modelFile: String,
+        val policyFile: String
+    ) : CasbinExecutorRequest()
+
     open class CasbinFileChangeRequest(
         open val checkSum: String
     ) : CasbinExecutorRequest()

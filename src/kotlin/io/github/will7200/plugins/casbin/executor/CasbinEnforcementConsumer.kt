@@ -45,7 +45,8 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
                     val rh = CasbinDocumentRequest.RemoveHighlighter(
                         delta.source.position,
                         delta.source.position + 1,
-                        request.document
+                        request.document,
+                        request.toolWindow
                     ).apply {
                         model = request.editor.editor?.markupModel
                     }

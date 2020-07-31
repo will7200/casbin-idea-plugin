@@ -2,6 +2,7 @@ package io.github.will7200.plugins.casbin.executor
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.messages.MessageBus
+import io.github.will7200.plugins.casbin.CasbinError
 import io.github.will7200.plugins.casbin.CasbinExecutorProducer
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
@@ -14,9 +15,14 @@ class CasbinEnforcementProducer(
     private val bus: MessageBus
 ) : CasbinExecutorProducer {
     private var log: Logger = Logger.getInstance(CasbinEnforcementProducer::class.java)
-    private var enforcer: Enforcer = Enforcer(modelPath, policyFile)
+    private var enforcer: Enforcer
 
     init {
+        try {
+            enforcer = Enforcer(modelPath, policyFile)
+        } catch (exception: Exception) {
+            throw CasbinError("Couldn't create an enforcer", exception)
+        }
         bus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
     }
 

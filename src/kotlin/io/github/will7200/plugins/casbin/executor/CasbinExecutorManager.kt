@@ -3,9 +3,11 @@ package io.github.will7200.plugins.casbin.executor
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.jetbrains.rd.util.ConcurrentHashMap
+import io.github.will7200.plugins.casbin.CasbinError
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinExecutorService
 import io.github.will7200.plugins.casbin.CasbinTopics
+import io.github.will7200.plugins.casbin.view.ui.CasbinExecutorErrorsNotifier
 import java.time.LocalDateTime
 
 typealias EnforcerKey = Pair<String, String>
@@ -19,16 +21,26 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
         myProject.messageBus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
     }
 
+    override fun createEnforcer(request: CasbinExecutorRequest.CasbinCreateEnforcer) {
+        val lk = Pair(request.modelFile.replace("\\", "/"), request.policyFile.replace("\\", "/"))
+        if (enforcers.size > maxEnforcers) {
+            val removeKeys = enforcers.leastUsedKeys(enforcers.size - maxEnforcers)
+            for (key in removeKeys) {
+                enforcers.remove(key)
+            }
+        }
+        try {
+            enforcers[lk] = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject.messageBus)
+        } catch (ce: CasbinError) {
+            val casbinExecutorErrorsNotifier = CasbinExecutorErrorsNotifier()
+            casbinExecutorErrorsNotifier.notify(myProject, ce.message, ce.details)
+        }
+    }
+
     override fun executeEnforcement(request: CasbinExecutorRequest.CasbinEnforcementRequest) {
         val lk = Pair(request.modelFile.replace("\\", "/"), request.policyFile.replace("\\", "/"))
         if (enforcers[lk] == null) {
-            if (enforcers.size > maxEnforcers) {
-                val removeKeys = enforcers.leastUsedKeys(enforcers.size - maxEnforcers)
-                for (key in removeKeys) {
-                    enforcers.remove(key)
-                }
-            }
-            enforcers[lk] = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject.messageBus)
+            return
         }
         myProject.messageBus.syncPublisher(CasbinTopics.EXECUTOR_REQUEST_TOPIC).processRequest(request)
     }
