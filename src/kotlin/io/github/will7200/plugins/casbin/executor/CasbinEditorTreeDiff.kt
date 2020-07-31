@@ -36,7 +36,6 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
         when (change) {
             is CasbinDocumentRequest.ExecuteEntireDocument -> {
                 contentAddedJob?.cancel("Processing entire document instead")
-                oldContent = change.document.text
                 process(change)
             }
             is CasbinDocumentRequest.ContentAdded -> {
@@ -47,19 +46,18 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                         onNewContent(change)
                     }
                 }
-                oldContent = change.document.text
             }
             is CasbinDocumentRequest.ContentRemoved -> {
                 oldContent?.let {
                     val patch = DiffUtils.diff(oldContent!!.lines(), change.document.text.lines())
                     change.patch = patch
                 }
-                oldContent = change.document.text
             }
             else -> {
                 TODO("Handle class ${change.toString()}")
             }
         }
+        oldContent = change.document.text
         project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
             .afterProcessing(change)
     }
@@ -96,19 +94,6 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
             val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
             for (record in casbinCSVFile.records) {
                 val ln = document.getLineNumber(record.textOffset)
-                log.warn("processing $ln")
-                if (record.text.isEmpty()) {
-                    log.warn("processing $ln: empty continuing")
-                    continue
-                }
-//                try {
-//                    if (lines[ln] == record.text) {
-//                        log.warn("processing $ln: cached equals")
-//                        continue
-//                    }
-//                } catch (ex: IndexOutOfBoundsException) {
-//
-//                }
                 lines.add(ln, record.text)
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
