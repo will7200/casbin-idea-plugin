@@ -126,6 +126,11 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
     private fun addHighlights(
         addHighlights: List<CasbinExecutorRequest.CasbinEnforcementRequest>
     ) {
+        if (addHighlights.isNotEmpty()) {
+            if (addHighlights[0].model?.document?.lineCount == 0) {
+                return
+            }
+        }
         ApplicationManager.getApplication().invokeAndWait(Runnable {
             ApplicationManager.getApplication().runWriteAction {
                 for (request in addHighlights) {
