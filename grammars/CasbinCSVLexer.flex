@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 %unicode
 
 EOL=\R
-WHITE_SPACE=\s+
+WHITE_SPACE=[\r\t\f\v ]+
 
 TEXT=[^ ,:;|\t\r\n\"\\]+
 ESCAPED_TEXT=[,:;|\t\r\n]|\"\"|\\\"
@@ -138,6 +138,10 @@ CRLF=\n
 <YYINITIAL, AFTER_TEXT, UNESCAPED_TEXT> {EOL}
 {
     yybegin(YYINITIAL);
+    return CasbinCSVElementTypes.CRLF;
+}
+{CRLF}
+{
     return CasbinCSVElementTypes.CRLF;
 }
 

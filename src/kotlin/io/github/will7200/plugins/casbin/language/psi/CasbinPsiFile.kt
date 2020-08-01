@@ -3,9 +3,9 @@ package io.github.will7200.plugins.casbin.language.psi
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.util.PsiTreeUtil
+import io.github.will7200.plugins.casbin.language.CasbinFileConstants
 import io.github.will7200.plugins.casbin.language.CasbinFileType
 import io.github.will7200.plugins.casbin.language.CasbinLanguage
-import io.github.will7200.plugins.casbin.language.CasbinFileConstants
 
 class CasbinPsiFile(viewProvider: FileViewProvider) : PsiFileBase(
     viewProvider,
@@ -15,6 +15,12 @@ class CasbinPsiFile(viewProvider: FileViewProvider) : PsiFileBase(
     override fun toString() = CasbinFileConstants.PSI_FILE_NAME
     val sections: List<CasbinSection>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinSection::class.java)
+
+    fun sectionByName(name: String): CasbinSection? {
+        return sections.first {
+            it.header.sectionName?.text == name
+        }
+    }
 
     val properties: Collection<CasbinProperty>
         get() = PsiTreeUtil.findChildrenOfType(this, CasbinProperty::class.java)

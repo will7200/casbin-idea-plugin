@@ -28,9 +28,8 @@ public interface CasbinSection extends PsiElement {
   //matching setProperty(CasbinSection, ...)
   //methods are not found in CasbinPsiUtils
 
-  //WARNING: getProperty(...) is skipped
-  //matching getProperty(CasbinSection, ...)
-  //methods are not found in CasbinPsiUtils
+  @Nullable
+  CasbinProperty getProperty(@NotNull String propertyName);
 
   @Nullable
   String getName();

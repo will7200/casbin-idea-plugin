@@ -40,4 +40,10 @@ public class CasbinSectionImpl extends CasbinSectionMixin implements CasbinSecti
     return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinProperty.class);
   }
 
+  @Override
+  @Nullable
+  public CasbinProperty getProperty(@NotNull String propertyName) {
+    return CasbinPsiUtils.getProperty(this, propertyName);
+  }
+
 }

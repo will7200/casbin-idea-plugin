@@ -1,21 +1,43 @@
 package io.github.will7200.plugins.casbin.executor
 
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.util.messages.MessageBus
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.psi.PsiManager
 import io.github.will7200.plugins.casbin.CasbinError
 import io.github.will7200.plugins.casbin.CasbinExecutorProducer
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
+import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
 import org.casbin.jcasbin.main.Enforcer
+import java.io.File
 
 
 class CasbinEnforcementProducer(
     private val modelPath: String?,
     private val policyFile: String?,
-    private val bus: MessageBus
+    private val project: Project
 ) : CasbinExecutorProducer {
     private var log: Logger = Logger.getInstance(CasbinEnforcementProducer::class.java)
     private var enforcer: Enforcer
+    private val bus = project.messageBus
+
+    // expectedValAmount hold the amount of rvals that the enforcer is expecting
+    // TODO: Does having a file with a non registered casbin extension give the correct PSIFile?
+    private val expectedValAmount: Int? by lazy {
+        if (modelPath != null) {
+            LocalFileSystem.getInstance().findFileByIoFile(File(modelPath))?.let {
+                val psiFile = PsiManager.getInstance(project).findFile(it)
+                if (psiFile is CasbinPsiFile) {
+                    val propertyDefinition = psiFile.sectionByName("request_definition")?.getProperty("r")
+                    return@lazy propertyDefinition?.optionValues?.valueTuple?.attributeDefinitionList?.size
+                } else {
+                    return@lazy null
+                }
+            }
+        }
+        return@lazy null
+    }
 
     init {
         try {
@@ -33,16 +55,6 @@ class CasbinEnforcementProducer(
                     executeEnforcement(casbinRequest)
                 }
             }
-            is CasbinExecutorRequest.CasbinFileChangeRequest -> {
-                when (casbinRequest) {
-                    is CasbinExecutorRequest.CasbinModelFileChangeRequest -> {
-                        // TODO: Model File Change
-                    }
-                    is CasbinExecutorRequest.CasbinPolicyFileChangeRequest -> {
-                        // TODO: Policy File Change
-                    }
-                }
-            }
             else -> {
                 log.warn("unknown type handle ${casbinRequest.toString()}")
                 log.warn("skipping")
@@ -56,10 +68,20 @@ class CasbinEnforcementProducer(
         publisher.beforeProcessing(casbinRequest);
         try {
             when {
-                casbinRequest.rvals.isEmpty() || (casbinRequest.rvals.size == 1 && casbinRequest.rvals[0].isEmpty()) -> {
+                casbinRequest.rvals.isEmpty() -> {
                     casbinRequest.processed = false
                     casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
                     casbinRequest.message = "Empty rvals"
+                }
+                casbinRequest.rvals.size == 1 && casbinRequest.rvals[0].isEmpty() -> {
+                    casbinRequest.processed = false
+                    casbinRequest.result = CasbinExecutorRequest.Decision.INVALID
+                    casbinRequest.message = "Skipped empty line"
+                }
+                casbinRequest.rvals.size != expectedValAmount -> {
+                    casbinRequest.processed = false
+                    casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
+                    casbinRequest.message = "Expecting $expectedValAmount values instead of ${casbinRequest.rvals.size}"
                 }
                 else -> {
                     if (enforcer.enforce(*casbinRequest.rvals)) {

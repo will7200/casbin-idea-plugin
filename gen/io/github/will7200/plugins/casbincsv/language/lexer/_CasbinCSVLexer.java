@@ -42,25 +42,25 @@ public class _CasbinCSVLexer implements FlexLexer {
 
   /** 
    * Translates characters to character classes
-   * Chosen bits are [7, 7, 7]
-   * Total runtime size is 1928 bytes
+   * Chosen bits are [9, 6, 6]
+   * Total runtime size is 1568 bytes
    */
   public static int ZZ_CMAP(int ch) {
-    return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch>>14]|((ch>>7)&0x7f)]<<7)|(ch&0x7f)];
+    return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch>>12]|((ch>>6)&0x3f)]<<6)|(ch&0x3f)];
   }
 
-  /* The ZZ_CMAP_Z table has 68 entries */
+  /* The ZZ_CMAP_Z table has 272 entries */
   static final char ZZ_CMAP_Z[] = zzUnpackCMap(
-    "\1\0\103\200");
+    "\1\0\1\100\1\200\u010d\100");
 
-  /* The ZZ_CMAP_Y table has 256 entries */
+  /* The ZZ_CMAP_Y table has 192 entries */
   static final char ZZ_CMAP_Y[] = zzUnpackCMap(
-    "\1\0\1\1\53\2\1\3\22\2\1\4\37\2\1\3\237\2");
+    "\1\0\1\1\1\2\175\3\1\4\77\3");
 
-  /* The ZZ_CMAP_A table has 640 entries */
+  /* The ZZ_CMAP_A table has 320 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\0\1\10\1\2\2\1\1\3\22\0\1\6\1\0\1\11\11\0\1\7\15\0\2\7\40\0\1\5\37\0\1"+
-    "\7\10\0\1\1\32\0\1\4\337\0\1\4\177\0\13\4\35\0\2\1\5\0\1\4\57\0\1\4\40\0");
+    "\11\0\1\11\1\2\1\1\1\5\1\3\22\0\1\7\1\0\1\12\11\0\1\10\15\0\2\10\40\0\1\6"+
+    "\31\0\1\4\5\0\1\10\10\0\1\1\242\0\2\1\26\0");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -68,11 +68,12 @@ public class _CasbinCSVLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\5\0\2\1\2\2\1\3\1\4\2\5\1\6\1\7"+
-    "\2\10\1\11\1\12\1\11\1\13\1\12";
+    "\5\0\1\1\2\2\1\1\1\3\1\4\2\5\1\6"+
+    "\1\7\1\2\1\10\2\11\1\10\1\12\1\13\1\14"+
+    "\1\12";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[22];
+    int [] result = new int[24];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -97,12 +98,12 @@ public class _CasbinCSVLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\12\0\24\0\36\0\50\0\62\0\74\0\106"+
-    "\0\120\0\132\0\106\0\132\0\106\0\132\0\132\0\144"+
-    "\0\156\0\106\0\170\0\132\0\170\0\132";
+    "\0\0\0\13\0\26\0\41\0\54\0\67\0\102\0\115"+
+    "\0\130\0\102\0\143\0\102\0\143\0\102\0\102\0\143"+
+    "\0\156\0\102\0\143\0\171\0\204\0\204\0\102\0\102";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[22];
+    int [] result = new int[24];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -125,20 +126,20 @@ public class _CasbinCSVLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\6\1\7\1\10\1\11\1\7\1\12\1\13\1\14"+
-    "\1\15\1\16\1\17\2\10\1\11\1\13\1\17\1\13"+
-    "\1\14\1\15\1\17\1\20\1\21\2\22\1\21\1\23"+
-    "\1\13\1\24\1\22\1\25\1\20\1\21\1\10\1\11"+
-    "\1\21\1\12\1\13\1\14\1\15\2\17\4\13\1\26"+
-    "\1\13\1\17\1\13\1\17\2\6\2\0\1\6\5\0"+
-    "\1\6\1\7\2\13\1\7\1\0\1\13\1\0\1\13"+
-    "\2\0\4\13\1\0\1\13\1\0\1\13\2\0\1\13"+
-    "\1\10\2\13\1\0\1\13\1\0\1\13\13\0\2\20"+
-    "\2\0\1\20\5\0\1\20\1\21\2\13\1\21\1\0"+
-    "\1\13\1\0\1\13\12\0\1\24";
+    "\2\6\1\7\1\10\2\11\1\12\1\13\1\14\1\15"+
+    "\1\16\1\17\2\7\1\10\1\13\1\20\1\17\1\13"+
+    "\1\14\1\15\1\17\2\21\1\22\1\23\2\24\1\25"+
+    "\1\13\1\22\1\23\1\26\2\21\1\7\1\10\2\24"+
+    "\1\12\1\13\1\14\1\15\2\17\1\0\1\27\3\13"+
+    "\1\30\1\13\1\17\1\13\1\17\2\6\2\0\2\6"+
+    "\22\0\1\7\3\13\1\0\1\13\1\0\1\13\1\0"+
+    "\2\6\1\0\1\13\2\11\1\0\1\13\1\0\1\13"+
+    "\4\0\3\13\1\0\1\13\1\0\1\13\1\0\2\21"+
+    "\2\0\2\21\5\0\2\21\1\0\1\13\2\24\1\0"+
+    "\1\13\1\0\1\13\13\0\1\22";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[130];
+    int [] result = new int[143];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -176,11 +177,11 @@ public class _CasbinCSVLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\5\0\4\1\1\11\1\1\1\11\1\1\2\11\4\1"+
-    "\1\11\1\1\1\11";
+    "\5\0\1\1\1\11\2\1\1\11\1\1\1\11\1\1"+
+    "\2\11\2\1\1\11\4\1\2\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[22];
+    int [] result = new int[24];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -516,13 +517,13 @@ public class _CasbinCSVLexer implements FlexLexer {
     return CasbinCSVElementTypes.TEXT;
             } 
             // fall through
-          case 12: break;
+          case 13: break;
           case 2: 
             { yybegin(YYINITIAL);
     return CasbinCSVElementTypes.CRLF;
             } 
             // fall through
-          case 13: break;
+          case 14: break;
           case 3: 
             { String text = yytext().toString();
     if (myEscapeCharacter.getCharacter().equals(text)) {
@@ -532,12 +533,12 @@ public class _CasbinCSVLexer implements FlexLexer {
     return CasbinCSVElementTypes.TEXT;
             } 
             // fall through
-          case 14: break;
+          case 15: break;
           case 4: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 15: break;
+          case 16: break;
           case 5: 
             { if (myValueSeparator.isValueSeparator(yytext().toString())) {
         yybegin(YYINITIAL);
@@ -550,23 +551,23 @@ public class _CasbinCSVLexer implements FlexLexer {
     return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 16: break;
+          case 17: break;
           case 6: 
             { yybegin(ESCAPED_TEXT);
     return CasbinCSVElementTypes.QUOTE;
             } 
             // fall through
-          case 17: break;
+          case 18: break;
           case 7: 
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 18: break;
+          case 19: break;
           case 8: 
             { return CasbinCSVElementTypes.TEXT;
             } 
             // fall through
-          case 19: break;
+          case 20: break;
           case 9: 
             { String text = yytext().toString();
     if (myEscapeCharacter.isEscapedQuote(text)
@@ -582,7 +583,7 @@ public class _CasbinCSVLexer implements FlexLexer {
     return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 20: break;
+          case 21: break;
           case 10: 
             { String text = yytext().toString();
     if (myEscapeCharacter.getCharacter().equals(text)) {
@@ -601,13 +602,18 @@ public class _CasbinCSVLexer implements FlexLexer {
     return CasbinCSVElementTypes.TEXT;
             } 
             // fall through
-          case 21: break;
+          case 22: break;
           case 11: 
             { yybegin(AFTER_TEXT);
     return CasbinCSVElementTypes.QUOTE;
             } 
             // fall through
-          case 22: break;
+          case 23: break;
+          case 12: 
+            { return CasbinCSVElementTypes.CRLF;
+            } 
+            // fall through
+          case 24: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

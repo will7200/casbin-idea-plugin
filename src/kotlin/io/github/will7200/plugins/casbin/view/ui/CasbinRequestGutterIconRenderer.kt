@@ -13,6 +13,7 @@ class CasbinRequestGutterIconRenderer(private val ce: CasbinExecutorRequest.Casb
             CasbinExecutorRequest.Decision.ALLOW -> AllIcons.Actions.Commit
             CasbinExecutorRequest.Decision.ERROR -> AllIcons.General.Error
             CasbinExecutorRequest.Decision.DENY -> AllIcons.Vcs.Remove
+            CasbinExecutorRequest.Decision.INVALID -> AllIcons.RunConfigurations.ToolbarTerminated
             else -> {
                 return AllIcons.Debugger.Question_badge
             }

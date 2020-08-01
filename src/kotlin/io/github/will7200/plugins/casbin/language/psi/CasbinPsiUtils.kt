@@ -17,4 +17,12 @@ object CasbinPsiUtils {
         val keyNode = element.node.findChildByType(CasbinElementTypes.OPTION_VALUES)
         return keyNode?.text
     }
+
+    @JvmStatic
+    fun getProperty(element: CasbinSection, propertyName: String): CasbinProperty? {
+        val propertyNodes = element.propertyList
+        return propertyNodes.first {
+            it.key == propertyName
+        }
+    }
 }

@@ -10,7 +10,8 @@ This project incorporates components from the projects listed below. The origina
         No changes to grammar definition itself besides changing where the generated code gets outputted
     grammars/CasbinCSVLexer.flex (source: intellij-csv-validator/src/main/java/net/seesharpsoft/intellij/plugins/csv/CsvLexer.flex)
         Changes:
-        No changes to grammar definition itself besides changing where the generated code gets outputted
+        1. where the generated code gets outputted
+        2. Lexer does not allow new lines as whitespace
     src/kotlin/io/github/will7200/plugins/casbincsv/language/lexer/CasbinCSVEscapeCharacter.kt (source: intellij-csv-validator/src/main/java/net/seesharpsoft/intellij/plugins/csv/CsvEscapeCharacter.java)
         Changes:
         Converted to Kotlin

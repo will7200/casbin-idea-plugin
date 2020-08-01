@@ -29,12 +29,18 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
                 enforcers.remove(key)
             }
         }
+        val found = enforcers[lk]
+        if (found != null) {
+            return
+        }
         try {
-            enforcers[lk] = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject.messageBus)
+            val producer = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject)
+            enforcers[lk] = producer
         } catch (ce: CasbinError) {
             val casbinExecutorErrorsNotifier = CasbinExecutorErrorsNotifier()
             casbinExecutorErrorsNotifier.notify(myProject, ce.message, ce.details)
         }
+        return
     }
 
     override fun executeEnforcement(request: CasbinExecutorRequest.CasbinEnforcementRequest) {
@@ -63,8 +69,7 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
     }
 
     private fun reInitializeEnforce(key: EnforcerKey) {
-        log.warn("Updating enforcer:\n model definition: ${key.first}\n policy file: ${key.second}")
-        val newEnforcer = CasbinEnforcementProducer(key.first, key.second, myProject.messageBus)
+        val newEnforcer = CasbinEnforcementProducer(key.first, key.second, myProject)
         enforcers.remove(key)
         enforcers[key] = newEnforcer
     }

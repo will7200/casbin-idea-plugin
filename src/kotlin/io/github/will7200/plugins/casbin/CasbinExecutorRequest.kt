@@ -7,7 +7,8 @@ open class CasbinExecutorRequest {
     enum class Decision {
         ALLOW,
         DENY,
-        ERROR
+        ERROR,
+        INVALID
     }
 
     open class CasbinEnforcementRequest(
