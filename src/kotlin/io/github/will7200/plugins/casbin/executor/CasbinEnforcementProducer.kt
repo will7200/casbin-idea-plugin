@@ -3,11 +3,13 @@ package io.github.will7200.plugins.casbin.executor
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import io.github.will7200.plugins.casbin.CasbinError
 import io.github.will7200.plugins.casbin.CasbinExecutorProducer
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
+import io.github.will7200.plugins.casbin.language.CasbinLanguage
 import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
 import org.casbin.jcasbin.main.Enforcer
 import java.io.File
@@ -23,16 +25,27 @@ class CasbinEnforcementProducer(
     private val bus = project.messageBus
 
     // expectedValAmount hold the amount of rvals that the enforcer is expecting
-    // TODO: Does having a file with a non registered casbin extension give the correct PSIFile?
+    // if the the model definition is not registered as a casbin file it will create an in memory psiFile
     private val expectedValAmount: Int? by lazy {
         if (modelPath != null) {
             LocalFileSystem.getInstance().findFileByIoFile(File(modelPath))?.let {
-                val psiFile = PsiManager.getInstance(project).findFile(it)
+                val psiFile = PsiManager.getInstance(project).findFile(it) ?: return@lazy null
                 if (psiFile is CasbinPsiFile) {
                     val propertyDefinition = psiFile.sectionByName("request_definition")?.getProperty("r")
                     return@lazy propertyDefinition?.optionValues?.valueTuple?.attributeDefinitionList?.size
                 } else {
-                    return@lazy null
+                    // using a non registered casbin extension we have to create our own psiFile
+                    val newPsiFile = PsiFileFactory.getInstance(project).createFileFromText(
+                        modelPath,
+                        CasbinLanguage,
+                        File(modelPath).readText(),
+                        false,
+                        true,
+                        false,
+                        it
+                    ) as CasbinPsiFile
+                    val propertyDefinition = newPsiFile.sectionByName("request_definition")?.getProperty("r")
+                    return@lazy propertyDefinition?.optionValues?.valueTuple?.attributeDefinitionList?.size
                 }
             }
         }
