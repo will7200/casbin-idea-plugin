@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "io.github.will7200.plugins.casbin"
-version = "0.1.0-Alpha"
+version = "0.1.0-alpha"
 
 repositories {
     mavenCentral()
@@ -68,10 +68,3 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 }
-//tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-//    changeNotes(
-//        """
-//      Add change notes here.<br>
-//      <em>most HTML tags may be used</em>"""
-//    )
-//}

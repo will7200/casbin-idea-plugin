@@ -1,11 +1,21 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
-    <id>io.github.will7200.plugins.casbin.casbin-idea-plugin</id>
+    <id>io.github.will7200.plugins.casbin</id>
     <name>Casbin</name>
-    <vendor url="https://github.com/will7200">Will7200</vendor>
+    <vendor url="https://github.com/will7200">will7200</vendor>
 
     <description><![CDATA[
-    Casbin plugin provides functionality syntax highlighting.
+    Support for Casbin Files and evaluating policies.
     ]]></description>
+
+    <change-notes><![CDATA[
+<li>Add support for parsing Casbin Files</li>
+<li>Add support for parsing Casbin CSV Policy Definitions</li>
+<li>Add syntax highlighting for Casbin Files</li>
+<li>Add support to evaluate policies given a model and policy definition<li>
+<li>Add Tool Window for interactive evaluation of policies</li>
+]]></change-notes>
+
+    <idea-version since-build="202.6397"/>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
