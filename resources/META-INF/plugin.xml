@@ -21,7 +21,7 @@
 <li>Add Tool Window for interactive evaluation of policies</li>
 ]]></change-notes>
 
-    <idea-version since-build="202.6397"/>
+    <idea-version since-build="201"/>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
