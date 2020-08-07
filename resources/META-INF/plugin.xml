@@ -4,7 +4,13 @@
     <vendor url="https://github.com/will7200">will7200</vendor>
 
     <description><![CDATA[
-    Support for Casbin Files and evaluating policies.
+    Support for Casbin models and evaluating policies.
+    <br/>
+    <b>Features</b>
+<li>Coding assistance for Casbin Models (highlighting, completion, formatting, refactorings, etc.)</li>
+<li>Goto declaration support for object attributes</li>
+<li>Support for parsing Casbin CSV Policy Definitions</li>
+<li>Tool Window for interactive evaluation of policies. Auto reloads interactive model on file changes.</li>
     ]]></description>
 
     <change-notes><![CDATA[
