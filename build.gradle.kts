@@ -1,5 +1,15 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
+// Import variables from gradle.properties file
+val pluginGroup: String by project
+val pluginName: String by project
+val pluginVersion: String by project
+val pluginSinceBuild: String by project
+val pluginUntilBuild: String by project
+val platformType: String by project
+val platformVersion: String by project
+val platformDownloadSources: String by project
+
 val psiViewerVersion: String by project
 val env: String? = System.getenv("CASBIN_ENV")
 
@@ -10,8 +20,9 @@ plugins {
     kotlin("jvm") version "1.3.72"
 }
 
-group = "io.github.will7200.plugins.casbin"
-version = "0.1.0-alpha"
+
+group = pluginGroup
+version = pluginVersion
 
 repositories {
     mavenCentral()
@@ -28,9 +39,10 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version = "2020.1.2"
+    version = platformVersion
     pluginName = rootProject.name
-    updateSinceUntilBuild = true
+    updateSinceUntilBuild = false
+    downloadSources = platformDownloadSources.toBoolean()
     sandboxDirectory = "${project.projectDir}/sandbox/idea-sandbox"
     val devPlugins = arrayOf("PsiViewer:$psiViewerVersion")
     setPlugins(*if (env == "DEV") devPlugins else emptyArray())
@@ -66,5 +78,16 @@ tasks {
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
+    }
+
+    patchPluginXml {
+        version(pluginVersion)
+        sinceBuild(pluginSinceBuild)
+        untilBuild(pluginUntilBuild)
+    }
+
+    publishPlugin {
+        token(System.getenv("PUBLISH_TOKEN"))
+        channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
     }
 }
