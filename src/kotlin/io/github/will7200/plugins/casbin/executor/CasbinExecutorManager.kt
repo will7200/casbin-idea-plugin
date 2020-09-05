@@ -37,8 +37,7 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
             val producer = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject)
             enforcers[lk] = producer
         } catch (ce: CasbinError) {
-            val casbinExecutorErrorsNotifier = CasbinExecutorErrorsNotifier()
-            casbinExecutorErrorsNotifier.notify(myProject, ce.message, ce.details)
+            CasbinExecutorErrorsNotifier.notify(myProject, ce.message, ce.details)
         }
         return
     }

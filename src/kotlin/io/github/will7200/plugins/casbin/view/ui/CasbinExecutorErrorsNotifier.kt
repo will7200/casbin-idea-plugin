@@ -8,23 +8,26 @@ import com.intellij.openapi.project.Project
 
 
 class CasbinExecutorErrorsNotifier {
-    private val NOTIFICATION_GROUP =
-        NotificationGroup("Casbin Executor Error", NotificationDisplayType.BALLOON, true)
+    companion object {
+        @JvmStatic
+        val NOTIFICATION_GROUP =
+            NotificationGroup("Casbin Executor Error", NotificationDisplayType.BALLOON, true)
 
-    fun notify(content: String?): Notification? {
-        return notify(null, content)
-    }
+        fun notify(content: String?): Notification? {
+            return notify(null, content)
+        }
 
-    fun notify(project: Project?, content: String?): Notification? {
-        val notification: Notification = NOTIFICATION_GROUP.createNotification(content!!, NotificationType.ERROR)
-        notification.notify(project)
-        return notification
-    }
+        fun notify(project: Project?, content: String?): Notification? {
+            val notification: Notification = NOTIFICATION_GROUP.createNotification(content!!, NotificationType.ERROR)
+            notification.notify(project)
+            return notification
+        }
 
-    fun notify(project: Project?, title: String?, details: String?): Notification? {
-        val notification: Notification =
-            NOTIFICATION_GROUP.createNotification(title!!, details!!, NotificationType.ERROR)
-        notification.notify(project)
-        return notification
+        fun notify(project: Project?, title: String?, details: String?): Notification? {
+            val notification: Notification =
+                NOTIFICATION_GROUP.createNotification(title!!, details!!, NotificationType.ERROR)
+            notification.notify(project)
+            return notification
+        }
     }
 }
