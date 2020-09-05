@@ -31,7 +31,9 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.casbin", "jcasbin", "1.6.0")
+    implementation("org.casbin", "jcasbin", "1.5.0") {
+        exclude("org.slf4j")
+    }
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4")
     implementation("io.github.java-diff-utils:java-diff-utils:4.7")
     testCompile("junit", "junit", "4.12")
