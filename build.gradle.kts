@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 // Import variables from gradle.properties file
@@ -18,6 +19,8 @@ plugins {
     idea
     id("org.jetbrains.intellij") version "0.4.21"
     kotlin("jvm") version "1.3.72"
+    // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+    id("org.jetbrains.changelog") version "0.4.0"
 }
 
 
@@ -74,6 +77,7 @@ sourceSets {
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
@@ -86,9 +90,17 @@ tasks {
         version(pluginVersion)
         sinceBuild(pluginSinceBuild)
         untilBuild(pluginUntilBuild)
+
+        // Get the latest available change notes from the changelog file
+        changeNotes(
+            closure {
+                changelog.getLatest().toHTML()
+            }
+        )
     }
 
     publishPlugin {
+        dependsOn("patchChangelog")
         token(System.getenv("PUBLISH_TOKEN"))
         channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
     }

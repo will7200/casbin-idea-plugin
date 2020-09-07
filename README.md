@@ -1,5 +1,7 @@
 Casbin support for IntelliJ-based IDEs
 ========================================
+[![Version](https://img.shields.io/jetbrains/plugin/v/14809.svg)](https://plugins.jetbrains.com/plugin/14809)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/14809.svg)](https://plugins.jetbrains.com/plugin/14809)
 
 Get it from plugin repository: https://plugins.jetbrains.com/plugin/14809-casbin
 
@@ -17,6 +19,20 @@ Editor
 
 Casbin Executor
 ![Casbin Executor](assets/screenshots/casbin_executor.PNG?raw=true)
+
+## Installation
+
+- Using IDE built-in plugin system:
+  
+  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "CASBIN"</kbd> >
+  <kbd>Install Plugin</kbd>
+  
+- Manually:
+
+  Download the [latest release](https://github.com/will7200/casbin/releases/latest) and install it manually using
+  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+
+
 
 ### Development
 
