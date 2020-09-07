@@ -1,5 +1,6 @@
 Casbin support for IntelliJ-based IDEs
 ========================================
+[Build Status](https://github.com/will7200/casbin-idea-plugin/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/14809.svg)](https://plugins.jetbrains.com/plugin/14809)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/14809.svg)](https://plugins.jetbrains.com/plugin/14809)
 
