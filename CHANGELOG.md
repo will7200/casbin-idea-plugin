@@ -6,9 +6,11 @@
 ### Added
 - Use Jetbrains changelog to patch xml
 - Add Github actions to build and deploy
+- Add error message for bad requests
 
 ### Fixed
 - Exclude org.slf4j dependency from jcasbin
+- Remove old casbin enforcers from listening to requests
 
 ## [0.1.1]
 ### Added
