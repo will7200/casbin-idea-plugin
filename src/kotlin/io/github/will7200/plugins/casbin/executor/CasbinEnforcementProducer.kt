@@ -58,19 +58,22 @@ class CasbinEnforcementProducer(
         } catch (exception: Exception) {
             throw CasbinError("Couldn't create an enforcer", exception)
         }
-        bus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
+        bus.connect(this).subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
     }
 
     private fun executeRequest(casbinRequest: CasbinExecutorRequest) {
         when (casbinRequest) {
             is CasbinExecutorRequest.CasbinEnforcementRequest -> {
-                if (casbinRequest.modelFile == this.modelPath && casbinRequest.policyFile == this.policyFile) {
+                if (casbinRequest.modelFile.replace(
+                        "\\",
+                        "/"
+                    ) == this.modelPath && casbinRequest.policyFile.replace("\\", "/") == this.policyFile
+                ) {
                     executeEnforcement(casbinRequest)
                 }
             }
             else -> {
-                log.warn("unknown type handle ${casbinRequest.toString()}")
-                log.warn("skipping")
+                log.warn("skipping. unknown type handle ${casbinRequest.toString()}")
             }
         }
     }
@@ -115,5 +118,8 @@ class CasbinEnforcementProducer(
 
     override fun processRequest(request: CasbinExecutorRequest) {
         executeRequest(request)
+    }
+
+    override fun dispose() {
     }
 }

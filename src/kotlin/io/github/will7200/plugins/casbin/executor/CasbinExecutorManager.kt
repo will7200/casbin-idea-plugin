@@ -2,6 +2,7 @@ package io.github.will7200.plugins.casbin.executor
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.jetbrains.rd.util.ConcurrentHashMap
 import io.github.will7200.plugins.casbin.CasbinError
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
@@ -26,6 +27,8 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
         if (enforcers.size > maxEnforcers) {
             val removeKeys = enforcers.leastUsedKeys(enforcers.size - maxEnforcers)
             for (key in removeKeys) {
+                val oldEnforcer = enforcers[key]!!
+                Disposer.dispose(oldEnforcer)
                 enforcers.remove(key)
             }
         }
@@ -34,7 +37,7 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
             return
         }
         try {
-            val producer = CasbinEnforcementProducer(request.modelFile, request.policyFile, myProject)
+            val producer = CasbinEnforcementProducer(lk.first, lk.second, myProject)
             enforcers[lk] = producer
         } catch (ce: CasbinError) {
             CasbinExecutorErrorsNotifier.notify(myProject, ce.message, ce.details)
@@ -56,7 +59,11 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
         when (request) {
             is CasbinExecutorRequest.CasbinFileChangeNotify -> {
                 for (key in enforcers.keys()) {
-                    if (key.first == request.filePath || key.second == request.filePath) {
+                    if (key.first == request.filePath.replace("\\", "/") || key.second == request.filePath.replace(
+                            "\\",
+                            "/"
+                        )
+                    ) {
                         reInitializeEnforce(key)
                         request.enforcerSwapped = true
                         break
@@ -67,10 +74,16 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
         publisher.afterProcessing(request)
     }
 
+    override fun dispose() {
+    }
+
     private fun reInitializeEnforce(key: EnforcerKey) {
         val newEnforcer = CasbinEnforcementProducer(key.first, key.second, myProject)
+        val oldEnforcer = enforcers[key]!!
+        Disposer.dispose(oldEnforcer)
         enforcers.remove(key)
         enforcers[key] = newEnforcer
+        Disposer.register(this, newEnforcer)
     }
 
     companion object {
