@@ -111,8 +111,7 @@ class CasbinEnforcementProducer(
             publisher.afterProcessing(casbinRequest)
         } catch (ex: Exception) {
             casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
-            log.warn(ex.toString())
-            ex.printStackTrace()
+            casbinRequest.message = ex.message
         }
     }
 
