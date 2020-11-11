@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.JBSplitter;
 import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor;
 
 import javax.swing.*;
@@ -21,6 +22,9 @@ public class CasbinExecutorToolWindow {
     public EditorTextField requestEditorPane;
     private JButton runTestButton;
     private JCheckBox runAsyncCheckBox;
+    private JPanel Run;
+    private JBSplitter LeftPane;
+    private JBSplitter TopSplitter;
     private final Logger log = Logger.getInstance("CasbinExecutorToolWindow");
 
     public CasbinExecutorToolWindow(Project project, ToolWindow toolWindow) {
