@@ -10,6 +10,7 @@ val pluginUntilBuild: String by project
 val platformType: String by project
 val platformVersion: String by project
 val platformDownloadSources: String by project
+val pluginVerifierIdeVersions: String by project
 
 val psiViewerVersion: String by project
 val env: String? = System.getenv("CASBIN_ENV")
@@ -17,10 +18,10 @@ val env: String? = System.getenv("CASBIN_ENV")
 plugins {
     java
     idea
-    id("org.jetbrains.intellij") version "0.4.21"
+    id("org.jetbrains.intellij") version "0.6.3"
     kotlin("jvm") version "1.3.72"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "0.4.0"
+    id("org.jetbrains.changelog") version "0.6.2"
 }
 
 
@@ -97,6 +98,10 @@ tasks {
                 changelog.getLatest().toHTML()
             }
         )
+    }
+
+    runPluginVerifier {
+        ideVersions(pluginVerifierIdeVersions)
     }
 
     publishPlugin {
