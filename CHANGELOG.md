@@ -7,6 +7,7 @@
 - Use Jetbrains changelog to patch xml
 - Add Github actions to build and deploy
 - Add error message for bad requests
+- Split pane between options and editor in tool window
 
 ### Fixed
 - Exclude org.slf4j dependency from jcasbin
