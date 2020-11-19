@@ -2,7 +2,7 @@
 
 # Casbin Idea Plugin Changelog
 
-## [Unreleased]
+## [0.1.2]
 ### Added
 - Use Jetbrains changelog to patch xml
 - Add Github actions to build and deploy
