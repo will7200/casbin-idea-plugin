@@ -2,6 +2,10 @@
 
 # Casbin Idea Plugin Changelog
 
+## [Unreleased]
+### Added
+### Fixed
+
 ## [0.1.2]
 ### Added
 - Use Jetbrains changelog to patch xml
