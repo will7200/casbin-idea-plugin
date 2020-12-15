@@ -12,7 +12,7 @@ jobs:
   release:
     name: Publish Plugin
     runs-on: ubuntu-latest
-    container: gradle:jdk8
+    container: gradle:jdk11
     if: github.repository != 'JetBrains/intellij-platform-plugin-template'
     steps:
 
@@ -33,7 +33,7 @@ jobs:
     name: Update Changelog
     needs: release
     runs-on: ubuntu-latest
-    container: gradle:jdk8
+    container: gradle:jdk11
     steps:
 
       # Check out current repository
