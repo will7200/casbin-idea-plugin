@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Added
 - Use JDK 11
+- Support for 2020.3 IDEs
 ### Fixed
 - Intellij Warning using Default Project
 - Failed Test Cases
