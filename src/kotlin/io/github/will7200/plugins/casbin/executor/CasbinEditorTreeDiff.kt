@@ -6,7 +6,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiTreeChangeEvent
 import com.intellij.psi.PsiTreeChangeListener
@@ -72,7 +71,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
         val document = change.document
         runReadAction {
             val psiFile =
-                PsiDocumentManager.getInstance(ProjectManager.getInstance().defaultProject).getPsiFile(document)
+                PsiDocumentManager.getInstance(project).getPsiFile(document)
                     ?: return@runReadAction
             val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
             for (record in casbinCSVFile.records) {
@@ -95,7 +94,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
         val document = change.document
         runReadAction {
             val psiFile =
-                PsiDocumentManager.getInstance(ProjectManager.getInstance().defaultProject).getPsiFile(document)
+                PsiDocumentManager.getInstance(project).getPsiFile(document)
                     ?: return@runReadAction
             val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
             for (record in casbinCSVFile.records) {
