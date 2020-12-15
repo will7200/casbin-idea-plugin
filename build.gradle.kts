@@ -19,7 +19,7 @@ plugins {
     java
     idea
     id("org.jetbrains.intellij") version "0.6.3"
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.21"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "0.6.2"
 }
@@ -38,7 +38,7 @@ dependencies {
     implementation("org.casbin", "jcasbin", "1.5.0") {
         exclude("org.slf4j")
     }
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("io.github.java-diff-utils:java-diff-utils:4.7")
     testCompile("junit", "junit", "4.12")
 }

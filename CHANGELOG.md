@@ -4,7 +4,10 @@
 
 ## [Unreleased]
 ### Added
+- Use JDK 11
 ### Fixed
+- Intellij Warning using Default Project
+- Failed Test Cases
 
 ## [0.1.2]
 ### Added
