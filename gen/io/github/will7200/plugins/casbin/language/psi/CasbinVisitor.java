@@ -1,9 +1,9 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.psi;
 
-import org.jetbrains.annotations.*;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 public class CasbinVisitor extends PsiElementVisitor {
 
@@ -88,6 +88,10 @@ public class CasbinVisitor extends PsiElementVisitor {
   }
 
   public void visitStringValue(@NotNull CasbinStringValue o) {
+    visitPsiElement(o);
+  }
+
+  public void visitSubAttribute(@NotNull CasbinSubAttribute o) {
     visitPsiElement(o);
   }
 

@@ -79,7 +79,7 @@ parameters ::= ((some_value (COMMA some_value)+) | some_value)
 equality ::= some_value OP_EQUALS some_value
 some_value ::= (object | ALLOW | DENY | string_value)
 
-object ::= object_identifier DOT attribute {
+object ::= object_identifier DOT attribute (DOT sub_attribute)* {
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinObjectMixin"
   methods=[getName]
 }
@@ -105,6 +105,10 @@ attribute  ::= (IDENTIFIER | "_"){
 }
 attribute_definition ::= IDENTIFIER | "_"{
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeDefinitionMixin"
+  methods=[getName]
+}
+sub_attribute  ::= (IDENTIFIER | "_"){
+  mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinSubAttributeMixin"
   methods=[getName]
 }
 

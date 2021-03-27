@@ -5,6 +5,7 @@ import com.intellij.lang.ASTNode
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
+import com.intellij.psi.tree.TokenSet
 import com.intellij.util.IncorrectOperationException
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementFactory
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes
@@ -31,6 +32,13 @@ abstract class CasbinObjectMixin(node: ASTNode) : ASTWrapperPsiElement(node), Ca
             return myReference[0]
         }
         return null
+    }
+
+    fun isObjectAccessor(): Boolean {
+        val subAttributes = node.getChildren(
+            TokenSet.create(CasbinElementTypes.SUB_ATTRIBUTE)
+        )
+        return subAttributes.isNotEmpty()
     }
 
     override fun getReferences(): Array<PsiReference> = myReference

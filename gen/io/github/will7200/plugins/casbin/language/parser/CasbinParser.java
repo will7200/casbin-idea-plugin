@@ -1,15 +1,16 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.parser;
 
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.LightPsiParser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
-import static io.github.will7200.plugins.casbin.language.parser.CasbinParserUtil.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.LightPsiParser;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
+
+import static io.github.will7200.plugins.casbin.language.parser.CasbinParserUtil.*;
+import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
 
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class CasbinParser implements PsiParser, LightPsiParser {
@@ -202,7 +203,7 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // object_identifier DOT attribute
+  // object_identifier DOT attribute (DOT sub_attribute)*
   public static boolean object(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -211,7 +212,30 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     r = object_identifier(b, l + 1);
     r = r && consumeToken(b, DOT);
     r = r && attribute(b, l + 1);
+    r = r && object_3(b, l + 1);
     exit_section_(b, m, OBJECT, r);
+    return r;
+  }
+
+  // (DOT sub_attribute)*
+  private static boolean object_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "object_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!object_3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "object_3", c)) break;
+    }
+    return true;
+  }
+
+  // DOT sub_attribute
+  private static boolean object_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "object_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, DOT);
+    r = r && sub_attribute(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -438,6 +462,18 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, OPEN_QUOTES, IDENTIFIER, CLOSE_QUOTES);
     exit_section_(b, m, STRING_VALUE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // IDENTIFIER | "_"
+  public static boolean sub_attribute(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "sub_attribute")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SUB_ATTRIBUTE, "<sub attribute>");
+    r = consumeToken(b, IDENTIFIER);
+    if (!r) r = consumeToken(b, "_");
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

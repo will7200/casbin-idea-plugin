@@ -1,9 +1,9 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.psi;
 
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.PsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 import io.github.will7200.plugins.casbin.language.psi.impl.*;
 
 public interface CasbinElementTypes {
@@ -29,6 +29,7 @@ public interface CasbinElementTypes {
   IElementType SECTION_NAME = new CasbinElementType("SECTION_NAME");
   IElementType SOME_VALUE = new CasbinElementType("SOME_VALUE");
   IElementType STRING_VALUE = new CasbinElementType("STRING_VALUE");
+  IElementType SUB_ATTRIBUTE = new CasbinElementType("SUB_ATTRIBUTE");
   IElementType VALUE_EXPRESSION = new CasbinElementType("VALUE_EXPRESSION");
   IElementType VALUE_IDENTIFIER = new CasbinElementType("VALUE_IDENTIFIER");
   IElementType VALUE_TUPLE = new CasbinElementType("VALUE_TUPLE");
@@ -114,14 +115,13 @@ public interface CasbinElementTypes {
       }
       else if (type == STRING_VALUE) {
         return new CasbinStringValueImpl(node);
-      }
-      else if (type == VALUE_EXPRESSION) {
+      } else if (type == SUB_ATTRIBUTE) {
+        return new CasbinSubAttributeImpl(node);
+      } else if (type == VALUE_EXPRESSION) {
         return new CasbinValueExpressionImpl(node);
-      }
-      else if (type == VALUE_IDENTIFIER) {
+      } else if (type == VALUE_IDENTIFIER) {
         return new CasbinValueIdentifierImpl(node);
-      }
-      else if (type == VALUE_TUPLE) {
+      } else if (type == VALUE_TUPLE) {
         return new CasbinValueTupleImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);

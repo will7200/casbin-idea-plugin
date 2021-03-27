@@ -1,14 +1,13 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.psi.impl;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
 import io.github.will7200.plugins.casbin.language.psi.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class CasbinObjectImpl extends CasbinObjectMixin implements CasbinObject {
 
@@ -35,6 +34,12 @@ public class CasbinObjectImpl extends CasbinObjectMixin implements CasbinObject 
   @NotNull
   public CasbinObjectIdentifier getObjectIdentifier() {
     return findNotNullChildByClass(CasbinObjectIdentifier.class);
+  }
+
+  @Override
+  @NotNull
+  public List<CasbinSubAttribute> getSubAttributeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinSubAttribute.class);
   }
 
 }
