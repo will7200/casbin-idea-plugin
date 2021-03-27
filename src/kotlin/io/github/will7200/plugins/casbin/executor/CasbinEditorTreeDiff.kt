@@ -4,11 +4,8 @@ import com.github.difflib.DiffUtils
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.PsiTreeChangeEvent
-import com.intellij.psi.PsiTreeChangeListener
 import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVPsiFile
 import kotlinx.coroutines.*
@@ -112,56 +109,5 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                 )
             }
         }
-    }
-
-    class DiffTree(document: Document) : PsiTreeChangeListener {
-        override fun beforePropertyChange(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun childReplaced(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun childrenChanged(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun beforeChildAddition(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun beforeChildReplacement(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun propertyChanged(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun beforeChildrenChange(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun childMoved(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun childRemoved(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun beforeChildMovement(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun childAdded(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
-        override fun beforeChildRemoval(event: PsiTreeChangeEvent) {
-            TODO("Not yet implemented")
-        }
-
     }
 }
