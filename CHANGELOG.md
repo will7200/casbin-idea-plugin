@@ -4,6 +4,33 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.1.4]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+- Unused PsiChangeListeners
+### Fixed
+- Sub object attribute accessors in matching function
+### Security
+
+
+## [0.1.3]
+### Added
 - Use JDK 11
 - Support for 2020.3 IDEs
 ### Fixed
