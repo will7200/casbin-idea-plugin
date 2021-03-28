@@ -14,7 +14,7 @@ class CasbinFileListener(private val project: Project) : BulkFileListener {
     override fun after(events: MutableList<out VFileEvent>) {
         super.after(events)
         for (event in events) {
-            if (File(event.path).extension in arrayOf("csv", "conf")) {
+            if (File(event.path).extension in arrayOf("csv", "conf", "casbincsv")) {
                 sendChangeEvent(event.path)
             }
         }
