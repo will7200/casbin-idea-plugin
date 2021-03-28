@@ -16,12 +16,15 @@ val psiViewerVersion: String by project
 val env: String? = System.getenv("CASBIN_ENV")
 
 plugins {
-    java
     idea
-    id("org.jetbrains.intellij") version "0.6.3"
-    kotlin("jvm") version "1.4.21"
+    // Java support
+    id("java")
+    // Kotlin support
+    id("org.jetbrains.kotlin.jvm") version "1.4.31"
+    // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
+    id("org.jetbrains.intellij") version "0.7.2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "0.6.2"
+    id("org.jetbrains.changelog") version "1.1.2"
 }
 
 
@@ -35,12 +38,14 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.casbin", "jcasbin", "1.5.0") {
+    implementation("org.casbin", "jcasbin", "1.7.4") {
         exclude("org.slf4j")
     }
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-    implementation("io.github.java-diff-utils:java-diff-utils:4.7")
-    testCompile("junit", "junit", "4.12")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
+    implementation("io.github.java-diff-utils:java-diff-utils:4.9")
+    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
