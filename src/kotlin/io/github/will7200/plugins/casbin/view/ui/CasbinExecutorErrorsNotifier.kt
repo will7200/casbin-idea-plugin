@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 
 class CasbinExecutorErrorsNotifier {
     companion object {
+        // TODO https://plugins.jetbrains.com/docs/intellij/notifications.html#top-level-notifications
         @JvmStatic
         val NOTIFICATION_GROUP =
             NotificationGroup("Casbin Executor Error", NotificationDisplayType.BALLOON, true)
