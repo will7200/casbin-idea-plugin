@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.1.5]
+### Added
 - Support for 2021.1 IDEs 
 
 ## [0.1.4]

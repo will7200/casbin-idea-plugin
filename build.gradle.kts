@@ -85,6 +85,10 @@ configure<JavaPluginConvention> {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+changelog {
+    version = pluginVersion
+}
+
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
