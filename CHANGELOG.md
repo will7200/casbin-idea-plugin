@@ -4,14 +4,9 @@
 
 ## [Unreleased]
 ### Added
+- Support for 2021.2 IDEs
+- Update jcasbin to 1.13.1
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
 
 ### Security
 ## [0.1.5]

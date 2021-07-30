@@ -1,4 +1,3 @@
-import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 // Import variables from gradle.properties file
@@ -20,9 +19,10 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.4.31"
-    // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "0.7.2"
+    id("org.jetbrains.kotlin.jvm") version "1.5.30-M1"
+    // gradle-intellij-plugin - read mo
+    // re: https://github.com/JetBrains/gradle-intellij-plugin
+    id("org.jetbrains.intellij") version "1.1.4"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.1.2"
 }
@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.casbin", "jcasbin", "1.7.4") {
+    implementation("org.casbin", "jcasbin", "1.13.1") {
         exclude("org.slf4j")
     }
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
@@ -50,13 +50,15 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version = platformVersion
-    pluginName = rootProject.name
-    updateSinceUntilBuild = false
-    downloadSources = platformDownloadSources.toBoolean()
-    sandboxDirectory = "${project.projectDir}/sandbox/idea-sandbox"
-    val devPlugins = arrayOf("PsiViewer:$psiViewerVersion")
-    setPlugins(*if (env == "DEV") devPlugins else emptyArray())
+    version.set(platformVersion)
+    pluginName.set(rootProject.name)
+    updateSinceUntilBuild.set(false)
+    downloadSources.set(platformDownloadSources.toBoolean())
+    sandboxDir.set("${project.projectDir}/sandbox/idea-sandbox")
+    val devPlugins = listOf("PsiViewer:$psiViewerVersion")
+    plugins.set(provider {
+        if (env == "DEV") devPlugins else emptyList()
+    })
 }
 
 sourceSets {
@@ -98,25 +100,25 @@ tasks {
     }
 
     patchPluginXml {
-        version(pluginVersion)
-        sinceBuild(pluginSinceBuild)
-        untilBuild(pluginUntilBuild)
+        version.set(pluginVersion)
+        sinceBuild.set(pluginSinceBuild)
+        untilBuild.set(pluginUntilBuild)
 
         // Get the latest available change notes from the changelog file
-        changeNotes(
-            closure {
+        changeNotes.set(
+            provider {
                 changelog.getLatest().toHTML()
             }
         )
     }
 
     runPluginVerifier {
-        ideVersions(pluginVerifierIdeVersions)
+        ideVersions.set(pluginVerifierIdeVersions.split(",").map(String::trim).filter(String::isNotEmpty))
     }
 
     publishPlugin {
         dependsOn("patchChangelog")
-        token(System.getenv("PUBLISH_TOKEN"))
-        channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
+        token.set(System.getenv("PUBLISH_TOKEN"))
+        channels.set(listOf(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first()))
     }
 }

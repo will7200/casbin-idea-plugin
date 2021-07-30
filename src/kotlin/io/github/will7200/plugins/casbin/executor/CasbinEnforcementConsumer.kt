@@ -26,7 +26,6 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
     private val log: Logger = Logger.getInstance(this::class.java)
     private val highlights = concurrentMapOf<Int, RangeHighlighter>()
 
-    @ExperimentalCoroutinesApi
     override fun beforeProcessing(request: CasbinDocumentRequest) {
         when (request) {
             is CasbinDocumentRequest.ExecuteEntireDocument -> {

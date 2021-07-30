@@ -9,7 +9,6 @@ import com.intellij.psi.PsiDocumentManager
 import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVPsiFile
 import kotlinx.coroutines.*
-import kotlin.time.ExperimentalTime
 
 class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProducer {
     private val log: Logger = Logger.getInstance(this::class.java)
@@ -25,7 +24,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
         connection.subscribe(CasbinTopics.DOCUMENT_REQUEST_TOPIC, this)
     }
 
-    @ExperimentalTime
+    @ExperimentalCoroutinesApi
     override fun processChange(change: CasbinDocumentRequest) {
         project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
             .beforeProcessing(change)
