@@ -7,11 +7,13 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 
 object CasbinPolicyEffectSuggestions : CompletionProvider<CompletionParameters>() {
+    // examples are pulled from https://casbin.org/docs/en/syntax-for-models
     private val policiesEffect = arrayOf(
         Pair("allow-override", "some(where (p.eft == allow))"),
         Pair("deny-override", "!some(where (p.eft == deny))"),
         Pair("allow-and-deny", "some(where (p.eft == allow)) && !some(where (p.eft == deny))"),
-        Pair("priority", "priority(p.eft) || deny")
+        Pair("priority", "priority(p.eft) || deny"),
+        Pair("priority-based-on-role", "subjectPriority(p.eft)")
     )
 
     override fun addCompletions(
