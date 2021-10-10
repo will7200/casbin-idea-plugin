@@ -34,6 +34,8 @@ version = pluginVersion
 repositories {
     mavenCentral()
     mavenLocal()
+    maven(url = "https://www.jetbrains.com/intellij-repository/releases")
+    maven(url = "https://www.jetbrains.com/intellij-repository/snapshots")
 }
 
 dependencies {
