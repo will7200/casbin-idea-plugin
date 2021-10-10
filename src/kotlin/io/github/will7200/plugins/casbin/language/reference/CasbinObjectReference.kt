@@ -7,11 +7,9 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiReference
-import com.intellij.psi.util.findDescendantOfType
-import io.github.will7200.plugins.casbin.language.psi.*
-import io.github.will7200.plugins.casbin.language.psi.impl.CasbinAttributeMixin
+import io.github.will7200.plugins.casbin.language.psi.CasbinProperty
+import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
 import io.github.will7200.plugins.casbin.language.psi.impl.CasbinObjectMixin
-import org.jetbrains.annotations.Nullable
 
 class CasbinObjectReference(private val usage: CasbinObjectMixin) : PsiReference {
     private val log: Logger = Logger.getInstance(CasbinObjectReference::class.java)
