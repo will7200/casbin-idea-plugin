@@ -4,16 +4,9 @@
 
 ## [Unreleased]
 ### Added
+- Support for 2021.3 IDEs
+- Suggestion for priority-based-on-role
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [0.1.6]
 ### Added
 - Support for 2021.2 IDEs
