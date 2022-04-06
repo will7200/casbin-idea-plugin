@@ -18,6 +18,8 @@
       R_BRACKET = "]"
       OPEN_QUOTES = "\""
       CLOSE_QUOTES = "\""
+      OPEN_SINGLE_QUOTES = "'"
+      CLOSE_SINGLE_QUOTES = "'"
       ASSIGN = "="
       COMMA = ","
       OP_AND = "&&"
@@ -29,6 +31,8 @@
       LINE_COMMENT='regexp:[#;].*'
       SECTION_IDENTIFER='regexp:[A-Za-z_]+'
       IDENTIFIER='regexp:[A-Za-z]?[A-Za-z_0-9]+'
+      STRING
+      STRING_SINGLE_QUOTE
       SPACE = "regexp:\s+"
       L_PARATHESIS = "("
       R_PARATHESIS = ")"
@@ -76,9 +80,10 @@ function ::= [OP_NOT] function_name L_PARATHESIS function_signature R_PARATHESIS
 function_signature ::= (function | equality | parameters)
 
 parameters ::= ((some_value (COMMA some_value)+) | some_value)
-equality ::= some_value OP_EQUALS some_value
-some_value ::= (object | ALLOW | DENY | string_value)
+equality ::= some_value (OP_EQUALS | OP_IN) some_value
+some_value ::= (object | ALLOW | DENY | strings | tuple)
 
+tuple ::= L_PARATHESIS ((strings (COMMA strings)+) | strings) R_PARATHESIS
 object ::= object_identifier DOT attribute (DOT sub_attribute)* {
   mixin="io.github.will7200.plugins.casbin.language.psi.impl.CasbinObjectMixin"
   methods=[getName]
@@ -96,7 +101,9 @@ private relOp           ::= OP_AND | OP_OR
 private parenConstruct  ::= '(' [ !')' Expr (',' Expr) * ] ')'
 
 // ---- ---- Low Level Identifiers ---- ----
-string_value ::= OPEN_QUOTES IDENTIFIER CLOSE_QUOTES
+strings ::= string_double_quotes | string_single_quotes
+string_single_quotes::= OPEN_SINGLE_QUOTES STRING_SINGLE_QUOTE CLOSE_SINGLE_QUOTES
+string_double_quotes ::= OPEN_QUOTES STRING CLOSE_QUOTES
 object_identifier ::= IDENTIFIER
 function_name ::= IDENTIFIER
 attribute  ::= (IDENTIFIER | "_"){

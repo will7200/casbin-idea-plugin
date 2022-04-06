@@ -28,11 +28,15 @@ WHITE_SPACE=\s+
 LINE_COMMENT=[#;].*
 
 IDENTIFIER=[A-Za-z]?[A-Za-z_0-9]+
-
+ESCAPE = \\[^]
+STRING=([^\r\n\"] | {ESCAPE})*
+STRING_SINGLE_QUOTE=([^\r\n\'] | {ESCAPE})*
 SECTION_IDENTIFER=[A-Za-z_]+
+SPACE=[ \t\n\x0B\f\r]+
 
 %state YYHEADER
 %state YYQUOTES
+%state YYSINGLE_QUOTES
 
 %%
 
@@ -50,6 +54,7 @@ SECTION_IDENTIFER=[A-Za-z_]+
 "allow"                     { return ALLOW; }
 "deny"                      { return DENY; }
 "!"                         { return OP_NOT;}
+"in"                        { return OP_IN;}
 
 <YYHEADER> {
     "]"                     { yybegin(YYINITIAL); return R_BRACKET; }
@@ -58,16 +63,32 @@ SECTION_IDENTIFER=[A-Za-z_]+
 
 <YYQUOTES> {
    "\""             {yybegin(YYINITIAL); return CLOSE_QUOTES;}
-   {IDENTIFIER}     { return IDENTIFIER;}
+   {STRING}         { return STRING;}
+}
+
+<YYSINGLE_QUOTES> {
+    "'"            {yybegin(YYINITIAL); return CLOSE_SINGLE_QUOTES;}
+    {STRING_SINGLE_QUOTE}       { return STRING_SINGLE_QUOTE;}
 }
 
 <YYINITIAL> {
-  "["                       { yybegin(YYHEADER);return L_BRACKET; }
-  "]"                       { return R_BRACKET; }
-  "\""                      { yybegin(YYQUOTES);return OPEN_QUOTES;}
-  "allow"                     { return ALLOW; }
-  "deny"                      { return DENY; }
-  {IDENTIFIER}              { return IDENTIFIER; }
+    "["                       { yybegin(YYHEADER);return L_BRACKET; }
+    "]"                       { return R_BRACKET; }
+    "\""                      { yybegin(YYQUOTES);return OPEN_QUOTES;}
+    "'"                      { yybegin(YYSINGLE_QUOTES);return OPEN_SINGLE_QUOTES;}
+    "."                      { return DOT; }
+    "="                      { return ASSIGN; }
+    ","                      { return COMMA; }
+    "&&"                     { return OP_AND; }
+    "||"                     { return OP_OR; }
+    "=="                     { return OP_EQUALS; }
+    "!"                      { return OP_NOT; }
+    "allow"                  { return ALLOW; }
+    "deny"                   { return DENY; }
+    "("                      { return L_PARATHESIS; }
+    ")"                      { return R_PARATHESIS; }
+    "OP_IN"                  { return OP_IN; }
+    {IDENTIFIER}             { return IDENTIFIER; }
 }
 
 [^]                         { return BAD_CHARACTER; }

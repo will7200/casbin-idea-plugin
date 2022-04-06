@@ -4,8 +4,11 @@
 
 ## [Unreleased]
 ### Added
+- Language support for in operator
 
 ### Changed
+
+- Expand better support for strings
 
 ### Deprecated
 

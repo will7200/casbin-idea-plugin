@@ -19,6 +19,7 @@ public class CasbinObjectImpl extends CasbinObjectMixin implements CasbinObject 
     visitor.visitObject(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof CasbinVisitor) accept((CasbinVisitor)visitor);
     else super.accept(visitor);

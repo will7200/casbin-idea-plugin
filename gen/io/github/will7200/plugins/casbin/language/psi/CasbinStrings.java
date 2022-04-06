@@ -4,15 +4,12 @@ package io.github.will7200.plugins.casbin.language.psi;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
-public interface CasbinSomeValue extends PsiElement {
+public interface CasbinStrings extends PsiElement {
 
   @Nullable
-  CasbinObject getObject();
+  CasbinStringDoubleQuotes getStringDoubleQuotes();
 
   @Nullable
-  CasbinStrings getStrings();
-
-  @Nullable
-  CasbinTuple getTuple();
+  CasbinStringSingleQuotes getStringSingleQuotes();
 
 }

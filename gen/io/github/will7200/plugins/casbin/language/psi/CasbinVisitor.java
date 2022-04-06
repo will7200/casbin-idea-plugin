@@ -87,11 +87,23 @@ public class CasbinVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitStringValue(@NotNull CasbinStringValue o) {
+  public void visitStringDoubleQuotes(@NotNull CasbinStringDoubleQuotes o) {
+    visitPsiElement(o);
+  }
+
+  public void visitStringSingleQuotes(@NotNull CasbinStringSingleQuotes o) {
+    visitPsiElement(o);
+  }
+
+  public void visitStrings(@NotNull CasbinStrings o) {
     visitPsiElement(o);
   }
 
   public void visitSubAttribute(@NotNull CasbinSubAttribute o) {
+    visitPsiElement(o);
+  }
+
+  public void visitTuple(@NotNull CasbinTuple o) {
     visitPsiElement(o);
   }
 

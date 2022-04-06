@@ -16,7 +16,7 @@ open class CasbinAnnotator : Annotator {
             is CasbinAttribute -> annotate(element, holder)
             is CasbinFlatKey -> annotate(element, holder)
             is CasbinFunctionName -> annotate(element, holder)
-            is CasbinStringValue -> annotate(element, holder)
+            is CasbinStrings -> annotate(element, holder)
         }
     }
 
@@ -58,7 +58,7 @@ open class CasbinAnnotator : Annotator {
             .textAttributes(CasbinHighlighterColors.Attribute).create()
     }
 
-    private fun annotate(attribute: CasbinStringValue, holder: AnnotationHolder) {
+    private fun annotate(attribute: CasbinStrings, holder: AnnotationHolder) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(attribute)
             .textAttributes(CasbinHighlighterColors.StringValue).create()
     }

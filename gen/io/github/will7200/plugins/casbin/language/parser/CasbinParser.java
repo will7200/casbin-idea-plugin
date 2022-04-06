@@ -77,15 +77,24 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // some_value OP_EQUALS some_value
+  // some_value (OP_EQUALS | OP_IN) some_value
   public static boolean equality(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "equality")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, EQUALITY, "<equality>");
     r = some_value(b, l + 1);
-    r = r && consumeToken(b, OP_EQUALS);
+    r = r && equality_1(b, l + 1);
     r = r && some_value(b, l + 1);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // OP_EQUALS | OP_IN
+  private static boolean equality_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "equality_1")) return false;
+    boolean r;
+    r = consumeToken(b, OP_EQUALS);
+    if (!r) r = consumeToken(b, OP_IN);
     return r;
   }
 
@@ -159,7 +168,7 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, section_name(b, l + 1));
     r = p && consumeToken(b, R_BRACKET) && r;
-    exit_section_(b, l, m, r, p, not_next_entry_parser_);
+    exit_section_(b, l, m, r, p, CasbinParser::not_next_entry);
     return r || p;
   }
 
@@ -388,7 +397,7 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     r = r && consumeToken(b, ASSIGN);
     p = r; // pin = 2
     r = r && value(b, l + 1);
-    exit_section_(b, l, m, r, p, not_next_entry_parser_);
+    exit_section_(b, l, m, r, p, CasbinParser::not_next_entry);
     return r || p;
   }
 
@@ -440,7 +449,7 @@ public class CasbinParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // object | ALLOW | DENY | string_value
+  // object | ALLOW | DENY | strings | tuple
   public static boolean some_value(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "some_value")) return false;
     boolean r;
@@ -448,20 +457,46 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     r = object(b, l + 1);
     if (!r) r = consumeToken(b, ALLOW);
     if (!r) r = consumeToken(b, DENY);
-    if (!r) r = string_value(b, l + 1);
+    if (!r) r = strings(b, l + 1);
+    if (!r) r = tuple(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // OPEN_QUOTES IDENTIFIER CLOSE_QUOTES
-  public static boolean string_value(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "string_value")) return false;
+  // OPEN_QUOTES STRING CLOSE_QUOTES
+  public static boolean string_double_quotes(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "string_double_quotes")) return false;
     if (!nextTokenIs(b, OPEN_QUOTES)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, OPEN_QUOTES, IDENTIFIER, CLOSE_QUOTES);
-    exit_section_(b, m, STRING_VALUE, r);
+    r = consumeTokens(b, 0, OPEN_QUOTES, STRING, CLOSE_QUOTES);
+    exit_section_(b, m, STRING_DOUBLE_QUOTES, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // OPEN_SINGLE_QUOTES STRING_SINGLE_QUOTE CLOSE_SINGLE_QUOTES
+  public static boolean string_single_quotes(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "string_single_quotes")) return false;
+    if (!nextTokenIs(b, OPEN_SINGLE_QUOTES)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, OPEN_SINGLE_QUOTES, STRING_SINGLE_QUOTE, CLOSE_SINGLE_QUOTES);
+    exit_section_(b, m, STRING_SINGLE_QUOTES, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // string_double_quotes | string_single_quotes
+  public static boolean strings(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "strings")) return false;
+    if (!nextTokenIs(b, "<strings>", OPEN_QUOTES, OPEN_SINGLE_QUOTES)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, STRINGS, "<strings>");
+    r = string_double_quotes(b, l + 1);
+    if (!r) r = string_single_quotes(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -474,6 +509,68 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, IDENTIFIER);
     if (!r) r = consumeToken(b, "_");
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // L_PARATHESIS ((strings (COMMA strings)+) | strings) R_PARATHESIS
+  public static boolean tuple(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple")) return false;
+    if (!nextTokenIs(b, L_PARATHESIS)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, L_PARATHESIS);
+    r = r && tuple_1(b, l + 1);
+    r = r && consumeToken(b, R_PARATHESIS);
+    exit_section_(b, m, TUPLE, r);
+    return r;
+  }
+
+  // (strings (COMMA strings)+) | strings
+  private static boolean tuple_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = tuple_1_0(b, l + 1);
+    if (!r) r = strings(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // strings (COMMA strings)+
+  private static boolean tuple_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = strings(b, l + 1);
+    r = r && tuple_1_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (COMMA strings)+
+  private static boolean tuple_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_1_0_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = tuple_1_0_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!tuple_1_0_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "tuple_1_0_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // COMMA strings
+  private static boolean tuple_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_1_0_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && strings(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -602,9 +699,4 @@ public class CasbinParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser not_next_entry_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return not_next_entry(b, l + 1);
-    }
-  };
 }

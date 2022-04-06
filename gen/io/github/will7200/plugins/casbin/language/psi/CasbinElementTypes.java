@@ -28,8 +28,11 @@ public interface CasbinElementTypes {
   IElementType SECTION = new CasbinElementType("SECTION");
   IElementType SECTION_NAME = new CasbinElementType("SECTION_NAME");
   IElementType SOME_VALUE = new CasbinElementType("SOME_VALUE");
-  IElementType STRING_VALUE = new CasbinElementType("STRING_VALUE");
+  IElementType STRINGS = new CasbinElementType("STRINGS");
+  IElementType STRING_DOUBLE_QUOTES = new CasbinElementType("STRING_DOUBLE_QUOTES");
+  IElementType STRING_SINGLE_QUOTES = new CasbinElementType("STRING_SINGLE_QUOTES");
   IElementType SUB_ATTRIBUTE = new CasbinElementType("SUB_ATTRIBUTE");
+  IElementType TUPLE = new CasbinElementType("TUPLE");
   IElementType VALUE_EXPRESSION = new CasbinElementType("VALUE_EXPRESSION");
   IElementType VALUE_IDENTIFIER = new CasbinElementType("VALUE_IDENTIFIER");
   IElementType VALUE_TUPLE = new CasbinElementType("VALUE_TUPLE");
@@ -37,6 +40,7 @@ public interface CasbinElementTypes {
   IElementType ALLOW = new CasbinTokenType("allow");
   IElementType ASSIGN = new CasbinTokenType("=");
   IElementType CLOSE_QUOTES = new CasbinTokenType("\"");
+  IElementType CLOSE_SINGLE_QUOTES = new CasbinTokenType("'");
   IElementType COMMA = new CasbinTokenType(",");
   IElementType DENY = new CasbinTokenType("deny");
   IElementType DOT = new CasbinTokenType(".");
@@ -45,13 +49,17 @@ public interface CasbinElementTypes {
   IElementType L_BRACKET = new CasbinTokenType("[");
   IElementType L_PARATHESIS = new CasbinTokenType("(");
   IElementType OPEN_QUOTES = new CasbinTokenType("OPEN_QUOTES");
+  IElementType OPEN_SINGLE_QUOTES = new CasbinTokenType("OPEN_SINGLE_QUOTES");
   IElementType OP_AND = new CasbinTokenType("&&");
   IElementType OP_EQUALS = new CasbinTokenType("==");
+  IElementType OP_IN = new CasbinTokenType("OP_IN");
   IElementType OP_NOT = new CasbinTokenType("!");
   IElementType OP_OR = new CasbinTokenType("||");
   IElementType R_BRACKET = new CasbinTokenType("]");
   IElementType R_PARATHESIS = new CasbinTokenType(")");
   IElementType SECTION_IDENTIFER = new CasbinTokenType("SECTION_IDENTIFER");
+  IElementType STRING = new CasbinTokenType("STRING");
+  IElementType STRING_SINGLE_QUOTE = new CasbinTokenType("STRING_SINGLE_QUOTE");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -113,15 +121,28 @@ public interface CasbinElementTypes {
       else if (type == SOME_VALUE) {
         return new CasbinSomeValueImpl(node);
       }
-      else if (type == STRING_VALUE) {
-        return new CasbinStringValueImpl(node);
-      } else if (type == SUB_ATTRIBUTE) {
+      else if (type == STRINGS) {
+        return new CasbinStringsImpl(node);
+      }
+      else if (type == STRING_DOUBLE_QUOTES) {
+        return new CasbinStringDoubleQuotesImpl(node);
+      }
+      else if (type == STRING_SINGLE_QUOTES) {
+        return new CasbinStringSingleQuotesImpl(node);
+      }
+      else if (type == SUB_ATTRIBUTE) {
         return new CasbinSubAttributeImpl(node);
-      } else if (type == VALUE_EXPRESSION) {
+      }
+      else if (type == TUPLE) {
+        return new CasbinTupleImpl(node);
+      }
+      else if (type == VALUE_EXPRESSION) {
         return new CasbinValueExpressionImpl(node);
-      } else if (type == VALUE_IDENTIFIER) {
+      }
+      else if (type == VALUE_IDENTIFIER) {
         return new CasbinValueIdentifierImpl(node);
-      } else if (type == VALUE_TUPLE) {
+      }
+      else if (type == VALUE_TUPLE) {
         return new CasbinValueTupleImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);

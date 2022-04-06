@@ -4,12 +4,10 @@ import com.intellij.lang.cacheBuilder.DefaultWordsScanner
 import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.TokenSet
 import io.github.will7200.plugins.casbin.language.lexer.CasbinLexerAdapter
 import io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes
-import io.github.will7200.plugins.casbin.language.psi.CasbinProperty
 
 class CasbinUsagesProvider : FindUsagesProvider {
     override fun getWordsScanner(): WordsScanner? {
@@ -26,7 +24,7 @@ class CasbinUsagesProvider : FindUsagesProvider {
             ),
             // Literals.
             TokenSet.create(
-                CasbinElementTypes.STRING_VALUE
+                CasbinElementTypes.STRINGS
             )
         )
     }

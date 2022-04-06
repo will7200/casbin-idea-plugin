@@ -15,6 +15,7 @@ class CasbinParserTest : ParsingTestCase("examples", "conf", CasbinParserDefinit
     fun testkeymatch2_model() = doTest(true)
     fun testpriority_model() = doTest(true)
     fun testrbac_model() = doTest(true)
+    fun testrbac_model_matcher_using_in_op() = doTest(true)
     fun testrbac_with_deny_model() = doTest(true)
     fun testrbac_with_domains_model() = doTest(true)
     fun testrbac_with_not_deny_model() = doTest(true)

@@ -1,13 +1,12 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.psi;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 
-public interface CasbinStringValue extends PsiElement {
+public interface CasbinStringDoubleQuotes extends PsiElement {
 
   @NotNull
-  PsiElement getIdentifier();
+  PsiElement getString();
 
 }

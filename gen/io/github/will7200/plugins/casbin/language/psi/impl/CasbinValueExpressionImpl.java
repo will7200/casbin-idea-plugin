@@ -1,15 +1,13 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.psi.impl;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.util.PsiTreeUtil;
-import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import io.github.will7200.plugins.casbin.language.psi.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import io.github.will7200.plugins.casbin.language.psi.CasbinExpr;
+import io.github.will7200.plugins.casbin.language.psi.CasbinValueExpression;
+import io.github.will7200.plugins.casbin.language.psi.CasbinVisitor;
+import org.jetbrains.annotations.NotNull;
 
 public class CasbinValueExpressionImpl extends ASTWrapperPsiElement implements CasbinValueExpression {
 
@@ -21,6 +19,7 @@ public class CasbinValueExpressionImpl extends ASTWrapperPsiElement implements C
     visitor.visitValueExpression(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof CasbinVisitor) accept((CasbinVisitor)visitor);
     else super.accept(visitor);

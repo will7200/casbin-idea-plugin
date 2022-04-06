@@ -1,24 +1,24 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbin.language.psi.impl;
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import io.github.will7200.plugins.casbin.language.psi.CasbinSubAttribute;
+import io.github.will7200.plugins.casbin.language.psi.CasbinStringDoubleQuotes;
 import io.github.will7200.plugins.casbin.language.psi.CasbinVisitor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.IDENTIFIER;
+import static io.github.will7200.plugins.casbin.language.psi.CasbinElementTypes.STRING;
 
-public class CasbinSubAttributeImpl extends CasbinSubAttributeMixin implements CasbinSubAttribute {
+public class CasbinStringDoubleQuotesImpl extends ASTWrapperPsiElement implements CasbinStringDoubleQuotes {
 
-  public CasbinSubAttributeImpl(@NotNull ASTNode node) {
+  public CasbinStringDoubleQuotesImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CasbinVisitor visitor) {
-    visitor.visitSubAttribute(this);
+    visitor.visitStringDoubleQuotes(this);
   }
 
   @Override
@@ -28,9 +28,9 @@ public class CasbinSubAttributeImpl extends CasbinSubAttributeMixin implements C
   }
 
   @Override
-  @Nullable
-  public PsiElement getIdentifier() {
-    return findChildByType(IDENTIFIER);
+  @NotNull
+  public PsiElement getString() {
+    return findNotNullChildByType(STRING);
   }
 
 }
