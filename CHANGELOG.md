@@ -7,8 +7,8 @@
 - Language support for in operator
 
 ### Changed
-
 - Expand better support for strings
+- Bumped jcasbin to 1.22.3
 
 ### Deprecated
 
