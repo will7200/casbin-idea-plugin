@@ -76,7 +76,32 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.map { it.text }.toTypedArray()
+                        record.fieldList.map {
+                            when {
+                                it.json != null -> {
+                                    val m = hashMapOf<String, Any>()
+                                    it.json!!.iterateAttributes().map { internal ->
+                                        var value: Any? = null
+                                        when {
+                                            internal.jsonValue!!.number != null -> {
+                                                value = Integer.parseInt(internal.jsonValue!!.number!!.text)
+                                            }
+                                            internal.jsonValue!!.string != null -> {
+                                                value = internal.jsonValue!!.string!!.text
+                                                value = trimStringByString(value, value[0])
+                                            }
+                                        }
+                                        value?.let {
+                                            m.put(internal.jsonName!!.text, value)
+                                        }
+                                    }
+                                    return@map m
+                                }
+                                else -> {
+                                    return@map it.text
+                                }
+                            }
+                        }.toTypedArray()
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
@@ -107,6 +132,20 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     }
                 )
             }
+        }
+    }
+
+    companion object {
+        fun trimStringByString(text: String, trimBy: Char): String {
+            var beginIndex = 0
+            var endIndex = text.length
+            while (text.substring(beginIndex, endIndex).startsWith(trimBy)) {
+                beginIndex += 1
+            }
+            while (text.substring(beginIndex, endIndex).endsWith(trimBy)) {
+                endIndex -= 1
+            }
+            return text.substring(beginIndex, endIndex)
         }
     }
 }
