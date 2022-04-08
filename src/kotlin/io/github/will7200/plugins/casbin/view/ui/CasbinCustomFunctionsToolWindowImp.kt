@@ -6,11 +6,12 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
+import io.github.will7200.plugins.casbin.CasbinCustomFunctionProvider
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
 
 class CasbinCustomFunctionsToolWindowImp(private val project: Project, private val toolWindow: ToolWindow) :
-    CasbinCustomFunctionWindow(project, toolWindow) {
+    CasbinCustomFunctionProvider, CasbinCustomFunctionWindow(project, toolWindow) {
     private val log: Logger = Logger.getInstance(CasbinCustomFunctionsToolWindowImp::class.java)
 
     init {
@@ -35,5 +36,9 @@ class CasbinCustomFunctionsToolWindowImp(private val project: Project, private v
                 }
             })
         }
+    }
+
+    override fun getScript(): String {
+        return editor.document.text
     }
 }

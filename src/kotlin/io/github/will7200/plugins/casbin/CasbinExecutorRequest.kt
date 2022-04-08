@@ -14,7 +14,7 @@ open class CasbinExecutorRequest {
     open class CasbinEnforcementRequest(
         val modelFile: String,
         val policyFile: String,
-        open val rvals: Array<String>
+        open val rvals: Array<Any>
     ) : CasbinExecutorRequest() {
         var lineNumber: Int? = null
         var result: Decision? = null

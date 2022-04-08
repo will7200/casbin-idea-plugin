@@ -14,6 +14,7 @@ import javax.swing.*;
 
 public class CasbinExecutorToolWindow {
     private final Project myProject;
+    public final ToolWindow iToolWindow;
     private JPanel TopLevel;
     private JPanel MainView;
     private JPanel Settings;
@@ -29,6 +30,7 @@ public class CasbinExecutorToolWindow {
 
     public CasbinExecutorToolWindow(Project project, ToolWindow toolWindow) {
         myProject = project;
+        iToolWindow = toolWindow;
         $$$setupUI$$$();
         policyFile.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(true, false, false, false, false, false)));
         modelDefinitionFile.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(true, false, false, false, false, false)));

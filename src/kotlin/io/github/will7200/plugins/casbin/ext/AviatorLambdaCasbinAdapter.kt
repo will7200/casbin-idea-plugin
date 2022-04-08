@@ -4,9 +4,10 @@ import com.googlecode.aviator.runtime.function.LambdaFunction
 import com.googlecode.aviator.runtime.type.AviatorObject
 import org.casbin.jcasbin.util.function.CustomFunction
 
-class AviatorLambdaCasbinAdapter(val function: LambdaFunction) : CustomFunction() {
+class AviatorLambdaCasbinAdapter(private val name: String, val function: LambdaFunction) : CustomFunction() {
+
     override fun getName(): String {
-        return function.name
+        return name
     }
 
     override fun call(env: Map<String?, Any?>): AviatorObject? {

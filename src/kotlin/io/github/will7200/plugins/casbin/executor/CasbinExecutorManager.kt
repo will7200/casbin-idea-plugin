@@ -4,10 +4,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.jetbrains.rd.util.ConcurrentHashMap
-import io.github.will7200.plugins.casbin.CasbinError
-import io.github.will7200.plugins.casbin.CasbinExecutorRequest
-import io.github.will7200.plugins.casbin.CasbinExecutorService
-import io.github.will7200.plugins.casbin.CasbinTopics
+import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbin.view.ui.CasbinExecutorErrorsNotifier
 import java.time.LocalDateTime
 
@@ -17,6 +14,7 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
     private val log: Logger = Logger.getInstance(CasbinExecutorManager::class.java)
     private val enforcers: MutableUsageMap<EnforcerKey, CasbinEnforcementProducer> = MutableUsageMap()
     private val maxEnforcers: Int = 10
+    private var customFunctionProvider: CasbinCustomFunctionProvider? = null;
 
     init {
         myProject.messageBus.connect().subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
@@ -36,13 +34,21 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
         if (found != null) {
             return
         }
+        if (customFunctionProvider == null) {
+            CasbinExecutorErrorsNotifier.notify(myProject, "CustomFunctionProvider has not been set yet", "please wait")
+            return
+        }
         try {
-            val producer = CasbinEnforcementProducer(lk.first, lk.second, myProject)
+            val producer = CasbinEnforcementProducer(lk.first, lk.second, customFunctionProvider!!, myProject)
             enforcers[lk] = producer
         } catch (ce: CasbinError) {
             CasbinExecutorErrorsNotifier.notify(myProject, ce.message, ce.details)
         }
         return
+    }
+
+    override fun registerCustomFunctionProvider(provider: CasbinCustomFunctionProvider) {
+        customFunctionProvider = provider
     }
 
     override fun executeEnforcement(request: CasbinExecutorRequest.CasbinEnforcementRequest) {
@@ -78,7 +84,7 @@ class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorServ
     }
 
     private fun reInitializeEnforce(key: EnforcerKey) {
-        val newEnforcer = CasbinEnforcementProducer(key.first, key.second, myProject)
+        val newEnforcer = CasbinEnforcementProducer(key.first, key.second, customFunctionProvider!!, myProject)
         val oldEnforcer = enforcers[key]!!
         Disposer.dispose(oldEnforcer)
         enforcers.remove(key)

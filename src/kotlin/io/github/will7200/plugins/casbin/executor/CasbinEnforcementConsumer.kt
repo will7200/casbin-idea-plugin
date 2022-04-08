@@ -99,7 +99,7 @@ class CasbinEnforcementConsumer(project: Project) : CasbinExecutorConsumer, Casb
                 }
             }
             else -> {
-                TODO("Not yet implemented $request")
+                log.warn("Not yet implemented $request")
             }
         }
     }

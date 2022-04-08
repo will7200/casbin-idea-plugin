@@ -1,18 +1,11 @@
 package io.github.will7200.plugins.casbin.executor
 
-import com.googlecode.aviator.AviatorEvaluator
-import com.googlecode.aviator.runtime.function.LambdaFunction
-import com.googlecode.aviator.utils.Env
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
-import io.github.will7200.plugins.casbin.CasbinError
-import io.github.will7200.plugins.casbin.CasbinExecutorProducer
-import io.github.will7200.plugins.casbin.CasbinExecutorRequest
-import io.github.will7200.plugins.casbin.CasbinTopics
-import io.github.will7200.plugins.casbin.ext.AviatorLambdaCasbinAdapter
+import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbin.language.CasbinLanguage
 import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
 import org.casbin.jcasbin.main.Enforcer
@@ -22,11 +15,13 @@ import java.io.File
 class CasbinEnforcementProducer(
     private val modelPath: String?,
     private val policyFile: String?,
+    private val customFunctionProvider: CasbinCustomFunctionProvider,
     private val project: Project
 ) : CasbinExecutorProducer {
     private var log: Logger = Logger.getInstance(CasbinEnforcementProducer::class.java)
     private var enforcer: Enforcer
     private val bus = project.messageBus
+
 
     // expectedValAmount hold the amount of rvals that the enforcer is expecting
     // if the the model definition is not registered as a casbin file it will create an in memory psiFile
@@ -59,6 +54,7 @@ class CasbinEnforcementProducer(
     init {
         try {
             enforcer = Enforcer(modelPath, policyFile)
+            customFunctionProvider.addFunctions(enforcer)
         } catch (exception: Exception) {
             throw CasbinError("Couldn't create an enforcer", exception)
         }
@@ -68,16 +64,7 @@ class CasbinEnforcementProducer(
     private fun executeRequest(casbinRequest: CasbinExecutorRequest) {
         when (casbinRequest) {
             is CasbinExecutorRequest.CasbinUpdateCustomFunctions -> {
-                val expression = AviatorEvaluator.compile(casbinRequest.aviatorScript)
-                val export = Env()
-                expression.execute(export)
-                export.entries.forEach {
-                    when (it.value) {
-                        is LambdaFunction -> {
-                            enforcer.addFunction(it.key, AviatorLambdaCasbinAdapter(it.value as LambdaFunction))
-                        }
-                    }
-                }
+                customFunctionProvider.addFunctions(enforcer, casbinRequest.aviatorScript)
             }
             is CasbinExecutorRequest.CasbinEnforcementRequest -> {
                 if (casbinRequest.modelFile.replace(
@@ -105,10 +92,16 @@ class CasbinEnforcementProducer(
                     casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
                     casbinRequest.message = "Empty rvals"
                 }
-                casbinRequest.rvals.size == 1 && casbinRequest.rvals[0].isEmpty() -> {
-                    casbinRequest.processed = false
-                    casbinRequest.result = CasbinExecutorRequest.Decision.INVALID
-                    casbinRequest.message = "Skipped empty line"
+                casbinRequest.rvals.size == 1 -> {
+                    when (val v = casbinRequest.rvals[0]) {
+                        is String -> {
+                            if (v.isEmpty()) {
+                                casbinRequest.processed = false
+                                casbinRequest.result = CasbinExecutorRequest.Decision.INVALID
+                                casbinRequest.message = "Skipped empty line"
+                            }
+                        }
+                    }
                 }
                 casbinRequest.rvals.size != expectedValAmount -> {
                     casbinRequest.processed = false
