@@ -4,20 +4,21 @@ package io.github.will7200.plugins.casbincsv.language.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVField;
-import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVJson;
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVJsonName;
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVJsonProp;
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVJsonValue;
 import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CasbinCSVFieldImpl extends ASTWrapperPsiElement implements CasbinCSVField {
+public class CasbinCSVJsonPropImpl extends ASTWrapperPsiElement implements CasbinCSVJsonProp {
 
-  public CasbinCSVFieldImpl(@NotNull ASTNode node) {
+  public CasbinCSVJsonPropImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CasbinCSVVisitor visitor) {
-    visitor.visitField(this);
+    visitor.visitJsonProp(this);
   }
 
   @Override
@@ -28,8 +29,14 @@ public class CasbinCSVFieldImpl extends ASTWrapperPsiElement implements CasbinCS
 
   @Override
   @Nullable
-  public CasbinCSVJson getJson() {
-    return findChildByClass(CasbinCSVJson.class);
+  public CasbinCSVJsonName getJsonName() {
+    return findChildByClass(CasbinCSVJsonName.class);
+  }
+
+  @Override
+  @Nullable
+  public CasbinCSVJsonValue getJsonValue() {
+    return findChildByClass(CasbinCSVJsonValue.class);
   }
 
 }

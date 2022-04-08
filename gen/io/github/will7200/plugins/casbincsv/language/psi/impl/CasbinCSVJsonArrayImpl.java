@@ -1,25 +1,25 @@
 // This is a generated file. Not intended for manual editing.
 package io.github.will7200.plugins.casbincsv.language.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVField;
-import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVRecord;
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVJson;
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVJsonArray;
 import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CasbinCSVRecordImpl extends ASTWrapperPsiElement implements CasbinCSVRecord {
+public class CasbinCSVJsonArrayImpl extends CasbinCSVJsonImpl implements CasbinCSVJsonArray {
 
-  public CasbinCSVRecordImpl(@NotNull ASTNode node) {
+  public CasbinCSVJsonArrayImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull CasbinCSVVisitor visitor) {
-    visitor.visitRecord(this);
+    visitor.visitJsonArray(this);
   }
 
   @Override
@@ -30,8 +30,8 @@ public class CasbinCSVRecordImpl extends ASTWrapperPsiElement implements CasbinC
 
   @Override
   @NotNull
-  public List<CasbinCSVField> getFieldList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinCSVField.class);
+  public List<CasbinCSVJson> getJsonList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, CasbinCSVJson.class);
   }
 
 }

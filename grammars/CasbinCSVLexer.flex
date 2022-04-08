@@ -42,23 +42,49 @@ import java.util.regex.Pattern;
 EOL=\R
 WHITE_SPACE=[\r\t\f\v ]+
 
+COLON=:
+BRACE1=\{
+BRACE2=\}
+BRACK1=\[
+BRACK2=\]
+STRING=\"[^\"]*\"|'[^']*'
+ID=\p{Alpha}\w*
+NUMBER=(\+|\-)?\p{Digit}*
 TEXT=[^ ,:;|\t\r\n\"\\]+
 ESCAPED_TEXT=[,:;|\t\r\n]|\"\"|\\\"
 ESCAPE_CHARACTER=\\
 COMMA=[,:;|\t]
 QUOTE=\"
 CRLF=\n
-
 %state AFTER_TEXT
 %state ESCAPED_TEXT
 %state UNESCAPED_TEXT
 %state ESCAPING
+%state JSON
 
 %%
-<YYINITIAL> {QUOTE}
-{
+<YYINITIAL> {
+{BRACE1} {
+          yybegin(JSON);
+          return CasbinCSVElementTypes.BRACE1;
+}
+{QUOTE} {
     yybegin(ESCAPED_TEXT);
     return CasbinCSVElementTypes.QUOTE;
+}
+
+}
+
+<JSON>
+{
+{BRACE2} {yybegin(YYINITIAL);return CasbinCSVElementTypes.BRACE2;}
+{BRACK1} {return CasbinCSVElementTypes.BRACK1;}
+{BRACK2} {return CasbinCSVElementTypes.BRACK2;}
+","      {return CasbinCSVElementTypes.COMMA;}
+{COLON} {return CasbinCSVElementTypes.COLON;}
+{ID} {return CasbinCSVElementTypes.ID;}
+{STRING} {return CasbinCSVElementTypes.STRING;}
+{NUMBER} {return CasbinCSVElementTypes.NUMBER;}
 }
 
 <ESCAPED_TEXT> {QUOTE}

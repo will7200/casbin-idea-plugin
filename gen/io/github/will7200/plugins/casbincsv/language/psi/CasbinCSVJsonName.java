@@ -2,11 +2,11 @@
 package io.github.will7200.plugins.casbincsv.language.psi;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public interface CasbinCSVField extends PsiElement {
+public interface CasbinCSVJsonName extends PsiElement {
 
-  @Nullable
-  CasbinCSVJson getJson();
+  @NotNull
+  PsiElement getId();
 
 }

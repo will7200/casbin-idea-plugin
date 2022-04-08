@@ -4,9 +4,12 @@ package io.github.will7200.plugins.casbincsv.language.psi;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
-public interface CasbinCSVField extends PsiElement {
+public interface CasbinCSVJsonProp extends PsiElement {
 
   @Nullable
-  CasbinCSVJson getJson();
+  CasbinCSVJsonName getJsonName();
+
+  @Nullable
+  CasbinCSVJsonValue getJsonValue();
 
 }

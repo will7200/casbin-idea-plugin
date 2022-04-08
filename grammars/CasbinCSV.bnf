@@ -2,7 +2,7 @@
   parserClass="io.github.will7200.plugins.casbincsv.language.parser.CasbinCSVParser"
   parserUtilClass = "io.github.will7200.plugins.casbincsv.language.parser.CasbinCSVParserUtil"
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-
+  parserImports=[ "static com.intellij.lang.WhitespacesBinders.*" ]
   psiClassPrefix="CasbinCSV"
   psiImplClassSuffix="Impl"
   psiPackage="io.github.will7200.plugins.casbincsv.language.psi"
@@ -12,12 +12,20 @@
   elementTypeClass="io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVElementType"
   tokenTypeClass="io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVTokenType"
   tokens=[
+    STRING = "regexp:\"[^\"]*\"|'[^']*'"
+    ID = "regexp:\p{Alpha}\w*"
+    NUMBER = "regexp:(\+|\-)?\p{Digit}*"
     TEXT='regexp:[^ ,:;|\t\r\n"\\]+'
     ESCAPED_TEXT='regexp:[,:;|\t\r\n]|""|\\"'
     ESCAPE_CHARACTER='regexp:\\'
     COMMA='regexp:[,:;|\t]'
     QUOTE='regexp:"'
     CRLF='regexp:\n'
+    COLON = ":"
+    BRACE1 = "{"
+    BRACE2 = "}"
+    BRACK1 = "["
+    BRACK2 = "]"
    ]
   psiImplUtilClass = "io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVPsiUtils"
 }
@@ -26,8 +34,21 @@ casbinCsvFile ::= record (CRLF record)* [CRLF]
 
 record ::= field (COMMA field)*
 
-field ::= (escaped | nonEscaped)
-
+field ::= (json | escaped | nonEscaped)
 private escaped ::= QUOTE (TEXT | ESCAPE_CHARACTER | ESCAPED_TEXT)* QUOTE
 
 private nonEscaped ::= (TEXT | ESCAPE_CHARACTER)*
+
+json ::= jsonArray | jsonObject  {
+hooks=[wsBinders="null, null"]
+mixin="io.github.will7200.plugins.casbincsv.language.psi.impl.CasbinJsonMixin"
+methods=[iterateAttributes]
+}
+jsonValue ::= STRING | NUMBER | json {name="jsonValue" hooks=[leftBinder="GREEDY_LEFT_BINDER"]}
+
+jsonArray ::= '[' [!']' jsonItem (!']' ',' jsonItem) *] ']' {pin(".*")=1 extends=json}
+private jsonItem ::= json {recoverWhile=jsonRecover}
+jsonObject ::= '{' [!'}' jsonProp (!'}' COMMA jsonProp) *] '}' {pin(".*")=1 extends=json}
+jsonProp ::= [] jsonName ':' jsonValue {pin=1 recoverWhile=jsonRecover} // remove [] to make NAME mandatory
+jsonName ::= ID  {name="jsonName" hooks=[rightBinder="GREEDY_RIGHT_BINDER"]}
+private jsonRecover ::= !(',' | ']' | '}' | '[' | '{')
