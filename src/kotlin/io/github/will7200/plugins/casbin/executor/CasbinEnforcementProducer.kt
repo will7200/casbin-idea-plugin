@@ -1,5 +1,8 @@
 package io.github.will7200.plugins.casbin.executor
 
+import com.googlecode.aviator.AviatorEvaluator
+import com.googlecode.aviator.runtime.function.LambdaFunction
+import com.googlecode.aviator.utils.Env
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -9,6 +12,7 @@ import io.github.will7200.plugins.casbin.CasbinError
 import io.github.will7200.plugins.casbin.CasbinExecutorProducer
 import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
+import io.github.will7200.plugins.casbin.ext.AviatorLambdaCasbinAdapter
 import io.github.will7200.plugins.casbin.language.CasbinLanguage
 import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
 import org.casbin.jcasbin.main.Enforcer
@@ -63,6 +67,18 @@ class CasbinEnforcementProducer(
 
     private fun executeRequest(casbinRequest: CasbinExecutorRequest) {
         when (casbinRequest) {
+            is CasbinExecutorRequest.CasbinUpdateCustomFunctions -> {
+                val expression = AviatorEvaluator.compile(casbinRequest.aviatorScript)
+                val export = Env()
+                expression.execute(export)
+                export.entries.forEach {
+                    when (it.value) {
+                        is LambdaFunction -> {
+                            enforcer.addFunction(it.key, AviatorLambdaCasbinAdapter(it.value as LambdaFunction))
+                        }
+                    }
+                }
+            }
             is CasbinExecutorRequest.CasbinEnforcementRequest -> {
                 if (casbinRequest.modelFile.replace(
                         "\\",

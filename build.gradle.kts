@@ -57,7 +57,7 @@ intellij {
     updateSinceUntilBuild.set(false)
     downloadSources.set(platformDownloadSources.toBoolean())
     sandboxDir.set("${project.projectDir}/sandbox/idea-sandbox")
-    val devPlugins = listOf("PsiViewer:$psiViewerVersion")
+    val devPlugins = listOf("PsiViewer:$psiViewerVersion", "AviatorScript:5.2.2-2021.01.15-IDEA.203")
     plugins.set(provider {
         if (env == "DEV") devPlugins else emptyList()
     })

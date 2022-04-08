@@ -17,5 +17,9 @@ class CasbinToolWindowFactory : ToolWindowFactory {
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val content: Content = contentFactory.createContent(myToolWindow.content, "Main", false)
         toolWindow.contentManager.addContent(content)
+
+        val functionToolWindow = CasbinCustomFunctionsToolWindowImp(project, toolWindow)
+        val content2: Content = contentFactory.createContent(functionToolWindow.content, "CustomFunctions", false)
+        toolWindow.contentManager.addContent(content2)
     }
 }

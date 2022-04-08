@@ -52,4 +52,8 @@ open class CasbinExecutorRequest {
     ) : CasbinFileChangeRequest(policyFile) {
 
     }
+
+    open class CasbinUpdateCustomFunctions(
+        open val aviatorScript: String
+    ) : CasbinExecutorRequest()
 }
