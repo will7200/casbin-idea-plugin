@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 ### Added
-
+- Support for 2022.2 IDEs
 ### Changed
 
 ### Deprecated
