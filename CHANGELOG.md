@@ -3,8 +3,27 @@
 # Casbin Idea Plugin Changelog
 
 ## [Unreleased]
+
 ### Added
+
+- Support for 2023.1 IDEs
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.1.11]
+
+### Added
+
 - Support for 2022.3 IDEs
+
 ### Changed
 
 ### Deprecated
