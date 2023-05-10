@@ -45,7 +45,7 @@ open class CasbinCSVEditor(language: Language?, project: Project?, s: String) :
         }
     }
 
-    override fun createEditor(): EditorEx? {
+    override fun createEditor(): EditorEx {
         val editor = super.createEditor()
         editor.setHorizontalScrollbarVisible(true)
         editor.setVerticalScrollbarVisible(true)

@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Import variables from gradle.properties file
 val pluginGroup: String by project
@@ -19,7 +20,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.5.30-M1"
+    id("org.jetbrains.kotlin.jvm") version "1.5.32"
     // gradle-intellij-plugin - read mo
     // re: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.1.4"
@@ -84,21 +85,17 @@ sourceSets {
     }
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
 changelog {
     version = pluginVersion
 }
 
 tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+    withType<JavaCompile> {
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "11"
     }
 
     patchPluginXml {
