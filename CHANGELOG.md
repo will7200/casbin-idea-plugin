@@ -6,6 +6,24 @@
 
 ### Added
 
+### Changed
+
+- Bumped jcasbin to 1.32.3
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Casbin Tool Executor for IDEs after 2022.*
+
+### Security
+
+## [0.1.12]
+
+### Added
+
 - Support for 2023.1 IDEs
 
 ### Changed
