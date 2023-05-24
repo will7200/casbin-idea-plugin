@@ -1,32 +1,32 @@
 package io.github.will7200.plugins.casbin.view.ui
 
 import com.intellij.notification.Notification
-import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 
 
 class CasbinExecutorErrorsNotifier {
     companion object {
-        // TODO https://plugins.jetbrains.com/docs/intellij/notifications.html#top-level-notifications
-        @JvmStatic
-        val NOTIFICATION_GROUP =
-            NotificationGroup("Casbin Executor Error", NotificationDisplayType.BALLOON, true)
+        fun getNotificationGroup(): NotificationGroup {
+            return NotificationGroupManager.getInstance().getNotificationGroup("Casbin Executor Error")
+        }
 
-        fun notify(content: String?): Notification? {
+        fun notify(content: String?): Notification {
             return notify(null, content)
         }
 
-        fun notify(project: Project?, content: String?): Notification? {
-            val notification: Notification = NOTIFICATION_GROUP.createNotification(content!!, NotificationType.ERROR)
+        fun notify(project: Project?, content: String?): Notification {
+            val notification: Notification =
+                this.getNotificationGroup().createNotification(content!!, NotificationType.ERROR)
             notification.notify(project)
             return notification
         }
 
-        fun notify(project: Project?, title: String?, details: String?): Notification? {
+        fun notify(project: Project?, title: String?, details: String?): Notification {
             val notification: Notification =
-                NOTIFICATION_GROUP.createNotification(title!!, details!!, NotificationType.ERROR)
+                this.getNotificationGroup().createNotification(title!!, details!!, NotificationType.ERROR)
             notification.notify(project)
             return notification
         }

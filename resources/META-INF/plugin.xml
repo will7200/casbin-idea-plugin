@@ -68,6 +68,9 @@
                         serviceInterface="io.github.will7200.plugins.casbin.CasbinDocumentService"/>
         <toolWindow id="Casbin Executor" icon="/icons/casbin-icon-13x13.png" anchor="bottom"
                     factoryClass="io.github.will7200.plugins.casbin.view.ui.CasbinToolWindowFactory"/>
+        <notificationGroup id="Casbin Executor Error"
+                           displayType="BALLOON"
+                           key="casbin.notification.executor"/>
     </extensions>
 
     <actions>
