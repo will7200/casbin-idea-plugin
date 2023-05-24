@@ -59,6 +59,11 @@ class CasbinEnforcementProducer(
             throw CasbinError("Couldn't create an enforcer", exception)
         }
         bus.connect(this).subscribe(CasbinTopics.EXECUTOR_REQUEST_TOPIC, this)
+        try {
+            enforcer.enforce()
+        } catch (_: Exception) {
+
+        }
     }
 
     private fun executeRequest(casbinRequest: CasbinExecutorRequest) {
@@ -72,6 +77,7 @@ class CasbinEnforcementProducer(
                     executeEnforcement(casbinRequest)
                 }
             }
+
             else -> {
                 log.warn("skipping. unknown type handle ${casbinRequest.toString()}")
             }
@@ -89,16 +95,19 @@ class CasbinEnforcementProducer(
                     casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
                     casbinRequest.message = "Empty rvals"
                 }
+
                 casbinRequest.rvals.size == 1 && casbinRequest.rvals[0].isEmpty() -> {
                     casbinRequest.processed = false
                     casbinRequest.result = CasbinExecutorRequest.Decision.INVALID
                     casbinRequest.message = "Skipped empty line"
                 }
+
                 casbinRequest.rvals.size != expectedValAmount -> {
                     casbinRequest.processed = false
                     casbinRequest.result = CasbinExecutorRequest.Decision.ERROR
                     casbinRequest.message = "Expecting $expectedValAmount values instead of ${casbinRequest.rvals.size}"
                 }
+
                 else -> {
                     if (enforcer.enforce(*casbinRequest.rvals)) {
                         casbinRequest.result = CasbinExecutorRequest.Decision.ALLOW
