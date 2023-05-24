@@ -83,7 +83,6 @@
                     </constraints>
                     <properties>
                       <hideActionText value="false"/>
-                      <icon value="general/notificationWarning.png"/>
                       <text resource-bundle="messages/CasbinBundle" key="casbin.editor.widget.runAsyncButton.text"/>
                       <toolTipText resource-bundle="messages/CasbinBundle" key="casbin.editor.widget.runAsyncButton.toolTipText"/>
                     </properties>

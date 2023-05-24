@@ -1,5 +1,6 @@
 package io.github.will7200.plugins.casbin.view.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -14,7 +15,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.lang.reflect.Method;
-import java.util.ResourceBundle;
 
 public class CasbinExecutorToolWindow {
     private final Project myProject;
@@ -110,7 +110,7 @@ public class CasbinExecutorToolWindow {
         Settings.add(modelDefinitionFile, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(130, 30), new Dimension(-1, 30), 0, false));
         runAsyncCheckBox = new JCheckBox();
         runAsyncCheckBox.setHideActionText(false);
-        runAsyncCheckBox.setIcon(new ImageIcon(getClass().getResource("/general/notificationWarning.png")));
+        runAsyncCheckBox.setIcon(AllIcons.General.NotificationWarning);
         this.$$$loadButtonText$$$(runAsyncCheckBox, this.$$$getMessageFromBundle$$$("messages/CasbinBundle", "casbin.editor.widget.runAsyncButton.text"));
         runAsyncCheckBox.setToolTipText(this.$$$getMessageFromBundle$$$("messages/CasbinBundle", "casbin.editor.widget.runAsyncButton.toolTipText"));
         Settings.add(runAsyncCheckBox, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(130, 24), null, 1, false));
@@ -140,18 +140,19 @@ public class CasbinExecutorToolWindow {
     private static Method $$$cachedGetBundleMethod$$$ = null;
 
     private String $$$getMessageFromBundle$$$(String path, String key) {
-        ResourceBundle bundle;
-        try {
-            Class<?> thisClass = this.getClass();
-            if ($$$cachedGetBundleMethod$$$ == null) {
-                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
-                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
-            }
-            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
-        } catch (Exception e) {
-            bundle = ResourceBundle.getBundle(path);
-        }
-        return bundle.getString(key);
+        return "yes";
+//        ResourceBundle bundle;
+//        try {
+//            Class<?> thisClass = this.getClass();
+//            if ($$$cachedGetBundleMethod$$$ == null) {
+//                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+//                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+//            }
+//            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+//        } catch (Exception e) {
+//            bundle = ResourceBundle.getBundle(path);
+//        }
+//        return bundle.getString(key);
     }
 
     /**
