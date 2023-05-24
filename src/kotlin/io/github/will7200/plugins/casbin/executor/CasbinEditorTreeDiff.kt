@@ -28,6 +28,10 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
     override fun processChange(change: CasbinDocumentRequest) {
         project.messageBus.syncPublisher(CasbinTopics.DOCUMENT_RESPONSE_TOPIC)
             .beforeProcessing(change)
+
+        if (change.toolWindow.policyFileText == "" || change.toolWindow.modelDefinitionFileText == "") {
+            return
+        }
         casbinService.createEnforcer(
             CasbinExecutorRequest.CasbinCreateEnforcer(
                 change.toolWindow.modelDefinitionFileText,
@@ -39,6 +43,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                 contentAddedJob?.cancel("Processing entire document instead")
                 process(change)
             }
+
             is CasbinDocumentRequest.ContentAdded -> {
                 contentAddedJob?.cancel()
                 contentAddedJob = GlobalScope.launch {
@@ -48,12 +53,14 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     }
                 }
             }
+
             is CasbinDocumentRequest.ContentRemoved -> {
                 oldContent?.let {
                     val patch = DiffUtils.diff(oldContent!!.lines(), change.document.text.lines())
                     change.patch = patch
                 }
             }
+
             else -> {
                 TODO("Handle class ${change.toString()}")
             }
