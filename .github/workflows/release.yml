@@ -12,15 +12,20 @@ jobs:
   release:
     name: Publish Plugin
     runs-on: ubuntu-latest
-    container: gradle:jdk11
-    if: github.repository != 'JetBrains/intellij-platform-plugin-template'
     steps:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.release.tag_name }}
+
+      # Setup Java 11 environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
 
       # Publish the plugin to the Marketplace
       - name: Publish Plugin
@@ -33,14 +38,22 @@ jobs:
     name: Update Changelog
     needs: release
     runs-on: ubuntu-latest
-    container: gradle:jdk11
+    permissions:
+      contents: write
     steps:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.release.tag_name }}
+
+      # Setup Java 11 environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 11
 
       # Update Unreleased section with the current version
       - name: Patch Changelog
