@@ -101,7 +101,7 @@ tasks {
     patchPluginXml {
         version.set(pluginVersion)
         sinceBuild.set(pluginSinceBuild)
-        untilBuild.set(pluginUntilBuild)
+        // untilBuild.set(pluginUntilBuild)
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(

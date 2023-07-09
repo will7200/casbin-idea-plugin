@@ -6,6 +6,7 @@
 ### Added
 
 ### Changed
+- Removed untilBuild from plugin to allow usage on new IDE versions
 
 ### Deprecated
 
