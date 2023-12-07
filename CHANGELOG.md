@@ -3,9 +3,27 @@
 # Casbin Idea Plugin Changelog
 
 ## [Unreleased]
+
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Multiline Matcher grammer support
+
+### Security
+
+## [0.1.15]
+
+### Added
+
+### Changed
+
 - Removed untilBuild from plugin to allow usage on new IDE versions
 
 ### Deprecated
