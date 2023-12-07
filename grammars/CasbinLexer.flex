@@ -88,6 +88,7 @@ SPACE=[ \t\n\x0B\f\r]+
     "("                      { return L_PARATHESIS; }
     ")"                      { return R_PARATHESIS; }
     "OP_IN"                  { return OP_IN; }
+    "\\\n"                   { return WHITE_SPACE;}
     {IDENTIFIER}             { return IDENTIFIER; }
 }
 
