@@ -12,7 +12,7 @@
 ### Removed
 
 ### Fixed
-
+- Add grammar support for multi line models
 ### Security
 
 ## [0.1.15]
