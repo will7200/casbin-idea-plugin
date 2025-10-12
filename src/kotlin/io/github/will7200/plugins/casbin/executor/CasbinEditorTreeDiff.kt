@@ -83,7 +83,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.map { it.text }.toTypedArray()
+                        record.fieldList.map { it.text.trim() }.filter { it.isNotEmpty() }.toTypedArray()
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
@@ -107,7 +107,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.map { it.text }.toTypedArray()
+                        record.fieldList.map { it.text.trim() }.filter { it.isNotEmpty() }.toTypedArray()
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
