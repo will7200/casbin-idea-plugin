@@ -12,6 +12,7 @@
 ### Removed
 
 ### Fixed
+- Fixed incorrect argument count error when parsing CSV enforcement requests with whitespace or trailing commas
 - Add grammar support for multi line models
 ### Security
 
