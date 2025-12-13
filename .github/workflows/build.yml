@@ -232,6 +232,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: plugin-artifact
+          path: .
 
       # Upload artifact as a release asset
       - name: Upload Release Asset
