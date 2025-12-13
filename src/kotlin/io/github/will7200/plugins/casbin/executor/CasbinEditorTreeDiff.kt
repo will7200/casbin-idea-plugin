@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import io.github.will7200.plugins.casbin.*
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVField
 import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVPsiFile
 import kotlinx.coroutines.*
 
@@ -18,6 +19,11 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
         project.service<CasbinExecutorService>()
     }
     private var oldContent: String? = null
+
+    companion object {
+        // Regex to match valid Casbin policy types: p, g, g2, g3, etc.
+        private val POLICY_TYPE_REGEX = Regex("^(p|g\\d*)$")
+    }
 
     init {
         val connection = project.messageBus.connect()
@@ -79,18 +85,11 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
             val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
             for (record in casbinCSVFile.records) {
                 val ln = document.getLineNumber(record.textOffset)
-                // Skip the first field if it's a policy type (p, g, g2, etc.) and trim whitespace
-                val fields = record.fieldList
-                val rvals = if (fields.isNotEmpty() && fields[0].text.trim().matches(Regex("[pg]\\d*"))) {
-                    fields.drop(1).map { it.text.trim() }.toTypedArray()
-                } else {
-                    fields.map { it.text.trim() }.toTypedArray()
-                }
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        rvals
+                        extractRequestValues(record.fieldList)
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
@@ -110,24 +109,29 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
             for (record in casbinCSVFile.records) {
                 val ln = document.getLineNumber(record.textOffset)
                 lines.add(ln, record.text)
-                // Skip the first field if it's a policy type (p, g, g2, etc.) and trim whitespace
-                val fields = record.fieldList
-                val rvals = if (fields.isNotEmpty() && fields[0].text.trim().matches(Regex("[pg]\\d*"))) {
-                    fields.drop(1).map { it.text.trim() }.toTypedArray()
-                } else {
-                    fields.map { it.text.trim() }.toTypedArray()
-                }
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        rvals
+                        extractRequestValues(record.fieldList)
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
                     }
                 )
             }
+        }
+    }
+
+    /**
+     * Extracts request values from CSV fields, skipping the first field if it's a policy type prefix (p, g, g2, etc.)
+     * and trimming whitespace from all fields.
+     */
+    private fun extractRequestValues(fields: List<CasbinCSVField>): Array<String> {
+        return if (fields.isNotEmpty() && fields[0].text.trim().matches(POLICY_TYPE_REGEX)) {
+            fields.drop(1).map { it.text.trim() }.toTypedArray()
+        } else {
+            fields.map { it.text.trim() }.toTypedArray()
         }
     }
 }
