@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import io.github.will7200.plugins.casbin.*
+import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVField
 import io.github.will7200.plugins.casbincsv.language.psi.CasbinCSVPsiFile
 import kotlinx.coroutines.*
 
@@ -18,6 +19,18 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
         project.service<CasbinExecutorService>()
     }
     private var oldContent: String? = null
+
+    companion object {
+        /**
+         * Regex to match valid Casbin policy types:
+         * - p: policy definition
+         * - g, g2, g3, etc.: role/grouping definitions
+         * 
+         * Casbin uses 'p' for policy rules and 'g' (with optional numeric suffix) for grouping/role rules.
+         * See https://casbin.org/docs/syntax-for-models for more details.
+         */
+        private val POLICY_TYPE_REGEX = Regex("^(p|g\\d*)$")
+    }
 
     init {
         val connection = project.messageBus.connect()
@@ -83,7 +96,7 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.map { it.text }.toTypedArray()
+                        extractRequestValues(record.fieldList)
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
@@ -107,13 +120,32 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.map { it.text }.toTypedArray()
+                        extractRequestValues(record.fieldList)
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
                     }
                 )
             }
+        }
+    }
+
+    /**
+     * Extracts request values from CSV fields, skipping the first field if it's a policy type prefix (p, g, g2, etc.)
+     * and trimming whitespace from all fields.
+     */
+    private fun extractRequestValues(fields: List<CasbinCSVField>): Array<String> {
+        if (fields.isEmpty()) {
+            return emptyArray()
+        }
+        
+        val firstFieldTrimmed = fields[0].text.trim()
+        return if (firstFieldTrimmed.matches(POLICY_TYPE_REGEX)) {
+            // First field is a policy type, skip it and return the rest
+            fields.drop(1).map { it.text.trim() }.toTypedArray()
+        } else {
+            // No policy type prefix, return all fields
+            fields.map { it.text.trim() }.toTypedArray()
         }
     }
 }
