@@ -79,11 +79,18 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
             val casbinCSVFile = if (psiFile is CasbinCSVPsiFile) psiFile else return@runReadAction
             for (record in casbinCSVFile.records) {
                 val ln = document.getLineNumber(record.textOffset)
+                // Skip the first field if it's a policy type (p, g, g2, etc.) and trim whitespace
+                val fields = record.fieldList
+                val rvals = if (fields.isNotEmpty() && fields[0].text.trim().matches(Regex("[pg]\\d*"))) {
+                    fields.drop(1).map { it.text.trim() }.toTypedArray()
+                } else {
+                    fields.map { it.text.trim() }.toTypedArray()
+                }
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.drop(1).map { it.text.trim() }.toTypedArray()
+                        rvals
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
@@ -103,11 +110,18 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
             for (record in casbinCSVFile.records) {
                 val ln = document.getLineNumber(record.textOffset)
                 lines.add(ln, record.text)
+                // Skip the first field if it's a policy type (p, g, g2, etc.) and trim whitespace
+                val fields = record.fieldList
+                val rvals = if (fields.isNotEmpty() && fields[0].text.trim().matches(Regex("[pg]\\d*"))) {
+                    fields.drop(1).map { it.text.trim() }.toTypedArray()
+                } else {
+                    fields.map { it.text.trim() }.toTypedArray()
+                }
                 casbinService.executeEnforcement(
                     CasbinExecutorRequest.CasbinEnforcementRequest(
                         change.toolWindow.modelDefinitionFileText,
                         change.toolWindow.policyFileText,
-                        record.fieldList.drop(1).map { it.text.trim() }.toTypedArray()
+                        rvals
                     ).apply {
                         this.model = change.editor.editor?.markupModel
                         this.lineNumber = ln
