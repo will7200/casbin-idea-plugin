@@ -10,9 +10,11 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import io.github.will7200.plugins.casbin.*
 import io.github.will7200.plugins.casbin.view.editors.CasbinCSVEditor
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.awt.event.ItemEvent
 import javax.swing.event.DocumentEvent.EventType
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CasbinExecutorToolWindowImp(private val project: Project, private val toolWindow: ToolWindow) :
     CasbinExecutorToolWindow(project, toolWindow), CasbinExecutorConsumer {
     private val log: Logger = Logger.getInstance(CasbinExecutorToolWindowImp::class.java)

@@ -11,10 +11,12 @@ import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinTopics
 import io.github.will7200.plugins.casbin.language.CasbinLanguage
 import io.github.will7200.plugins.casbin.language.psi.CasbinPsiFile
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.casbin.jcasbin.main.Enforcer
 import java.io.File
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CasbinEnforcementProducer(
     private val modelPath: String?,
     private val policyFile: String?,

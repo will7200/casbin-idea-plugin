@@ -4,7 +4,9 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.Project
 import io.github.will7200.plugins.casbin.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CasbinDocumentManager(private val project: Project) : CasbinDocumentService() {
     private val log: Logger = Logger.getInstance(this::class.java)
     var document: Document? = null

@@ -38,7 +38,7 @@ class CasbinUsagesProvider : FindUsagesProvider {
     }
 
     override fun getType(element: PsiElement): String {
-        return element.node.elementType.toString().toLowerCase()
+        return element.node.elementType.toString().lowercase()
     }
 
     override fun getHelpId(psiElement: PsiElement): String? {
