@@ -21,7 +21,14 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
     private var oldContent: String? = null
 
     companion object {
-        // Regex to match valid Casbin policy types: p, g, g2, g3, etc.
+        /**
+         * Regex to match valid Casbin policy types:
+         * - p: policy definition
+         * - g, g2, g3, etc.: role/grouping definitions
+         * 
+         * Casbin uses 'p' for policy rules and 'g' (with optional numeric suffix) for grouping/role rules.
+         * See https://casbin.org/docs/syntax-for-models for more details.
+         */
         private val POLICY_TYPE_REGEX = Regex("^(p|g\\d*)$")
     }
 
@@ -128,9 +135,16 @@ class CasbinEditorTreeDiff(private val project: Project) : CasbinDocumentProduce
      * and trimming whitespace from all fields.
      */
     private fun extractRequestValues(fields: List<CasbinCSVField>): Array<String> {
-        return if (fields.isNotEmpty() && fields[0].text.trim().matches(POLICY_TYPE_REGEX)) {
+        if (fields.isEmpty()) {
+            return emptyArray()
+        }
+        
+        val firstFieldTrimmed = fields[0].text.trim()
+        return if (firstFieldTrimmed.matches(POLICY_TYPE_REGEX)) {
+            // First field is a policy type, skip it and return the rest
             fields.drop(1).map { it.text.trim() }.toTypedArray()
         } else {
+            // No policy type prefix, return all fields
             fields.map { it.text.trim() }.toTypedArray()
         }
     }
