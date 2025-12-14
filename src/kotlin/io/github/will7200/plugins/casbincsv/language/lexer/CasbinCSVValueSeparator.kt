@@ -41,11 +41,11 @@ class CasbinCSVValueSeparator private constructor(
         return Objects.hash(character, isCustom)
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj == null || obj !is CasbinCSVValueSeparator) {
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is CasbinCSVValueSeparator) {
             return false
         }
-        val otherObj = obj
+        val otherObj = other
         return otherObj.character == character && otherObj.isCustom == isCustom
     }
 

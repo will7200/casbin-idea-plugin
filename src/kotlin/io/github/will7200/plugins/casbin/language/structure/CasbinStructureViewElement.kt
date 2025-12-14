@@ -35,8 +35,8 @@ class CasbinStructureViewElement(private val element: PsiElement) : StructureVie
     }
 
     override fun getAlphaSortKey() = when (element) {
-        is PsiFile -> element.name.toLowerCase()
-        else -> element.text.toLowerCase()
+        is PsiFile -> element.name.lowercase()
+        else -> element.text.lowercase()
     }
 
     override fun canNavigate() = (element as? NavigationItem)?.canNavigate() ?: false

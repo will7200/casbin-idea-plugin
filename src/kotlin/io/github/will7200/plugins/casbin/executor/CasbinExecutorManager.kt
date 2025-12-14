@@ -9,10 +9,12 @@ import io.github.will7200.plugins.casbin.CasbinExecutorRequest
 import io.github.will7200.plugins.casbin.CasbinExecutorService
 import io.github.will7200.plugins.casbin.CasbinTopics
 import io.github.will7200.plugins.casbin.view.ui.CasbinExecutorErrorsNotifier
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.time.LocalDateTime
 
 typealias EnforcerKey = Pair<String, String>
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CasbinExecutorManager(private val myProject: Project) : CasbinExecutorService() {
     private val log: Logger = Logger.getInstance(CasbinExecutorManager::class.java)
     private val enforcers: MutableUsageMap<EnforcerKey, CasbinEnforcementProducer> = MutableUsageMap()
